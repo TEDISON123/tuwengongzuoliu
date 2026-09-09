@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
+</head>
+<body class="bg-transparent text-[var(--foreground)] antialiased p-3">
+  <div class="bg-[var(--card)] text-[var(--foreground)] border border-[var(--border)] rounded-xl p-4 shadow-sm max-w-xl mx-auto text-xs sm:text-sm">
+    <div class="flex items-center justify-between pb-3 border-b border-[var(--border)] mb-3">
+      <div>
+        <h2 class="font-semibold text-base text-[var(--foreground)] flex items-center gap-1.5">
+          <span>🎁</span> 活动收益测算与冲档助手
+        </h2>
+        <p class="text-[var(--muted-foreground)] text-xs">周四0:00至次周三24:00 · 不填表视作未参与</p>
+      </div>
+      <span class="px-2 py-0.5 rounded text-xs bg-red-500/10 text-red-500 font-medium border border-red-500/20">9月30日止</span>
+    </div>
+
+    <!-- Inputs -->
+    <div class="grid grid-cols-2 gap-3 mb-3">
+      <div>
+        <label class="block text-[var(--muted-foreground)] text-xs mb-1">当周发布篇数 (填表)</label>
+        <input type="number" id="notesCount" min="0" value="3" class="w-full bg-[var(--background)] border border-[var(--border)] rounded px-2.5 py-1.5 text-sm focus:outline-none focus:border-red-500" oninput="calculateRewards()">
+      </div>
+      <div>
+        <label class="block text-[var(--muted-foreground)] text-xs mb-1">当周累计有效评论数</label>
+        <input type="number" id="commentsCount" min="0" value="25" class="w-full bg-[var(--background)] border border-[var(--border)] rounded px-2.5 py-1.5 text-sm focus:outline-none focus:border-red-500" oninput="calculateRewards()">
+      </div>
+      <div>
+        <label class="block text-[var(--muted-foreground)] text-xs mb-1">单篇最高评论数</label>
+        <input type="number" id="topSingleComment" min="0" value="18" class="w-full bg-[var(--background)] border border-[var(--border)] rounded px-2.5 py-1.5 text-sm focus:outline-none focus:border-red-500" oninput="calculateRewards()">
+      </div>
+      <div class="flex items-center pt-5">
+        <label class="flex items-center gap-2 cursor-pointer text-xs select-none">
+          <input type="checkbox" id="isNewbie" class="rounded border-[var(--border)] text-red-500" onchange="calculateRewards()">
+          <span>此前从未提交过（新人首发）</span>
+        </label>
+      </div>
+    </div>
+
+    <!-- Result Banner -->
+    <div class="bg-[var(--background)] rounded-lg p-3 border border-[var(--border)] space-y-2 mb-3">
+      <div class="flex items-center justify-between">
+        <span class="text-xs text-[var(--muted-foreground)]">当前预计解锁流量券：</span>
+        <span class="text-base font-bold text-red-500" id="voucherTotal">1 张 (1,000流量)</span>
+      </div>
+      <div class="text-xs text-[var(--muted-foreground)] flex items-center justify-between border-t border-[var(--border)] pt-1.5" id="breakdownList">
+        <span>基础单篇扶持：单篇 ≥10万曝光</span>
+        <span class="text-[var(--foreground)] font-medium" id="tierDetail">创作参与奖 (1张)</span>
+      </div>
+    </div>
+
+    <!-- Optimization Advice -->
+    <div class="p-2.5 rounded bg-amber-500/10 border border-amber-500/20 text-xs text-amber-700 dark:text-amber-300 mb-2 flex items-start gap-2" id="tipsBox">
+      <span class="text-sm">💡</span>
+      <span id="adviceText">冲档建议计算中...</span>
+    </div>
+
+    <!-- Quick Link Actions -->
+    <div class="flex gap-2 text-xs pt-1">
+      <a href="https://doc.weixin.qq.com/forms/ANAAyQcbAAgAbEAGAb_AKoCNPRTWz2o5f" target="_blank" class="flex-1 text-center py-1.5 bg-red-600 hover:bg-red-700 text-white rounded font-medium transition-colors">
+        去填表登记 (不填视为无效) ↗
+      </a>
+      <a href="https://cowork.xiaohongshu.com/f/sr-8ffe0573/" target="_blank" class="px-3 text-center py-1.5 bg-[var(--background)] border border-[var(--border)] hover:bg-[var(--border)] rounded font-medium transition-colors">
+        查看内容范式 ↗
+      </a>
+    </div>
+  </div>
+
+  <script>
+    function calculateRewards() {
+      const notes = parseInt(document.getElementById('notesCount').value) || 0;
+      const comments = parseInt(document.getElementById('commentsCount').value) || 0;
+      const topComment = parseInt(document.getElementById('topSingleComment').value) || 0;
+      const isNewbie = document.getElementById('isNewbie').checked;
+
+      let vouchers = 0;
+      let awards = [];
+
+      // 新人奖
+      if (isNewbie && notes >= 1) {
+        vouchers += 1;
+        awards.push("新人首发奖(1张)");
+      }
+
+      // 周阶梯
+      if (notes >= 10 && comments >= 150) {
+        vouchers += 3;
+        awards.push("优质共创奖(3张)");
+      } else if (notes >= 5 && comments >= 50) {
+        vouchers += 2;
+        awards.push("持续创作奖(2张)");
+      } else if (notes >= 2 && comments >= 20) {
+        vouchers += 1;
+        awards.push("创作参与奖(1张)");
+      }
+
+      // 高热讨论奖
+      if (topComment >= 500) {
+        vouchers += 5;
+        awards.push("高热讨论奖(5张)");
+      }
+
+      // 展现奖励
+      const voucherElem = document.getElementById('voucherTotal');
+      voucherElem.innerText = `${vouchers} 张 (${(vouchers * 1000).toLocaleString()} 流量券)`;
+      
+      const tierDetail = document.getElementById('tierDetail');
+      tierDetail.innerText = awards.length > 0 ? awards.join(" + ") : "未达阶梯门槛";
+
+      // 冲档建议
+      const advice = document.getElementById('adviceText');
+      if (topComment < 500 && topComment >= 350) {
+        advice.innerText = `单篇评论已有 ${topComment} 条！距「高热讨论奖(5张券)」仅差 ${500 - topComment} 条，建议置顶互动神评全力冲刺！`;
+      } else if (notes >= 10 && comments >= 150) {
+        advice.innerText = "已达成【优质共创奖】顶格流量券！若篇数或评论在社群排前3，还可斩获限定T恤！";
+      } else if (notes >= 5 && comments >= 50) {
+        const gapNotes = Math.max(0, 10 - notes);
+        const gapComments = Math.max(0, 150 - comments);
+        advice.innerText = `距【优质共创奖(3张)】还需：补发 ${gapNotes} 篇且增加 ${gapComments} 条评论，继续加油！`;
+      } else if (notes >= 2 && comments >= 20) {
+        const gapNotes = Math.max(0, 5 - notes);
+        const gapComments = Math.max(0, 50 - comments);
+        advice.innerText = `距【持续创作奖(2张)】还需：发布 ${gapNotes} 篇且增加 ${gapComments} 条评论，周三前有望冲线！`;
+      } else {
+        const gapNotes = Math.max(0, 2 - notes);
+        const gapComments = Math.max(0, 20 - comments);
+        advice.innerText = `距基础【创作参与奖】还需：发满 2 篇 (差 ${gapNotes} 篇)，且累计满 20 条有效评论 (差 ${gapComments} 条)。`;
+      }
+    }
+    calculateRewards();
+  </script>
+</body>
+</html>

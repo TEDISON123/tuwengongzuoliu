@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700;900&display=swap');
+    body { font-family: 'Noto Sans SC', sans-serif; }
+    .card-canvas {
+      width: 540px;
+      height: 720px;
+      position: relative;
+      overflow: hidden;
+    }
+  </style>
+</head>
+<body class="bg-slate-100 flex items-center justify-center min-h-screen p-4">
+  <div class="card-canvas bg-white shadow-xl rounded-2xl flex flex-col justify-between p-8 border border-slate-200">
+    
+    <!-- Top Header Bar -->
+    <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+      <span class="text-xs font-bold px-2.5 py-1 rounded-full bg-blue-50 text-blue-600 tracking-wider">
+        #理性讨论 · 财经认知
+      </span>
+      <span class="text-xs font-semibold text-slate-400 font-mono">
+        2 / 6
+      </span>
+    </div>
+
+    <div class="my-auto space-y-5">
+      <div class="space-y-1">
+        <span class="text-xs font-bold text-blue-600 uppercase tracking-wider">现实痛点拆解</span>
+        <h2 class="text-2xl font-black text-slate-900 leading-tight">存款破2%，房贷还在4.0%</h2>
+      </div>
+      <p class="text-xs text-slate-600 leading-relaxed">手头好不容易攒了50万闲钱，面对每月几千块房贷，每天都在纠结：</p>
+      
+      <div class="space-y-2">
+        <div class="flex items-center justify-between p-3 rounded-lg bg-slate-50 border border-slate-100">
+              <span class="font-bold text-xs text-slate-700">银行大额存单</span>
+              <span class="text-xs font-semibold text-slate-500">年利率 1.5%~1.8%</span>
+              <span class="font-mono font-bold text-xs text-red-500">年利息约 8,500 元</span>
+            </div><div class="flex items-center justify-between p-3 rounded-lg bg-slate-50 border border-slate-100">
+              <span class="font-bold text-xs text-slate-700">留在房贷继续还</span>
+              <span class="text-xs font-semibold text-slate-500">年利率 3.8%~4.2%</span>
+              <span class="font-mono font-bold text-xs text-red-500">年利息约 20,000 元</span>
+            </div>
+      </div>
+
+      <div class="p-3.5 rounded-xl bg-amber-500/10 border-l-4 border-amber-500 text-xs text-amber-800 font-medium leading-relaxed">
+        💡 表面看提前还贷等于白赚4%年化，为什么资深金融人却坚决劝你'别急着还'？
+      </div>
+    </div>
+    <div class="pt-3 border-t border-slate-100 text-right text-xs text-slate-400">P2 / 痛点账本</div>
+
+  </div>
+</body>
+</html>

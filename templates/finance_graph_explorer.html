@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
+</head>
+<body class="bg-transparent text-[var(--foreground)] antialiased p-3">
+  <div class="bg-[var(--card)] text-[var(--foreground)] border border-[var(--border)] rounded-xl p-4 shadow-sm max-w-2xl mx-auto text-xs sm:text-sm">
+    <div class="flex items-center justify-between pb-3 border-b border-[var(--border)] mb-3">
+      <div>
+        <h2 class="font-bold text-base text-[var(--foreground)] flex items-center gap-1.5">
+          <span>🧭</span> 金融知识图谱与话题矩阵罗盘
+        </h2>
+        <p class="text-[var(--muted-foreground)] text-xs">6 大母模块 · 18 个二级领域 · 50+ 讨论型选题库</p>
+      </div>
+      <span class="px-2 py-0.5 rounded text-xs bg-blue-500/10 text-blue-500 font-medium border border-blue-500/20">内容图谱系统</span>
+    </div>
+
+    <!-- Category Filter Tabs -->
+    <div class="flex flex-wrap gap-1.5 mb-3" id="tabContainer">
+      <button onclick="switchTab(0)" class="tab-btn px-2.5 py-1 rounded border border-[var(--border)] bg-[var(--primary)] text-white font-medium" data-index="0">01 个人财务</button>
+      <button onclick="switchTab(1)" class="tab-btn px-2.5 py-1 rounded border border-[var(--border)] bg-[var(--background)] hover:bg-[var(--border)]" data-index="1">02 资产配置</button>
+      <button onclick="switchTab(2)" class="tab-btn px-2.5 py-1 rounded border border-[var(--border)] bg-[var(--background)] hover:bg-[var(--border)]" data-index="2">03 宏观周期</button>
+      <button onclick="switchTab(3)" class="tab-btn px-2.5 py-1 rounded border border-[var(--border)] bg-[var(--background)] hover:bg-[var(--border)]" data-index="3">04 商业公司</button>
+      <button onclick="switchTab(4)" class="tab-btn px-2.5 py-1 rounded border border-[var(--border)] bg-[var(--background)] hover:bg-[var(--border)]" data-index="4">05 金融史话</button>
+      <button onclick="switchTab(5)" class="tab-btn px-2.5 py-1 rounded border border-[var(--border)] bg-[var(--background)] hover:bg-[var(--border)]" data-index="5">06 时代辩题</button>
+    </div>
+
+    <!-- Active Category Banner -->
+    <div class="bg-[var(--background)] p-2.5 rounded-lg border border-[var(--border)] mb-3 flex items-center justify-between">
+      <div>
+        <span class="font-semibold text-xs text-[var(--foreground)]" id="catTitle">01 个人收支与风险底线</span>
+        <span class="text-[var(--muted-foreground)] text-xs ml-2" id="catDesc">流量基石 · 破圈刚需 · 痛点避坑</span>
+      </div>
+      <span class="text-xs px-2 py-0.5 rounded bg-amber-500/10 text-amber-600 font-medium" id="catTrafficRatio">建议占比 40%</span>
+    </div>
+
+    <!-- Topic Cards List -->
+    <div class="space-y-2 max-h-60 overflow-y-auto pr-1" id="topicList">
+      <!-- Injected by JS -->
+    </div>
+
+    <div class="mt-3 pt-2.5 border-t border-[var(--border)] flex justify-between items-center text-xs text-[var(--muted-foreground)]">
+      <span>💡 点击卡片可复制选题到剪贴板</span>
+      <span id="copyNotice" class="text-emerald-500 font-medium opacity-0 transition-opacity">已复制到剪贴板!</span>
+    </div>
+  </div>
+
+  <script>
+    const data = [
+      {
+        title: "01 个人收支与底线风控",
+        desc: "流量基石 · 破圈刚需 · 痛点避坑",
+        ratio: "产能占比 40%",
+        topics: [
+          { sub: "现金流与流动性", title: "存款买活钱理财 vs 定期存单，为了 1% 的息差损失半年流动性到底值不值？", logic: "机会成本、流动性溢价、无风险利率" },
+          { sub: "负债与信贷杠杆", title: "提前还房贷到底是锁定确定性收益，还是交出了未来资产通胀期的话语权？", logic: "实际资金成本、IRR内部收益率、货币贬值预期" },
+          { sub: "保险反脆弱兜底", title: "买返还型重疾险到底是“有病治病没病返钱”，还是在给保险公司交沉没智商税？", logic: "精算纯风险费率、复利时间折现、大数法则" }
+        ]
+      },
+      {
+        title: "02 投资工具与资产配置",
+        desc: "进阶干货 · 深度黏性 · 财富实操",
+        ratio: "产能占比 30%",
+        topics: [
+          { sub: "固收类基本盘", title: "银行理财全面破净常态化，普通人该继续忍受2%超低收益，还是承受净值波动买债基？", logic: "资管新规、净值化转型、信用利差与久期" },
+          { sub: "指数基金与权益", title: "长江电力等高股息资产持续攀升，现在入场是优质防御避风港还是高位接盘？", logic: "股息率贴现模型、均值回归、类债券防御逻辑" },
+          { sub: "黄金与大宗商品", title: "年轻人疯狂跟风攒金豆，到底是明智的低门槛储蓄，还是为高溢价和折旧买单的伪理财？", logic: "实际利率倒挂、主权信用对冲、零售黄金溢价" }
+        ]
+      },
+      {
+        title: "03 宏观周期与货币密码",
+        desc: "专业壁垒 · 权威降维 · 宏观视野",
+        ratio: "产能占比 30%",
+        topics: [
+          { sub: "央行货币政策", title: "降息大时代开启，资金从银行流向实体，普通人该加杠杆抄底核心资产还是现金为王？", logic: "M2增速、流动性陷阱、货币乘数与实体传导" },
+          { sub: "通胀与债务周期", title: "官方讨论案例：拉动国内消费，到底是靠“休假时间多”更有效，还是靠“工资收入多”更根本？", logic: "边际消费倾向、收入效应 vs 替代效应" },
+          { sub: "美元潮汐与汇率", title: "美联储降息周期启幕，人民币汇率企稳反弹，对出口型制造业和海淘消费族谁更有利？", logic: "三元悖论、利差交易拆解、国际收支平衡" }
+        ]
+      },
+      {
+        title: "04 商业洞察与公司财务",
+        desc: "商业敏锐 · 信息差拆解 · 精准获客",
+        ratio: "产能占比 30%",
+        topics: [
+          { sub: "三张财务报表", title: "账面净利润几千万却发不出工资，是企业激进扩张的必经阵痛还是资金链崩盘前兆？", logic: "营运资本占用、权责发生制 vs 现金流健康度" },
+          { sub: "商业护城河", title: "预制菜进商场，究竟是现代化食品工业降本提效的飞跃，还是剥夺消费者知情权的牟利？", logic: "供应链规模经济、转换壁垒、沉没成本" },
+          { sub: "资本运作估值", title: "星链正式宣战美国三大运营商，商业航天星座真能创造万亿暴利，还是基站吞金兽？", logic: "DCF现金流折现、卫星制造与发射规模边际成本" }
+        ]
+      },
+      {
+        title: "05 金融史话与危机复盘",
+        desc: "长尾长青 · 故事性强 · 神级复盘",
+        ratio: "储备专栏",
+        topics: [
+          { sub: "货币演变史", title: "官方讨论案例：同为古代纸币，大明宝钞为何比北宋早期的交子贬值得快得多？", logic: "金银抵押储备金信用、铸币税滥用、格雷欣法则" },
+          { sub: "金融泡沫启示", title: "荷兰郁金香狂热是一场全民疯狂投机的致命泡沫，还是被后世历史学家刻意夸大的传说？", logic: "期货期权早期衍生品失控、流动性踩踏与明斯基时刻" },
+          { sub: "全球危机复盘", title: "2008年次贷危机中，美联储到底该放任雷曼破产以正市场纪律，还是动用公款阻断流动性雪崩？", logic: "最后贷款人道德风险、大而不能倒 (TBTF)、系统性传染" }
+        ]
+      },
+      {
+        title: "06 时代痛点与认知辩题",
+        desc: "理性讨论 · 官薯翻牌 · 双门槛冲榜",
+        ratio: "重点冲刺 30%",
+        topics: [
+          { sub: "消费主义解构", title: "官方讨论案例：为品牌溢价、五星服务和身份认同买单，到底算不算被洗脑的不理性消费？", logic: "凡勃伦炫耀性效用、边际满足感 vs 实用价值成本" },
+          { sub: "代际阶层积累", title: "普通人实现资产跃迁，主要是靠极致省吃俭用与长期复利，还是靠踏准一次时代周期的资产杠杆？", logic: "资本回报率r与经济增长率g的差距 (皮凯蒂定律)" },
+          { sub: "劳动资本博弈", title: "严格执行劳动法到底是在筑牢劳动者尊严底线，还是会客观上加重中小微企业负担导致招工收缩？", logic: "企业合规边际成本、就业市场供给弹性与劳资分配" }
+        ]
+      }
+    ];
+
+    let currentTab = 0;
+
+    function renderTopics() {
+      const cur = data[currentTab];
+      document.getElementById('catTitle').innerText = cur.title;
+      document.getElementById('catDesc').innerText = cur.desc;
+      document.getElementById('catTrafficRatio').innerText = cur.ratio;
+
+      const container = document.getElementById('topicList');
+      container.innerHTML = cur.topics.map((t, idx) => `
+        <div onclick="copyText('${t.title.replace(/'/g, "\\'")}')" class="p-2.5 rounded border border-[var(--border)] hover:border-blue-500 cursor-pointer bg-[var(--card)] transition-colors">
+          <div class="flex items-center justify-between mb-1">
+            <span class="text-xs px-1.5 py-0.5 rounded bg-blue-500/10 text-blue-600 font-semibold">${t.sub}</span>
+            <span class="text-[10px] text-[var(--muted-foreground)]">点击复制</span>
+          </div>
+          <p class="font-medium text-xs text-[var(--foreground)] leading-relaxed mb-1">${t.title}</p>
+          <p class="text-[11px] text-[var(--muted-foreground)] flex items-center gap-1">
+            <span class="opacity-70">底层逻辑:</span> ${t.logic}
+          </p>
+        </div>
+      `).join('');
+    }
+
+    function switchTab(index) {
+      currentTab = index;
+      const btns = document.querySelectorAll('.tab-btn');
+      btns.forEach((b, i) => {
+        if (i === index) {
+          b.className = "tab-btn px-2.5 py-1 rounded border border-[var(--border)] bg-[var(--primary)] text-white font-medium";
+        } else {
+          b.className = "tab-btn px-2.5 py-1 rounded border border-[var(--border)] bg-[var(--background)] hover:bg-[var(--border)]";
+        }
+      });
+      renderTopics();
+    }
+
+    function copyText(str) {
+      navigator.clipboard.writeText(str).then(() => {
+        const n = document.getElementById('copyNotice');
+        n.classList.remove('opacity-0');
+        setTimeout(() => n.classList.add('opacity-0'), 1500);
+      });
+    }
+
+    renderTopics();
+  </script>
+</body>
+</html>

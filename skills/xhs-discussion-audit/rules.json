@@ -1,0 +1,91 @@
+{
+  "skill_name": "xhs-discussion-audit",
+  "version": "1.0.0",
+  "guideline_source": "https://cowork.xiaohongshu.com/f/sr-8ffe0573/",
+  "campaign_title": "理性讨论｜活动创作指导",
+  "core_formula": {
+    "OBJECT": "必须具备具体对象或局面（人物/装备/事件/公司/岗位/特定处境），非抽象概念",
+    "CONDITION": "必须具备明确前提、资源限制、比较标准或代价反差，形成真实取舍",
+    "QUESTION": "必须是尚无唯一定论的开放问题，具备至少两个合理站得住脚的对立答案",
+    "INVITATION": "必须具体邀请读者作出判断（二选一/划分责任/权衡利弊/判定合理性），而非泛问'你怎么看'"
+  },
+  "verticals": {
+    "history": {
+      "name": "历史",
+      "requirement": "明确历史节点、制度或人物条件，解释现象或推演后果",
+      "question_archetype": "假如...你会选谁 / 若...会怎样 / 能否避免... / 给哪个效力危险性最高"
+    },
+    "military": {
+      "name": "军事",
+      "requirement": "明确装备、战略目标、用途或同级参照，判断水平与实战价值",
+      "question_archetype": "哪个最登峰造极 / 应该从A还是B开始 / 为什么敢...不敢... / 是否被高估"
+    },
+    "legal": {
+      "name": "法律",
+      "requirement": "明确当事人、行为顺序和关键事实，划分责任并说明法理依据",
+      "question_archetype": "偏袒A还是压垮B / XX摔伤了我有责任吗 / 互殴还是正当防卫 / 算损坏私物吗"
+    },
+    "finance": {
+      "name": "财经",
+      "requirement": "提供公共经济现象、真实数据或增长假设，解释机制或判断商业合理性",
+      "question_archetype": "A还是B更能拉动消费 / 仅靠X能否实现Y收入 / A能否战胜B / 会复制暴利吗 / 为何分红率会上升"
+    },
+    "workplace": {
+      "name": "职场",
+      "requirement": "围绕从业者共同见过的普遍现象，留下尚未说清的深层原因或组织机制",
+      "question_archetype": "某行业会裁员吗 / 必须某背景才能做某事吗 / 听A还是听B / 难干到底待多久才能走"
+    }
+  },
+  "negative_traps": [
+    {
+      "id": "personal_experience",
+      "name": "纯个人经历/流水账分享",
+      "symptom": "个人求职进度、面试碎碎念、建群打卡、日常随笔，读者只能被动打听细节",
+      "action": "强制改写为公共议题，提炼出可对比的自变量（如：学校背景 vs 科研经历）"
+    },
+    {
+      "id": "motivational_summary",
+      "name": "励志感悟/结论先行式鸡汤",
+      "symptom": "成长感悟、作者直接单向输出结论（例如'找到托举你的人很重要'），读者无法辩驳",
+      "action": "改为二元对立辩题（如：自身努力 vs 他人托举，哪个更关键）"
+    },
+    {
+      "id": "tutorial_teaching",
+      "name": "方法教学/实用技巧攻略",
+      "symptom": "面试话术教程、租房攻略、踩坑指南，答案已由作者单向给定",
+      "action": "将工具技巧转化为博弈价值争议（如：职场套话是信息博弈还是破坏信任）"
+    },
+    {
+      "id": "lifestyle_attitude",
+      "name": "生活态度/纯主观消费分享",
+      "symptom": "极简主义日记、轻奢生活态度、主观审美感悟，缺乏公共争议点",
+      "action": "转化为消费理性与溢价边界辩题（如：为品牌体验支付溢价算不算不理性）"
+    }
+  ],
+  "checklist": [
+    {
+      "id": "check_1_title_is_question",
+      "rule": "标题本身就是一个问题，用户一眼能看懂在讨论什么"
+    },
+    {
+      "id": "check_2_multiple_answers",
+      "rule": "这个问题至少存在两种站得住脚的答案，而不是只有一个标准答案"
+    },
+    {
+      "id": "check_3_fact_accuracy",
+      "rule": "问题里的事实部分经得起核查，没有为了尖锐而编造虚假前提"
+    },
+    {
+      "id": "check_4_concrete_condition",
+      "rule": "有具体对象、时间或条件，不是'你怎么看'式的空泛提问"
+    },
+    {
+      "id": "check_5_no_pure_sharing",
+      "rule": "内容不是纯个人经历、方法教学、励志感悟或生活态度分享"
+    },
+    {
+      "id": "check_6_form_submitted",
+      "rule": "已准备按要求填写群内腾讯统计表格（不填表视为未参与）"
+    }
+  ]
+}
