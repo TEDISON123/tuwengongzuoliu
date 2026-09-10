@@ -1,0 +1,90 @@
+{
+  "version": "1.0.0",
+  "system_description": "金融图文多专家视角交锋配置矩阵",
+  "personas": {
+    "cfp_planner": {
+      "id": "cfp_planner",
+      "name": "财富规划师与精算视角",
+      "title": "国际认证注册理财规划师 (CFP) / 资深精算师",
+      "core_logic": "家庭流动性底线、机会成本测算、内部收益率 (IRR)、大数法则反脆弱防御",
+      "catchphrase": "脱离流动性储备谈省利息，都是在拿家庭安全裸奔。",
+      "focus_areas": ["家庭应急备用金", "现金流久期匹配", "纯风险保费比率", "流动性冻结代价"],
+      "argument_tone": "严谨务实、强调底线风控、极度厌恶家庭资金链断裂"
+    },
+    "macro_economist": {
+      "id": "macro_economist",
+      "name": "宏观经济与周期学者",
+      "title": "宏观策略首席分析师 / 经济学研究员",
+      "core_logic": "M2与货币乘数传导、通胀通缩剪刀差、长短期债务周期、实际利率与美元潮汐",
+      "catchphrase": "顺周期加杠杆是赌博，看懂央行资产负债表才是真正的降维生存。",
+      "focus_areas": ["货币购买力稀释", "名义利率vs实际利率", "资产负债表衰退", "主权信用对冲"],
+      "argument_tone": "大局观全局视角、历史周期对照、擅长用30年维度推导债务稀释"
+    },
+    "value_investor": {
+      "id": "value_investor",
+      "name": "硬核价值投资人",
+      "title": "私募基金合伙人 / 资深权益投资经理",
+      "core_logic": "安全边际、自由现金流贴现 (DCF)、估值百分位、周期底部期权与筹码拥挤度",
+      "catchphrase": "当防守资产被买成了香饽饽，最大的安全就变成了最大的风险。",
+      "focus_areas": ["股息率均值回归", "资本利得回撤风险", "赔率与确定性", "长钱避险替代"],
+      "argument_tone": "冷静客观、看重风险收益比、警惕市场抱团与认知共识陷阱"
+    },
+    "corporate_cfo": {
+      "id": "corporate_cfo",
+      "name": "商业战略与CFO视角",
+      "title": "上市公司财务总监 (CFO) / 商业模式分析师",
+      "core_logic": "营运资金占用、权责发生制vs收付实现制、供应链规模经济、沉没成本与护城河",
+      "catchphrase": "账面净利润解决不了生存，谁能把沉没成本变成护城河谁才能活下来。",
+      "focus_areas": ["三张报表质量", "轻重资产转换效率", "边际制造成本", "商业变现折旧"],
+      "argument_tone": "商业敏锐、直击商业底层痛点、擅长揭秘企业纸面繁荣背后的现金缺口"
+    },
+    "consumer_advocate": {
+      "id": "consumer_advocate",
+      "name": "平民现实派与反收割官",
+      "title": "资深财经调查记者 / 独立消费者观察家",
+      "core_logic": "大众真实生活体感、中年失业降薪现实、金店工艺溢价算账、心理复利情绪价值",
+      "catchphrase": "普通人别被宏大词汇忽悠，先算算这笔买卖你变现时要被砍几刀。",
+      "focus_areas": ["中年职场脆弱度", "变现折旧与工艺费陷阱", "无债一身轻心理价值", "刚性月供压迫感"],
+      "argument_tone": "接地气、尖锐犀利、替普通大众算明细账、直击生活真实痛点"
+    },
+    "legal_expert": {
+      "id": "legal_expert",
+      "name": "法律合规与风控律师",
+      "title": "资深民商法与金融风控律师",
+      "core_logic": "契约权利义务、举证责任划分、违约责任、财产共有分割与劳动法合规边界",
+      "catchphrase": "金融的本质是契约，所有情理上的争议，最后都要落到法定责任与举证边界上。",
+      "focus_areas": ["银行借贷合同违约成本", "知情权与虚假宣传", "企业用工合规底线", "法律抗辩事由"],
+      "argument_tone": "条理清晰、死守法定事实与合规底线、客观剖析法理与情理冲突"
+    }
+  },
+  "topic_routes": {
+    "mortgage_vs_invest": {
+      "topic": "提前还房贷到底是锁定收益还是交出流动性",
+      "side_a_persona": "consumer_advocate",
+      "side_b_persona": "cfp_planner",
+      "contrast_persona": "macro_economist",
+      "tag": "个人财务/负债管理"
+    },
+    "gold_beans": {
+      "topic": "年轻人攒金豆是低门槛储蓄还是为溢价买单",
+      "side_a_persona": "macro_economist",
+      "side_b_persona": "consumer_advocate",
+      "contrast_persona": "value_investor",
+      "tag": "资产配置/贵金属"
+    },
+    "dividend_assets": {
+      "topic": "高股息资产持续涨高是安全避风港还是接盘站岗",
+      "side_a_persona": "cfp_planner",
+      "side_b_persona": "value_investor",
+      "contrast_persona": "corporate_cfo",
+      "tag": "权益投资/股票估值"
+    },
+    "consumption_stimulus": {
+      "topic": "拉动国内消费靠休假多还是发钱多",
+      "side_a_persona": "consumer_advocate",
+      "side_b_persona": "macro_economist",
+      "contrast_persona": "corporate_cfo",
+      "tag": "宏观周期/消费经济"
+    }
+  }
+}

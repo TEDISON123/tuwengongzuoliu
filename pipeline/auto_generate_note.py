@@ -23,8 +23,16 @@ except ImportError:
     def audit_note(title, content, category):
         return {"score": 90, "status": "PASS (推荐投流 ✅)", "checks": {}, "penalties": []}
 
+def load_expert_personas() -> dict:
+    """加载专家视角配置库"""
+    personas_file = os.path.join(CURRENT_DIR, "expert_personas.json")
+    if os.path.exists(personas_file):
+        with open(personas_file, "r", encoding="utf-8") as f:
+            return json.load(f)
+    return {"personas": {}, "topic_routes": {}}
+
 def render_html_card(page_data: dict, page_num: int, total_pages: int = 6) -> str:
-    """基于 Tailwind CSS 渲染 3:4 比例卡片 HTML"""
+    """基于 Tailwind CSS 渲染 3:4 比例卡片 HTML (全面融入专家视角)"""
     ptype = page_data.get("type", "")
     
     html = f"""<!DOCTYPE html>
@@ -60,9 +68,23 @@ def render_html_card(page_data: dict, page_num: int, total_pages: int = 6) -> st
     if ptype == "cover_poster":
         title_lines = page_data.get("title_main", "").split("\n")
         title_html = "".join([f'<span class="block">{line}</span>' for line in title_lines])
+        
+        matchup_html = ""
+        if "expert_matchup" in page_data:
+            em = page_data["expert_matchup"]
+            matchup_html = f"""
+      <!-- 专家视角交锋对决 Badge -->
+      <div class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-900 text-white text-[11px] font-bold shadow-md">
+        <span class="text-slate-400">⚖️ 专家对决:</span>
+        <span class="text-amber-300">{em.get('side_a', '')}</span>
+        <span class="text-slate-500 font-mono text-[10px]">VS</span>
+        <span class="text-blue-300">{em.get('side_b', '')}</span>
+      </div>
+"""
+
         html += f"""
     <!-- Cover Poster Content -->
-    <div class="my-auto space-y-6 text-center">
+    <div class="my-auto space-y-5 text-center">
       <div class="inline-block px-3 py-1 rounded bg-amber-50 border border-amber-200 text-amber-700 text-xs font-bold tracking-wide">
         💰 真实账本对决 · 争议辩题
       </div>
@@ -72,11 +94,12 @@ def render_html_card(page_data: dict, page_num: int, total_pages: int = 6) -> st
       <div class="mx-auto max-w-sm p-3 rounded-xl bg-red-50 border-2 border-red-500/30 text-red-600 font-bold text-sm leading-snug">
         {page_data.get("subtitle", "")}
       </div>
+      {matchup_html}
     </div>
     
     <!-- Footer CTA -->
     <div class="pt-4 border-t border-slate-100 flex items-center justify-between text-xs text-slate-400 font-medium">
-      <span>{page_data.get("footer_tip", "内附算账对比 · 换你你怎么选？ ➔")}</span>
+      <span>{page_data.get("footer_tip", "内附两派专家真实账本 · 换你你怎么选？ ➔")}</span>
       <span class="text-blue-500 font-bold">滑动阅读 ➔</span>
     </div>
 """
@@ -90,7 +113,7 @@ def render_html_card(page_data: dict, page_num: int, total_pages: int = 6) -> st
             </div>""" for row in page_data.get("table_data", [])
         ])
         html += f"""
-    <div class="my-auto space-y-5">
+    <div class="my-auto space-y-4">
       <div class="space-y-1">
         <span class="text-xs font-bold text-blue-600 uppercase tracking-wider">现实痛点拆解</span>
         <h2 class="text-2xl font-black text-slate-900 leading-tight">{page_data.get("heading", "")}</h2>
@@ -109,22 +132,42 @@ def render_html_card(page_data: dict, page_num: int, total_pages: int = 6) -> st
 """
 
     elif ptype == "contrast_gap":
+        expert_tag = ""
+        if page_data.get("expert_name"):
+            expert_tag = f"""
+        <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-purple-50 border border-purple-200 text-purple-700 text-[11px] font-bold">
+          <span>🔬 穿透视角：{page_data.get("expert_name")}</span>
+        </div>
+"""
+        expert_quote = ""
+        if page_data.get("expert_quote"):
+            expert_quote = f"""
+        <div class="p-2.5 rounded-lg bg-purple-50/60 border-l-2 border-purple-400 text-[11px] text-purple-900 italic font-medium">
+          “{page_data.get("expert_quote")}”
+        </div>
+"""
+
         html += f"""
-    <div class="my-auto space-y-5">
-      <div class="space-y-1">
-        <span class="text-xs font-bold text-red-600 uppercase tracking-wider">认知剪刀差</span>
+    <div class="my-auto space-y-4">
+      <div class="space-y-1.5">
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-bold text-red-600 uppercase tracking-wider">认知剪刀差</span>
+          {expert_tag}
+        </div>
         <h2 class="text-2xl font-black text-slate-900 leading-tight">{page_data.get("heading", "")}</h2>
       </div>
 
-      <div class="space-y-3">
-        <div class="p-3.5 rounded-xl bg-emerald-50 border border-emerald-200">
+      {expert_quote}
+
+      <div class="space-y-2.5">
+        <div class="p-3 rounded-xl bg-emerald-50 border border-emerald-200">
           <div class="text-xs font-bold text-emerald-700 mb-1 flex items-center gap-1">
             <span>👀 看得见的算计（显性账）：</span>
           </div>
           <p class="text-xs text-emerald-900 leading-relaxed font-medium">{page_data.get("visible_gain", "")}</p>
         </div>
 
-        <div class="p-3.5 rounded-xl bg-red-50 border border-red-200">
+        <div class="p-3 rounded-xl bg-red-50 border border-red-200">
           <div class="text-xs font-bold text-red-700 mb-1 flex items-center gap-1">
             <span>⚠️ 看不见的代价（隐性账）：</span>
           </div>
@@ -142,43 +185,69 @@ def render_html_card(page_data: dict, page_num: int, total_pages: int = 6) -> st
     elif ptype in ["side_a", "side_b"]:
         is_a = ptype == "side_a"
         color = "blue" if is_a else "amber"
+        expert_name = page_data.get("expert_name", "正方专家" if is_a else "反方专家")
+        expert_title = page_data.get("expert_title", "")
+        expert_quote = page_data.get("expert_quote", "")
+
         args_html = "".join([
             f"""<li class="flex items-start gap-2 text-xs text-slate-700 leading-relaxed">
               <span class="flex-shrink-0 w-5 h-5 rounded-full bg-{color}-100 text-{color}-700 font-bold text-[10px] flex items-center justify-center mt-0.5">{idx+1}</span>
               <span>{arg}</span>
             </li>""" for idx, arg in enumerate(page_data.get("arguments", []))
         ])
-        html += f"""
-    <div class="my-auto space-y-5">
-      <div class="p-3 rounded-xl bg-{color}-50 border-l-4 border-{color}-600">
-        <h2 class="text-base font-black text-{color}-900">{page_data.get("stance", "")}</h2>
+
+        quote_html = ""
+        if expert_quote:
+            quote_html = f"""
+      <div class="p-2.5 rounded-lg bg-{color}-50/70 border-l-3 border-{color}-500 text-[11px] text-{color}-900 italic font-medium">
+        💬 核心观点：“{expert_quote}”
       </div>
-      <ul class="space-y-3">
+"""
+
+        html += f"""
+    <div class="my-auto space-y-4">
+      <!-- 专家立论看板 -->
+      <div class="p-3.5 rounded-xl bg-{color}-50 border-l-4 border-{color}-600 space-y-1">
+        <div class="flex items-center justify-between">
+          <span class="text-[10px] font-bold uppercase tracking-wider text-{color}-600">
+            {"【正方立场】" if is_a else "【反方立场】"}
+          </span>
+          <span class="text-[10px] px-2 py-0.5 rounded bg-white/80 font-bold text-{color}-800 border border-{color}-200">
+            {expert_name}
+          </span>
+        </div>
+        <h2 class="text-base font-black text-{color}-950 leading-snug">{page_data.get("stance", "")}</h2>
+        {f'<p class="text-[10px] text-{color}-700/80 font-medium">{expert_title}</p>' if expert_title else ''}
+      </div>
+
+      {quote_html}
+
+      <ul class="space-y-2.5">
         {args_html}
       </ul>
     </div>
-    <div class="pt-3 border-t border-slate-100 text-right text-xs text-slate-400">{"P4 / 正方立场" if is_a else "P5 / 反方立场"}</div>
+    <div class="pt-3 border-t border-slate-100 text-right text-xs text-slate-400">{"P4 / 正方立论" if is_a else "P5 / 反方立论"}</div>
 """
 
     elif ptype == "ending_hook":
         html += f"""
-    <div class="my-auto space-y-6 text-center">
+    <div class="my-auto space-y-5 text-center">
       <div class="space-y-1">
         <span class="text-xs font-bold text-purple-600 uppercase tracking-wider">天平抉择 · 终极站队</span>
         <h2 class="text-2xl font-black text-slate-900 leading-tight">{page_data.get("heading", "")}</h2>
       </div>
 
-      <div class="space-y-3 text-left">
-        <div class="p-3.5 rounded-xl border-2 border-red-500 bg-red-50/50">
-          <p class="text-xs font-bold text-red-700">{page_data.get("option_a", "")}</p>
+      <div class="space-y-2.5 text-left">
+        <div class="p-3 rounded-xl border-2 border-blue-500 bg-blue-50/50">
+          <p class="text-xs font-bold text-blue-800">{page_data.get("option_a", "")}</p>
         </div>
-        <div class="p-3.5 rounded-xl border-2 border-blue-500 bg-blue-50/50">
-          <p class="text-xs font-bold text-blue-700">{page_data.get("option_b", "")}</p>
+        <div class="p-3 rounded-xl border-2 border-amber-500 bg-amber-50/50">
+          <p class="text-xs font-bold text-amber-800">{page_data.get("option_b", "")}</p>
         </div>
       </div>
 
-      <div class="p-4 rounded-xl bg-slate-900 text-white space-y-1">
-        <p class="text-xs font-bold text-amber-300">💬 换作是你，你会支持哪一边？</p>
+      <div class="p-4 rounded-xl bg-slate-900 text-white space-y-1.5">
+        <p class="text-xs font-bold text-amber-300">💬 两位专家神仙打架，换作是你站哪边？</p>
         <p class="text-[11px] text-slate-300 leading-relaxed">{page_data.get("debate_invitation", "")}</p>
       </div>
     </div>
@@ -191,76 +260,225 @@ def render_html_card(page_data: dict, page_num: int, total_pages: int = 6) -> st
 </html>"""
     return html
 
-def run_pipeline(topic: str, category: str = "财经/理财", output_dir: str = "./output"):
-    os.makedirs(output_dir, exist_ok=True)
-    print(f"🚀 [Pipeline] 开始全自动生产金融图文笔记...")
-    print(f"📌 [议题] {topic} (赛道: {category})")
-
-    # 1. 结构化脚本组装 (遵循6页结构法)
-    mock_data = {
-      "meta": {
-        "topic": topic,
-        "category": category,
+def get_topic_data_bundle(topic_id: str, personas_cfg: dict) -> dict:
+    """根据议题ID组装融入专家视角的标准6页图文数据"""
+    personas = personas_cfg.get("personas", {})
+    
+    bundles = {
+      "mortgage_vs_invest": {
+        "meta": {
+          "topic_id": "mortgage_vs_invest",
+          "topic": "手头有50万闲钱：提前还4.0%房贷，还是留着买理财？",
+          "category": "财经/理财",
+          "side_a_expert": "consumer_advocate",
+          "side_b_expert": "cfp_planner",
+          "contrast_expert": "macro_economist"
+        },
+        "post_copy": {
+          "title": "手头有50万闲钱：提前还4.0%房贷，还是留着买理财？",
+          "body": "存款利率跌破2%，房贷还在4%挂着……手头攒了50万，到底是该提前还款锁定无风险收益，还是手握现金保留家庭生命流动性？\n\n【平民反收割官】力挺提前还款：理财全面破净，还房贷就是年化4%保本收益！无债一身轻比什么都强。\n【注册理财规划师】坚决反对：脱离流动性储备谈省利息都是裸奔！房贷是一生最廉价长期贷款，现金是中年家庭的呼吸机。\n\n这根本不是一道数学题，而是确定性与安全感的极端较量！\n\n欢迎在评论区聊聊你的真实账本！换作是你，你会怎么选？👇\n\n#理性讨论 #财经知识 #提前还房贷 #理财思维 #资产配置",
+          "pinned_comment": "我先抛砖引玉：如果这50万是全部流动备用金，千万别全还！至少留1~2年生活费；若是纯闲钱，还贷确实等于躺赚年化4%无风险收益。大家现在处于哪种情况？"
+        },
+        "pages": [
+          {
+            "type": "cover_poster",
+            "badge": "#理性讨论 · 财经认知",
+            "title_main": "手头有50万闲钱\n提前还4.0%房贷？\n还是留着吃理财？",
+            "subtitle": "锁定4%无风险收益 VS 握紧流动性防裁员？",
+            "expert_matchup": {
+              "side_a": "平民反收割官",
+              "side_b": "注册理财规划师"
+            },
+            "footer_tip": "内附两派专家真实账本 · 换你你怎么选？ ➔"
+          },
+          {
+            "type": "pain_point",
+            "heading": "存款破2%，房贷还在4.0%",
+            "scene_desc": "手头好不容易攒了50万闲钱，面对每月几千块房贷，每天都在纠结：",
+            "table_data": [
+              {"item": "银行大额存单", "rate": "年利率 1.5%~1.8%", "yield": "年利息约 8,500 元"},
+              {"item": "留在房贷继续还", "rate": "年利率 3.8%~4.2%", "yield": "年利息约 20,000 元"}
+            ],
+            "hook_question": "表面看提前还贷等于白赚4%年化，为什么资深金融人却坚决劝你'别急着还'？"
+          },
+          {
+            "type": "contrast_gap",
+            "heading": "还贷省了利息，却交出了'话语权'",
+            "expert_name": "宏观经济学者",
+            "expert_quote": "顺周期加杠杆是赌博，但在周期底部把最便宜的长钱还回去，是在牺牲家庭的流动性期权。",
+            "visible_gain": "提前还50万，30年总共省下近35万利息，每月月供直降2400元。",
+            "hidden_cost": "房贷是一生最长最廉价杠杆，还进水泥后再想借出来难如登天！",
+            "core_friction": "你到底要'纸面省利息'，还是要'手里有真金'？"
+          },
+          {
+            "type": "side_a",
+            "stance": "无债一身轻，锁定确定性收益",
+            "expert_name": "平民现实派与反收割官",
+            "expert_title": "独立财经观察家",
+            "expert_quote": personas.get("consumer_advocate", {}).get("catchphrase", "普通人别被宏大词汇忽悠，先算算这笔买卖你变现时要被砍几刀。"),
+            "arguments": [
+              "保本收益之王：稳健理财收益持续下行，没有任何确定性工具保本4%，还贷即是净赚！",
+              "降低生存门槛：每月少还2400元月供，遭遇降薪失业家庭每月刚性支出大幅降低。",
+              "心理复利无价：没有债务催逼的松弛感与睡眠质量，情绪价值远超通胀贬值理论。"
+            ]
+          },
+          {
+            "type": "side_b",
+            "stance": "现金是呼吸机，绝不把子弹打光",
+            "expert_name": "财富规划师与精算视角",
+            "expert_title": "国际认证注册理财规划师 (CFP)",
+            "expert_quote": personas.get("cfp_planner", {}).get("catchphrase", "脱离流动性储备谈省利息，都是在拿家庭安全裸奔。"),
+            "arguments": [
+              "流动性不可逆：房子变现周期极长，手握50万现金是抵御中年职场失业的生命线。",
+              "久期错配陷阱：房贷是长达30年的超长资金，一旦全额填平，突遇急用钱只能借高息消费贷。",
+              "周期底部期权：全市场缺钱时现金才是最高级期权，保留现金才能抓住未来的资产重估机会。"
+            ]
+          },
+          {
+            "type": "ending_hook",
+            "heading": "这不是数学题，而是人生的取舍题",
+            "option_a": "🔴 站队反收割官【还贷派】：立刻还！省下利息装进兜里才是真金白银！",
+            "option_b": "🔵 站队理财规划师【留钱派】：坚决不还！手里有现金流才有抵御风浪的安全感！",
+            "debate_invitation": "如果换作是你手握这50万现金，面对4.0%的房贷，你会选立刻还还是留着？评论区亮出你的账本！"
+          }
+        ]
       },
-      "post_copy": {
-        "title": f"手头有50万闲钱：提前还4.0%房贷，还是留着买理财？",
-        "body": f"存款利率全面跌破2%，房贷利率还在4%挂着……手头攒了50万，到底是该提前还款锁定无风险收益，还是手握现金保留家庭生命流动性？\n\n💡 这根本不是一道数学题，而是【确定性】与【安全感】的极端选择题！\n\n欢迎在评论区聊聊你的真实选择与账本！👇\n\n#理性讨论 #财经知识 #提前还房贷 #理财思维 #资产配置",
-        "pinned_comment": "我先抛砖引玉：如果这50万是全部流动备用金，千万别全还！至少留1~2年生活费；若是纯闲钱，还贷确实等于躺赚年化4%无风险收益。大家现在处于哪种情况？"
-      },
-      "pages": [
-        {
-          "type": "cover_poster",
-          "badge": "#理性讨论 · 财经认知",
-          "title_main": "手头有50万闲钱\n提前还4.0%房贷？\n还是留着吃理财？",
-          "subtitle": "锁定4%无风险收益 VS 握紧流动性防裁员？",
-          "footer_tip": "内附两笔真实账本对比 · 换你你怎么选？ ➔"
+      "gold_beans": {
+        "meta": {
+          "topic_id": "gold_beans",
+          "topic": "年轻人攒金豆：是低门槛储蓄还是为高溢价买单？",
+          "category": "财经/资产配置",
+          "side_a_expert": "macro_economist",
+          "side_b_expert": "consumer_advocate",
+          "contrast_expert": "value_investor"
         },
-        {
-          "type": "pain_point",
-          "heading": "存款破2%，房贷还在4.0%",
-          "scene_desc": "手头好不容易攒了50万闲钱，面对每月几千块房贷，每天都在纠结：",
-          "table_data": [
-            {"item": "银行大额存单", "rate": "年利率 1.5%~1.8%", "yield": "年利息约 8,500 元"},
-            {"item": "留在房贷继续还", "rate": "年利率 3.8%~4.2%", "yield": "年利息约 20,000 元"}
-          ],
-          "hook_question": "表面看提前还贷等于白赚4%年化，为什么资深金融人却坚决劝你'别急着还'？"
+        "post_copy": {
+          "title": "年轻人每月攒一颗金豆：是低门槛储蓄还是为高溢价买单？",
+          "body": "金价一路狂飙，一颗颗1克重的小金豆成了年轻人的新型储蓄罐。有人说是普通人对抗通胀的最优解，有人却说是金店精准收割年轻人的智商税！\n\n【宏观经济学者】力挺金豆储蓄：黄金是主权货币超发的终极解药，每月1克积少成多，是天然的强制储蓄与资产压舱石。\n【平民反收割官】直呼陷阱：买入时加了15%工艺溢价，变现回购时还要被克扣折旧！一买一卖白白蒸发上百元。\n\n普通人攒黄金，到底是锁定财富还是给金店打工？\n\n评论区聊聊：你买过小金豆吗？回收时亏了吗？👇\n\n#理性讨论 #攒金豆 #黄金理财 #资产配置 #年轻人理财",
+          "pinned_comment": "提醒大家一句：如果是为了首饰戴着玩，小金豆很开心；如果是为了投资理财，一定要算清买入溢价和回收折价！大家买金豆时每克溢价多少？"
         },
-        {
-          "type": "contrast_gap",
-          "heading": "还贷省了利息，却交出了'话语权'",
-          "visible_gain": "提前还50万，30年总共省下近35万利息，每月月供直降2400元。",
-          "hidden_cost": "房贷是一生最长最廉价杠杆，还进水泥后再想借出来难如登天！",
-          "core_friction": "你到底要'纸面省利息'，还是要'手里有真金'？"
-        },
-        {
-          "type": "side_a",
-          "stance": "【立场 A】无债一身轻，锁定确定性收益",
-          "arguments": [
-            "保本收益之王：理财全面破净，没有任何稳健理财保本4%，还贷即是稳赚！",
-            "降低生存门槛：每月少还2400元月供，遭遇降薪失业家庭运转不至于窒息。",
-            "心理复利无价：没有债务催促的焦虑感，情绪价值远超通胀贬值理论。"
-          ]
-        },
-        {
-          "type": "side_b",
-          "stance": "【立场 B】现金是呼吸机，绝不把子弹打光",
-          "arguments": [
-            "流动性不可逆：房子难变现，手握50万现金至少能保家庭3~5年开销。",
-            "30年通胀稀释：用未来贬值的钱去还今天的固定债务本就是抗通胀手段。",
-            "周期底部期权：全市场缺钱时现金才是最高级期权，才能抄底优质资产。"
-          ]
-        },
-        {
-          "type": "ending_hook",
-          "heading": "这不是数学题，而是人生的取舍题",
-          "option_a": "🔴 选 A【还贷派】：立刻还！省下利息才是真金白银！",
-          "option_b": "🔵 选 B【留钱派】：坚决不还！手里有现金才有安全感！",
-          "debate_invitation": "换作是你手握这 50 万闲钱，你会选 A 还是选 B？为什么？评论区聊聊你的账本！"
-        }
-      ]
+        "pages": [
+          {
+            "type": "cover_poster",
+            "badge": "#理性讨论 · 黄金真相",
+            "title_main": "年轻人每月攒金豆\n是低门槛强制储蓄？\n还是为高溢价买单？",
+            "subtitle": "抗通胀资产压舱石 VS 回购变现被砍两刀？",
+            "expert_matchup": {
+              "side_a": "宏观经济学者",
+              "side_b": "平民反收割官"
+            },
+            "footer_tip": "内附克重回收真实损耗对比 · 滑动阅读 ➔"
+          },
+          {
+            "type": "pain_point",
+            "heading": "买时当资产，卖时被当废铁",
+            "scene_desc": "每月花几百块买一颗金豆，满心欢喜以为在存钱，直到走进黄金回收店：",
+            "table_data": [
+              {"item": "专柜零售金价", "rate": "含工艺费溢价", "yield": "约 720~760 元/克"},
+              {"item": "大盘实际回收价", "rate": "扣除折旧成色", "yield": "仅 620~640 元/克"}
+            ],
+            "hook_question": "刚买到手就账面亏损15%，为什么年轻人依然乐此不疲？"
+          },
+          {
+            "type": "contrast_gap",
+            "heading": "黄金确实保值，但金豆不是投资金条",
+            "expert_name": "硬核价值投资人",
+            "expert_quote": personas.get("value_investor", {}).get("catchphrase", "当防守资产被买成了香饽饽，最大的安全就变成了最大的风险。"),
+            "visible_gain": "每克几百元无痛上车，克重看得见摸得着，治好了年轻人的乱花钱消费瘾。",
+            "hidden_cost": "工艺费+损耗费+回购门槛，让微型金豆的实际持仓成本远超标准投资金条。",
+            "core_friction": "你买的究竟是'抗通胀黄金'，还是包裹着黄金外衣的'情绪消费品'？"
+          },
+          {
+            "type": "side_a",
+            "stance": "微型法币对冲，极佳的强制储蓄手段",
+            "expert_name": "宏观经济与周期学者",
+            "expert_title": "宏观策略首席分析师",
+            "expert_quote": personas.get("macro_economist", {}).get("catchphrase", "顺周期加杠杆是赌博，看懂央行资产负债表才是真正的降维生存。"),
+            "arguments": [
+              "无痛强制储蓄：相比买包买奶茶，买金豆把浮躁消费转化为了实物硬通货。",
+              "长周期购买力抵御：法币持续超发大背景下，黄金穿越数千年依然具备终极兑现力。",
+              "心理锚定效应：沉甸甸的黄金能带来储蓄正反馈，帮助年轻人养成低频复利习惯。"
+            ]
+          },
+          {
+            "type": "side_b",
+            "stance": "工艺溢价陷阱，变现被精准收割两刀",
+            "expert_name": "平民现实派与反收割官",
+            "expert_title": "资深财经调查记者",
+            "expert_quote": personas.get("consumer_advocate", {}).get("catchphrase", "普通人别被宏大词汇忽悠，先算算这笔买卖你变现时要被砍几刀。"),
+            "arguments": [
+              "双重剪刀差收割：买入时承受品牌与工艺溢价，变现回收时还要遭遇火熔验金克重扣减。",
+              "流动性折价惨烈：民间典当行与回收小店套路频出，小克重金豆变现议价权极低。",
+              "不生息资产死结：黄金不生息不分红，高位接盘的小金豆可能要坐过山车好几年。"
+            ]
+          },
+          {
+            "type": "ending_hook",
+            "heading": "小金豆的尽头，究竟是存钱还是消费？",
+            "option_a": "🔴 站队学者【储蓄派】：少喝几杯咖啡攒颗金豆，对抗通胀还能管住手！",
+            "option_b": "🔵 站队反收割官【算账派】：坚决不当大冤种！高溢价变现亏死，要买就买大投资金条！",
+            "debate_invitation": "你手头攒了多少克金豆？你觉得这是存钱神操作还是智商税？评论区等你来辩！"
+          }
+        ]
+      }
     }
+    
+    return bundles.get(topic_id, bundles["mortgage_vs_invest"])
 
-    # 2. 自动化 Skill 合规体检
+def print_expert_personas(personas_cfg: dict):
+    """打印当前支持的专家视角与路由库"""
+    print("=" * 60)
+    print("🎭 [金融图文多专家视角配置库 (Expert Personas)]")
+    print("=" * 60)
+    for pid, p in personas_cfg.get("personas", {}).items():
+        print(f"\n👤 [{p['name']}] ({p['title']})")
+        print(f"   💡 核心立论逻辑: {p['core_logic']}")
+        print(f"   💬 金句标志语: \"{p['catchphrase']}\"")
+        print(f"   🎯 核心聚焦领域: {', '.join(p['focus_areas'])}")
+    
+    print("\n" + "=" * 60)
+    print("🗺️ [已配置的议题对决路由 (Topic Routes)]")
+    print("=" * 60)
+    for tid, r in personas_cfg.get("topic_routes", {}).items():
+        print(f"📌 路由ID: {tid}")
+        print(f"   议题: {r['topic']} [{r['tag']}]")
+        print(f"   正方视角: {r['side_a_persona']} | 反方视角: {r['side_b_persona']} | 穿透视角: {r['contrast_persona']}")
+
+def run_pipeline(topic: str = "", category: str = "财经/理财", output_dir: str = "./output", topic_id: str = ""):
+    os.makedirs(output_dir, exist_ok=True)
+    personas_cfg = load_expert_personas()
+
+    # 1. 智能匹配或指定 topic_id
+    if not topic_id:
+        if topic:
+            if "金豆" in topic or "黄金" in topic:
+                topic_id = "gold_beans"
+            else:
+                topic_id = "mortgage_vs_invest"
+        else:
+            topic_id = "mortgage_vs_invest"
+
+    print(f"🚀 [Pipeline] 开始全自动生产金融图文笔记...")
+    print(f"🎯 [议题路由ID] {topic_id}")
+
+    # 2. 结构化装配融入专家视角的图文数据
+    mock_data = get_topic_data_bundle(topic_id, personas_cfg)
+    if topic and topic != mock_data["post_copy"]["title"]:
+        mock_data["post_copy"]["title"] = topic
+        mock_data["meta"]["topic"] = topic
+    if category:
+        mock_data["meta"]["category"] = category
+
+    meta = mock_data.get("meta", {})
+    personas = personas_cfg.get("personas", {})
+    side_a_p = personas.get(meta.get("side_a_expert", ""), {})
+    side_b_p = personas.get(meta.get("side_b_expert", ""), {})
+    contrast_p = personas.get(meta.get("contrast_expert", ""), {})
+
+    print(f"📌 [议题] {mock_data['post_copy']['title']}")
+    print(f"⚖️ [专家视角配置] 正方: {side_a_p.get('name', 'N/A')} VS 反方: {side_b_p.get('name', 'N/A')} (穿透: {contrast_p.get('name', 'N/A')})")
+
+    # 3. 自动化 Skill 合规体检
     print(f"🔍 [Audit] 正在调用 xhs-discussion-audit 进行 6 项卡点质检...")
     audit_res = audit_note(mock_data["post_copy"]["title"], mock_data["post_copy"]["body"], category)
     print(f"📊 [Audit 结果] 评分: {audit_res['score']} 分 | 状态: {audit_res['status']}")
@@ -269,7 +487,7 @@ def run_pipeline(topic: str, category: str = "财经/理财", output_dir: str = 
     with open(os.path.join(output_dir, "audit_report.json"), "w", encoding="utf-8") as f:
         json.dump(audit_res, f, ensure_ascii=False, indent=2)
 
-    # 3. 批量渲染 P1~P6 HTML 卡片
+    # 4. 批量渲染 P1~P6 HTML 卡片
     print(f"🎨 [Render] 正在渲染 6 张标准 3:4 图文卡片 (HTML+Tailwind)...")
     for i, pdata in enumerate(mock_data["pages"]):
         pnum = i + 1
@@ -279,7 +497,7 @@ def run_pipeline(topic: str, category: str = "财经/理财", output_dir: str = 
             f.write(card_html)
         print(f"   ➔ 已生成: page_{pnum}.html")
 
-    # 4. 生成发布物料包 publish_pack.txt
+    # 5. 生成发布物料包 publish_pack.txt
     pack_content = f"""【小红书发布文案包】
 标题：{mock_data['post_copy']['title']}
 
@@ -289,13 +507,50 @@ def run_pipeline(topic: str, category: str = "财经/理财", output_dir: str = 
 作者置顶神评（发布后5分钟内置顶）：
 {mock_data['post_copy']['pinned_comment']}
 
+专家交锋视角配置：
+- 正方立场代言：{side_a_p.get('name', '')} ({side_a_p.get('title', '')})
+- 反方立场代言：{side_b_p.get('name', '')} ({side_b_p.get('title', '')})
+- 认知穿透拆解：{contrast_p.get('name', '')} ({contrast_p.get('title', '')})
+
 官方收集表填报链接（发布后务必提交）：
 https://doc.weixin.qq.com/forms/ANAAyQcbAAgAbEAGAb_AKoCNPRTWz2o5f
 """
     with open(os.path.join(output_dir, "publish_pack.txt"), "w", encoding="utf-8") as f:
         f.write(pack_content)
 
-    # 5. 生成一键全屏多卡片阅览器 all_pages_viewer.html
+    # 6. 生成一键全屏多卡片阅览器 all_pages_viewer.html
+    expert_cards_banner = f"""
+    <!-- 专家视角交锋矩阵 Panel -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 bg-slate-800/80 p-4 rounded-xl border border-slate-700">
+      <div class="p-3 rounded-lg bg-blue-950/40 border border-blue-500/30">
+        <div class="flex items-center justify-between mb-1">
+          <span class="text-xs font-bold text-blue-400">🔵 正方视角</span>
+          <span class="text-[10px] text-slate-400">{side_a_p.get('name', '')}</span>
+        </div>
+        <p class="text-[11px] text-blue-200 font-medium">{side_a_p.get('title', '')}</p>
+        <p class="text-[10px] text-slate-400 mt-1 italic">“{side_a_p.get('catchphrase', '')}”</p>
+      </div>
+
+      <div class="p-3 rounded-lg bg-amber-950/40 border border-amber-500/30">
+        <div class="flex items-center justify-between mb-1">
+          <span class="text-xs font-bold text-amber-400">🟡 反方视角</span>
+          <span class="text-[10px] text-slate-400">{side_b_p.get('name', '')}</span>
+        </div>
+        <p class="text-[11px] text-amber-200 font-medium">{side_b_p.get('title', '')}</p>
+        <p class="text-[10px] text-slate-400 mt-1 italic">“{side_b_p.get('catchphrase', '')}”</p>
+      </div>
+
+      <div class="p-3 rounded-lg bg-purple-950/40 border border-purple-500/30">
+        <div class="flex items-center justify-between mb-1">
+          <span class="text-xs font-bold text-purple-400">🔬 穿透视角</span>
+          <span class="text-[10px] text-slate-400">{contrast_p.get('name', '')}</span>
+        </div>
+        <p class="text-[11px] text-purple-200 font-medium">{contrast_p.get('title', '')}</p>
+        <p class="text-[10px] text-slate-400 mt-1 italic">“{contrast_p.get('catchphrase', '')}”</p>
+      </div>
+    </div>
+"""
+
     viewer_html = f"""<!DOCTYPE html>
 <html>
 <head>
@@ -307,13 +562,15 @@ https://doc.weixin.qq.com/forms/ANAAyQcbAAgAbEAGAb_AKoCNPRTWz2o5f
   <div class="max-w-7xl mx-auto space-y-6">
     <div class="flex items-center justify-between pb-4 border-b border-slate-800">
       <div>
-        <span class="text-xs px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 font-bold border border-emerald-500/30">自动化流水线交付包</span>
+        <span class="text-xs px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 font-bold border border-emerald-500/30">自动化流水线交付包 · 专家多视角模式</span>
         <h1 class="text-xl font-bold text-white mt-1">{mock_data['post_copy']['title']}</h1>
       </div>
       <div class="text-right">
-        <span class="text-xs text-slate-400">体检得分: <b class="text-emerald-400">{audit_res['score']}/100</b> ({audit_res['status']})</span>
+        <span class="text-xs text-slate-400">合规体检评分: <b class="text-emerald-400">{audit_res['score']}/100</b> ({audit_res['status']})</span>
       </div>
     </div>
+
+    {expert_cards_banner}
 
     <!-- 6 Cards Grid -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -336,7 +593,7 @@ https://doc.weixin.qq.com/forms/ANAAyQcbAAgAbEAGAb_AKoCNPRTWz2o5f
         </h3>
         <span class="text-xs text-slate-400">复制即可直接发布</span>
       </div>
-      <textarea class="w-full h-36 bg-slate-950 text-slate-200 text-xs p-3 rounded border border-slate-700 font-mono focus:outline-none" readonly>{pack_content}</textarea>
+      <textarea class="w-full h-40 bg-slate-950 text-slate-200 text-xs p-3 rounded border border-slate-700 font-mono focus:outline-none" readonly>{pack_content}</textarea>
     </div>
   </div>
 </body>
@@ -344,16 +601,22 @@ https://doc.weixin.qq.com/forms/ANAAyQcbAAgAbEAGAb_AKoCNPRTWz2o5f
     with open(os.path.join(output_dir, "all_pages_viewer.html"), "w", encoding="utf-8") as f:
         f.write(viewer_html)
 
-    print(f"\n🎉 [Success] 全套图文笔记生产完成！")
+    print(f"\n🎉 [Success] 全套融入专家视角的图文笔记生产完成！")
     print(f"📁 [输出目录] {output_dir}")
     print(f"🌐 [全景看板] {os.path.join(output_dir, 'all_pages_viewer.html')}")
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="小红书全自动化图文生产引擎")
-    parser.add_argument("--topic", type=str, default="手头有50万闲钱：提前还4.0%房贷，还是留着买理财？", help="笔记辩题")
-    parser.add_argument("--category", type=str, default="财经/理财", help="所属赛道")
+    parser = argparse.ArgumentParser(description="小红书全自动化图文生产引擎 (融入多专家视角)")
+    parser.add_argument("--topic-id", type=str, default="", help="预设议题ID (如 mortgage_vs_invest, gold_beans)")
+    parser.add_argument("--topic", type=str, default="", help="笔记辩题 (留空则根据 topic-id 自动读取预设)")
+    parser.add_argument("--category", type=str, default="", help="所属赛道 (留空则读取议题预设)")
+    parser.add_argument("--list-experts", action="store_true", help="打印查看已配置的专家库与路由矩阵")
     DEFAULT_OUTPUT = os.path.join(REPO_ROOT, "examples", "mortgage_vs_invest")
     parser.add_argument("--output", type=str, default=DEFAULT_OUTPUT, help="输出文件夹")
     args = parser.parse_args()
 
-    run_pipeline(args.topic, args.category, args.output)
+    if args.list_experts:
+        print_expert_personas(load_expert_personas())
+    else:
+        run_pipeline(args.topic, args.category, args.output, args.topic_id)
+

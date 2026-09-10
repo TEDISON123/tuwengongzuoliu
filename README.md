@@ -23,6 +23,7 @@
    * **P5 反方**：立场 B 的 3 条反周期、抗风险立论。
    * **P6 站队**：A/B 投票箱，直击灵魂二选一促评 Hook。
 5. **官方履约风控集成**：自动打包小红书发布文案、官方指定活动标签、作者前 5 分钟置顶神评及腾讯文档收集表直达链接。
+6. **多专家视角交锋矩阵 (Expert Personas Matrix)**：针对不同金融议题，自动路由并注入 6 大硬核专家角色（注册理财规划师/精算视角、宏观经济周期学者、硬核价值投资人、商业战略CFO、平民反收割官、法律风控律师），在封面 P1 展示交锋 Badge、P3 深度穿透认知剪刀差、P4/P5 注入专家专属立论与标志金句，彻底告别单一口吻与假大空教程。
 
 ---
 
@@ -31,6 +32,7 @@
 ```text
 tuwengongzuoliu/
 ├── docs/                                          # 核心规范与体系规划文档
+│   ├── expert_perspectives_framework.md           # 六大金融专家视角体系设计与路由框架
 │   ├── campaign_workflow_sop.md                   # 小红书社群活动规则与创作者SOP
 │   ├── finance_knowledge_graph_planning.md        # 金融知识图谱与50+话题矩阵规划
 │   ├── finance_note_production_workflow.md        # 金融图文工业化生产全流程工作流
@@ -42,17 +44,23 @@ tuwengongzuoliu/
 │       └── scripts/
 │           └── audit_note.py                      # 自动化体检与诊断打分 Python 脚本
 ├── pipeline/
-│   └── auto_generate_note.py                      # 核心自动化调度脚本 (端到端流水线)
+│   ├── auto_generate_note.py                      # 核心自动化调度脚本 (端到端流水线)
+│   └── expert_personas.json                       # 专家视角角色库与议题路由配置表
 ├── templates/                                     # 交互式组件与模板
 │   ├── incentive_calculator.html                  # 活动收益测算与冲档助手 (Generative UI)
 │   ├── finance_graph_explorer.html                # 交互式知识图谱话题罗盘
 │   └── pipeline_controller.html                   # 全自动化流水线交互控制器
 ├── examples/
-│   └── mortgage_vs_invest/                        # 实测交付物示例 (提前还贷vs理财)
-│       ├── page_1.html ~ page_6.html              # 标准 3:4 独立图文卡片 (HTML+Tailwind)
-│       ├── all_pages_viewer.html                  # 6 卡片全景预览看板
-│       ├── audit_report.json                      # 自动化体检达标报告 (100分 PASS)
-│       └── publish_pack.txt                       # 复制即发文案包 (含置顶神评)
+│   ├── mortgage_vs_invest/                        # 示例1：提前还贷 vs 留现金买理财 (反收割官 VS 理财规划师)
+│   │   ├── page_1.html ~ page_6.html              # 融入专家视角的 3:4 独立图文卡片 (HTML+Tailwind)
+│   │   ├── all_pages_viewer.html                  # 包含专家交锋矩阵的全景预览看板
+│   │   ├── audit_report.json                      # 自动化体检达标报告 (100分 PASS)
+│   │   └── publish_pack.txt                       # 复制即发文案包 (含专家视角配置与置顶神评)
+│   └── gold_beans/                                # 示例2：年轻人攒金豆是储蓄还是被割 (宏观学者 VS 反收割官)
+│       ├── page_1.html ~ page_6.html              # 标准 3:4 独立图文卡片
+│       ├── all_pages_viewer.html                  # 全景图文看板
+│       ├── audit_report.json                      # 100分 PASS 报告
+│       └── publish_pack.txt                       # 完整发布包
 └── README.md
 ```
 
@@ -60,18 +68,25 @@ tuwengongzuoliu/
 
 ## 🚀 快速启动指南 (Quick Start)
 
-### 1. 运行单篇全自动图文生成
-
-在终端中执行以下命令，即可针对特定议题一键完成脚本生成、质量体检、3:4卡片渲染与文案打包：
+### 1. 查看支持的专家视角与议题路由
 
 ```bash
-python3 pipeline/auto_generate_note.py \
-  --topic "手头有50万闲钱：提前还4.0%房贷，还是留着买理财？" \
-  --category "财经/理财" \
-  --output "examples/mortgage_vs_invest"
+python3 pipeline/auto_generate_note.py --list-experts
 ```
 
-### 2. 独立运行内容合规体检工具
+### 2. 运行预设立论全自动图文生成 (融入多专家视角)
+
+在终端中执行以下命令，即可针对特定议题一键完成专家路由、脚本生成、质量体检、3:4卡片渲染与文案打包：
+
+```bash
+# 运行提前还贷 vs 理财议题 (平民反收割官 VS 注册理财规划师)
+python3 pipeline/auto_generate_note.py --topic-id mortgage_vs_invest --output examples/mortgage_vs_invest
+
+# 运行攒金豆议题 (宏观经济学者 VS 平民反收割官)
+python3 pipeline/auto_generate_note.py --topic-id gold_beans --output examples/gold_beans
+```
+
+### 3. 独立运行内容合规体检工具
 
 你可以直接使用审核引擎检验任意标题或笔记草稿是否符合官方投流标准：
 
