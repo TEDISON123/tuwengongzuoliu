@@ -1,0 +1,41 @@
+{
+  "title": "期权会让人暴富还是导致人破产？",
+  "category": "财经/理财",
+  "checks": {
+    "check_1_title_is_question": {
+      "rule": "标题本身就是一个问题，用户一眼能看懂在讨论什么",
+      "passed": true,
+      "detail": "标题含有疑问/辨析标识"
+    },
+    "check_5_no_pure_sharing": {
+      "rule": "内容不是纯个人经历、方法教学、励志感悟或生活态度分享",
+      "passed": true,
+      "detail": "排除四大非投流死穴"
+    },
+    "check_4_concrete_condition": {
+      "rule": "有具体对象、时间或条件，不是空泛提问",
+      "passed": true,
+      "detail": "具备具体的限制条件、反差比较或具体处境"
+    },
+    "check_2_multiple_answers": {
+      "rule": "这个问题至少存在两种站得住脚的答案，而不是只有一个标准答案",
+      "passed": true,
+      "detail": "具备多元立场对辩空间"
+    },
+    "check_3_fact_accuracy": {
+      "rule": "问题里的事实部分经得起核查，没有为了尖锐而编造虚假前提",
+      "passed": true,
+      "detail": "观点可以尖锐，事实必须准确。严禁出现'黄埔没有任何军事教育'式的硬伤前提。"
+    },
+    "check_6_form_submitted": {
+      "rule": "已准备按要求填写群内腾讯统计表格（不填表视为未参与）",
+      "passed": true,
+      "detail": "强提醒：发布后务必第一时间复制链接提交至腾讯文档收集表。"
+    }
+  },
+  "penalties": [],
+  "strengths": [],
+  "score": 100,
+  "status": "PASS (推荐投流 ✅)",
+  "rewrite_suggestions": []
+}

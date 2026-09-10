@@ -119,3 +119,4 @@ if __name__ == "__main__":
     print(f"📊 [{args.calc.upper()} 精算结果]")
     for k, v in res.items():
         print(f"   {k}: {v}")
+

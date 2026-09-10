@@ -57,3 +57,4 @@ python3 skills/humor-refiner/scripts/refine_humor.py \
 # 打印特定议题的幽默金句库
 python3 skills/humor-refiner/scripts/refine_humor.py --list-quotes
 ```
+

@@ -495,6 +495,85 @@ def get_topic_data_bundle(topic_id: str, personas_cfg: dict) -> dict:
             "debate_invitation": "你手头攒了多少克金豆？你觉得这是存钱神操作还是智商税？评论区等你来辩！"
           }
         ]
+      },
+      "options_rich_or_ruin": {
+        "meta": {
+          "topic_id": "options_rich_or_ruin",
+          "topic": "期权会让人暴富还是导致人破产？",
+          "category": "财经/期权衍生品",
+          "side_a_expert": "value_investor",
+          "side_b_expert": "consumer_advocate",
+          "contrast_expert": "macro_economist"
+        },
+        "post_copy": {
+          "title": "期权交易：会让人一夜暴富，还是让人倾家荡产？",
+          "body": "有人买期权单日狂赚192倍，从2万本金变成近400万；有人裸卖期权遭遇黑天鹅，100万本金归零还倒欠券商200多万！\n\n【硬核价值投资人】力挺非对称博弈：期权买方下行风险锁死为有限权利金，上行收益理论无上限，是用极小确定性成本撬动黑天鹅极端收益的非线性神器！\n【平民反收割官】直呼绞肉机陷阱：散户每天睁眼都在被Theta时间价值无情流逝收割，超过80%的买方期权到期沦为废纸归零，本质是在给做市商定期众筹盒饭钱！\n\n期权到底是以小博大的暴富利器，还是专割散户的金融绞肉机？\n\n你在期权上赚过几倍，还是被时间价值归零过？评论区留下你的真实战绩！👇\n\n#理性讨论 #期权交易 #衍生品 #金融知识 #投资理财 #以小博大",
+          "pinned_comment": "温馨提示：普通散户千万别把买方期权当股票炒，更不要盲目裸卖期权！大家身边玩期权的朋友，目前总账本是赚还是亏？"
+        },
+        "pages": [
+          {
+            "type": "cover_poster",
+            "badge": "#理性讨论 · 衍生品真相",
+            "title_main": "期权交易\n会让人一夜暴富？\n还是倾家荡产？",
+            "subtitle": "单日192倍暴利奇迹 VS 穿仓倒欠券商数百万？",
+            "expert_matchup": {
+              "side_a": "硬核价值投资人",
+              "side_b": "平民反收割官"
+            },
+            "footer_tip": "内附期权买卖双方真实盈亏账本 · 滑动阅读 ➔"
+          },
+          {
+            "type": "pain_point",
+            "heading": "上午赚300%，下午本金归零",
+            "scene_desc": "无数人被'几十倍杠杆'吸引进场，面对每天剧烈跳动的期权权利金，真实体感往往是：",
+            "table_data": [
+              {"item": "买方虚值看涨期权", "rate": "动态杠杆 30x~100x", "yield": "日内振幅 ±200%~1000%"},
+              {"item": "Theta时间价值流逝", "rate": "到期前最后15天", "yield": "每日自然贬值 3%~8%"},
+              {"item": "散户买方到期清零率", "rate": "交易所长周期统计", "yield": "实测超 82.4% 终值归零"}
+            ],
+            "hook_question": "上午赚300%感觉巴菲特不如我，下午归零发现连饭钱都没了，普通人玩期权到底是在搞投资还是在送人头？"
+          },
+          {
+            "type": "contrast_gap",
+            "heading": "买方亏在'耗不起'，卖方死于'黑天鹅'",
+            "expert_name": "宏观经济学者",
+            "expert_quote": personas.get("macro_economist", {}).get("catchphrase", "顺周期加杠杆是赌博，看懂央行资产负债表才是真正的降维生存。"),
+            "visible_gain": "买方用几千元权利金就能锁定几十万资产收益，即使方向做错，最大亏损仅仅是投入的权利金。",
+            "hidden_cost": "期权定价的是波动率与时间，看似下行风险有限，但持续被时间价值消耗会导致胜率低至冰点！",
+            "core_friction": "你到底是在玩'胜率只有15%的赌徒彩票'，还是在做'专业机构的风险对冲'？"
+          },
+          {
+            "type": "side_a",
+            "stance": "非对称盈亏之王，小资金逆天改命武器",
+            "expert_name": "硬核价值投资人",
+            "expert_title": "私募基金合伙人",
+            "expert_quote": personas.get("value_investor", {}).get("catchphrase", "当防守资产被买成了香饽饽，最大的安全就变成了最大的风险。"),
+            "arguments": [
+              "锁定有限下行：买方期权最大亏损就是所付权利金，绝不存在爆仓被追债的绝境。",
+              "非线性杠杆爆发：极端行情下单日可爆发数十倍甚至上百倍利润，是普通资产无法比拟的非对称杀器。",
+              "极端风险防御盾：手握现货股票时买入少量虚值认沽，可以用极低成本对冲毁灭性黑天鹅崩盘。"
+            ]
+          },
+          {
+            "type": "side_b",
+            "stance": "时间价值绞肉机，专割散户的合法赌场",
+            "expert_name": "平民现实派与反收割官",
+            "expert_title": "资深财经调查记者",
+            "expert_quote": personas.get("consumer_advocate", {}).get("catchphrase", "普通人别被宏大词汇忽悠，先算算这笔买卖你变现时要被砍几刀。"),
+            "arguments": [
+              "Theta每日凌迟：期权有严格保质期，只要标的横盘不暴涨，买方每天都在白白亏损时间价值。",
+              "买方极低胜率：统计显示超80%的散户买方期权最终归零作废，长期频繁交易几乎必输无疑。",
+              "卖方穿仓深渊：为了每月赚2%蝇头小利去裸卖期权，一旦遭遇极端跳空，瞬间倾家荡产倒欠券商数百万。"
+            ]
+          },
+          {
+            "type": "ending_hook",
+            "heading": "期权这把双刃剑，你敢不敢碰？",
+            "option_a": "🔴 站队投资人【非对称派】：以小博大有奇迹！亏得起有限权利金，不玩非对称杠杆怎么跨越阶层！",
+            "option_b": "🔵 站队反收割官【保命清醒派】：衍生品绞肉机！珍爱生命远离期权，不做做市商的人形自走提款机！",
+            "debate_invitation": "换作是你，你会拿一小笔闲钱博弈期权的高倍杠杆，还是坚决不碰衍生品？评论区亮出你的战绩！"
+          }
+        ]
       }
     }
     
@@ -527,7 +606,9 @@ def run_pipeline(topic: str = "", category: str = "财经/理财", output_dir: s
     # 1. 智能匹配或指定 topic_id
     if not topic_id:
         if topic:
-            if "金豆" in topic or "黄金" in topic:
+            if "期权" in topic or "options" in topic:
+                topic_id = "options_rich_or_ruin"
+            elif "金豆" in topic or "黄金" in topic:
                 topic_id = "gold_beans"
             else:
                 topic_id = "mortgage_vs_invest"

@@ -85,6 +85,13 @@
       "side_b_persona": "macro_economist",
       "contrast_persona": "corporate_cfo",
       "tag": "宏观周期/消费经济"
+    },
+    "options_rich_or_ruin": {
+      "topic": "期权交易到底是暴富神器还是破产绞肉机",
+      "side_a_persona": "value_investor",
+      "side_b_persona": "consumer_advocate",
+      "contrast_persona": "macro_economist",
+      "tag": "衍生品/风险对冲"
     }
   }
 }

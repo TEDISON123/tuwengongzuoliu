@@ -53,3 +53,4 @@ python3 skills/fact-case-injector/scripts/inject_cases.py \
 # 打印所有主题已入库的事实案例
 python3 skills/fact-case-injector/scripts/inject_cases.py --list-all
 ```
+
