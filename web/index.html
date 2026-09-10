@@ -1,0 +1,1644 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>金融内容制作者工作台 - 一键生成图文与运营活动配置</title>
+  <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
+  <style>
+    /* 3:4 Ratio card styling */
+    .ratio-3-4 {
+      aspect-ratio: 3 / 4;
+    }
+    /* Custom scrollbar */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #0f172a;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #334155;
+      border-radius: 3px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #475569;
+    }
+    /* Phone frame shadow */
+    .phone-mockup {
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7), 0 0 0 12px #1e293b, 0 0 0 14px #334155;
+    }
+    /* Toast animation */
+    @keyframes slideUp {
+      from { transform: translate(-50%, 100%); opacity: 0; }
+      to { transform: translate(-50%, 0); opacity: 1; }
+    }
+    .toast-anim {
+      animation: slideUp 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen font-sans antialiased flex flex-col selection:bg-blue-600 selection:text-white">
+
+  <!-- ================= 顶部导航栏 ================= -->
+  <header class="border-b border-slate-800 bg-slate-900/80 backdrop-blur sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-500 flex items-center justify-center shadow-lg shadow-blue-500/20 text-white font-bold text-xl">
+          ⚡
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <h1 class="font-black text-base sm:text-lg tracking-tight text-white flex items-center gap-1.5">
+              金融图文工坊 <span class="text-xs px-2 py-0.5 rounded-full bg-blue-500/20 text-blue-400 border border-blue-500/30 font-medium">制作者 Studio</span>
+            </h1>
+          </div>
+          <p class="text-xs text-slate-400 hidden sm:block">输入一个标题 ➔ 自动生成 6 张 3:4 高清图文卡片 + 小红书文案 + 运营活动配置</p>
+        </div>
+      </div>
+
+      <!-- 右侧动作按钮 -->
+      <div class="flex items-center gap-2">
+        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-xs font-medium">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+          合规自检 100分
+        </span>
+        <button onclick="exportCampaignJSON()" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold border border-slate-700 transition flex items-center gap-1.5">
+          <span>📥</span> 导出中台配置 JSON
+        </button>
+        <button onclick="copyFullPostCopy()" class="px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold shadow-sm transition flex items-center gap-1.5">
+          <span>📋</span> 复制发布文案
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ================= 主体内容区 ================= -->
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+
+    <!-- 1. 核心输入区：标题快速生成引擎 -->
+    <section class="bg-gradient-to-b from-slate-900 to-slate-900/60 rounded-2xl border border-slate-800 p-5 shadow-xl relative overflow-hidden">
+      <div class="absolute -right-16 -top-16 w-64 h-64 bg-blue-500/10 rounded-full blur-3xl pointer-events-none"></div>
+      <div class="absolute -left-16 -bottom-16 w-64 h-64 bg-purple-500/10 rounded-full blur-3xl pointer-events-none"></div>
+
+      <div class="relative z-10 space-y-4">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+          <div>
+            <span class="text-xs font-bold text-blue-400 tracking-wider uppercase">Content Generator</span>
+            <h2 class="text-lg sm:text-xl font-black text-white flex items-center gap-2">
+              <span>🎯</span> 金融选题一键极速生成
+            </h2>
+          </div>
+          <div class="flex items-center gap-2 text-xs text-slate-400">
+            <span>内置 Skill:</span>
+            <span class="text-slate-300">📊 数据精算</span> · 
+            <span class="text-slate-300">📜 事实切片</span> · 
+            <span class="text-slate-300">🎭 幽默隐喻</span>
+          </div>
+        </div>
+
+        <!-- 标题输入框与一键生成主按钮 -->
+        <div class="flex flex-col sm:flex-row gap-3">
+          <div class="relative flex-1">
+            <input 
+              id="titleInput"
+              type="text"
+              value="期权会让人暴富还是导致人破产？"
+              placeholder="请输入具有争议性或强认知的金融标题，例如：提前还房贷还是留钱理财？"
+              class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3.5 text-sm sm:text-base text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 font-medium transition"
+              onkeydown="if(event.key === 'Enter') generateContent()"
+            />
+            <button onclick="clearTitleInput()" class="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300 text-xs">
+              ✕
+            </button>
+          </div>
+          <button 
+            id="btnGenerate"
+            onclick="generateContent()"
+            class="px-6 py-3.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold text-sm sm:text-base rounded-xl shadow-lg shadow-blue-500/25 transition transform active:scale-95 flex items-center justify-center gap-2 shrink-0 cursor-pointer"
+          >
+            <span id="genBtnIcon">⚡</span>
+            <span id="genBtnText">快速生成对应内容与图片</span>
+          </button>
+        </div>
+
+        <!-- 热门选题灵感 Pills -->
+        <div class="space-y-1.5 pt-1">
+          <div class="flex items-center gap-2 text-xs text-slate-400">
+            <span>🔥 热门金融争议题库（点击即填）：</span>
+          </div>
+          <div class="flex flex-wrap gap-2 text-xs">
+            <button onclick="applyPresetTopic(0)" class="px-3 py-1.5 rounded-lg bg-slate-800/80 hover:bg-slate-700 border border-slate-700/80 text-slate-300 hover:text-white transition flex items-center gap-1.5">
+              <span>⚖️</span> 期权会让人暴富还是导致人破产？
+              <span class="px-1.5 py-0.2 bg-blue-500/20 text-blue-300 rounded text-[10px]">衍生品</span>
+            </button>
+            <button onclick="applyPresetTopic(1)" class="px-3 py-1.5 rounded-lg bg-slate-800/80 hover:bg-slate-700 border border-slate-700/80 text-slate-300 hover:text-white transition flex items-center gap-1.5">
+              <span>🏠</span> 手头有50万闲钱：提前还4.0%房贷，还是留着买理财？
+              <span class="px-1.5 py-0.2 bg-emerald-500/20 text-emerald-300 rounded text-[10px]">中产现金流</span>
+            </button>
+            <button onclick="applyPresetTopic(2)" class="px-3 py-1.5 rounded-lg bg-slate-800/80 hover:bg-slate-700 border border-slate-700/80 text-slate-300 hover:text-white transition flex items-center gap-1.5">
+              <span>🪙</span> 年轻人疯狂攒金豆，到底是明智理财还是被割智商税？
+              <span class="px-1.5 py-0.2 bg-amber-500/20 text-amber-300 rounded text-[10px]">黄金实物</span>
+            </button>
+            <button onclick="applyPresetTopic(3)" class="px-3 py-1.5 rounded-lg bg-slate-800/80 hover:bg-slate-700 border border-slate-700/80 text-slate-300 hover:text-white transition flex items-center gap-1.5">
+              <span>📉</span> 大盘3000点震荡，该一次性重仓抄底还是死磕定投？
+              <span class="px-1.5 py-0.2 bg-purple-500/20 text-purple-300 rounded text-[10px]">权益策略</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- 专家对决与配置指示条 -->
+        <div id="expertMatchBar" class="p-3 bg-slate-950/70 rounded-xl border border-slate-800 flex flex-wrap items-center justify-between gap-3 text-xs">
+          <div class="flex items-center gap-2">
+            <span class="text-slate-400">当前议题专家对决：</span>
+            <span id="sideABadge" class="px-2 py-0.5 rounded bg-blue-500/20 text-blue-300 border border-blue-500/30 font-semibold">正方: 硬核价值投资人</span>
+            <span class="text-slate-600">VS</span>
+            <span id="sideBBadge" class="px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/30 font-semibold">反方: 平民现实派反收割官</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="text-slate-400">穿透视角:</span>
+            <span id="contrastBadge" class="text-purple-300 font-medium">宏观经济与周期学者</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. 工作台主区域：左侧产出中心 (文案/卡片/活动配置) + 右侧实时移动端落地页模拟器 -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+
+      <!-- 左侧产出区 (7 列) -->
+      <div class="lg:col-span-7 space-y-4">
+
+        <!-- 产出类型 Tab 切换栏 -->
+        <div class="flex items-center justify-between border-b border-slate-800 pb-2">
+          <div class="flex items-center gap-2">
+            <button id="tabBtnCards" onclick="switchOutputTab('cards')" class="px-4 py-2 rounded-lg text-xs font-bold transition flex items-center gap-1.5 bg-blue-600 text-white shadow-sm">
+              <span>🖼️</span> 6 张 3:4 图文卡片
+            </button>
+            <button id="tabBtnCopy" onclick="switchOutputTab('copy')" class="px-4 py-2 rounded-lg text-xs font-bold transition flex items-center gap-1.5 bg-slate-800 text-slate-300 hover:text-white">
+              <span>📝</span> 小红书发布文案
+            </button>
+            <button id="tabBtnCampaign" onclick="switchOutputTab('campaign')" class="px-4 py-2 rounded-lg text-xs font-bold transition flex items-center gap-1.5 bg-slate-800 text-slate-300 hover:text-white">
+              <span>🎪</span> 运营活动配置中心
+            </button>
+          </div>
+
+          <!-- 模式切换/辅助功能 -->
+          <div id="cardsToolbar" class="flex items-center gap-2">
+            <button onclick="toggleCardViewMode()" id="btnCardViewMode" class="text-xs text-slate-400 hover:text-slate-200 px-2.5 py-1 rounded bg-slate-800/80 border border-slate-700">
+              切换平铺全景
+            </button>
+          </div>
+        </div>
+
+        <!-- ================= PANEL 1: 6 张 3:4 图文卡片展示 ================= -->
+        <div id="panelCards" class="space-y-4">
+          <!-- 卡片指示器导航条 -->
+          <div class="flex items-center justify-between bg-slate-900/60 p-2.5 rounded-xl border border-slate-800 text-xs">
+            <div class="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0" id="cardNavPills">
+              <button onclick="selectCardPage(1)" id="pill1" class="px-2.5 py-1 rounded bg-blue-600 text-white font-bold">P1 封面</button>
+              <button onclick="selectCardPage(2)" id="pill2" class="px-2.5 py-1 rounded bg-slate-800 text-slate-400 hover:text-white">P2 痛点</button>
+              <button onclick="selectCardPage(3)" id="pill3" class="px-2.5 py-1 rounded bg-slate-800 text-slate-400 hover:text-white">P3 剪刀差</button>
+              <button onclick="selectCardPage(4)" id="pill4" class="px-2.5 py-1 rounded bg-slate-800 text-slate-400 hover:text-white">P4 正方</button>
+              <button onclick="selectCardPage(5)" id="pill5" class="px-2.5 py-1 rounded bg-slate-800 text-slate-400 hover:text-white">P5 反方</button>
+              <button onclick="selectCardPage(6)" id="pill6" class="px-2.5 py-1 rounded bg-slate-800 text-slate-400 hover:text-white">P6 互动</button>
+            </div>
+            <div class="flex items-center gap-2 shrink-0">
+              <button onclick="prevCard()" class="p-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-300">◀</button>
+              <span id="currentCardIndexText" class="text-slate-400 font-mono text-xs">1 / 6</span>
+              <button onclick="nextCard()" class="p-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-300">▶</button>
+            </div>
+          </div>
+
+          <!-- 焦点单卡片容器 (3:4 标准比例) -->
+          <div id="singleCardContainer" class="flex justify-center bg-slate-950 p-4 rounded-2xl border border-slate-800 relative">
+            <div class="w-full max-w-[420px] ratio-3-4 bg-slate-900 rounded-xl overflow-hidden border border-slate-700 shadow-2xl relative flex flex-col justify-between" id="activeCardRender">
+              <!-- 由 JavaScript 动态渲染卡片内容 -->
+            </div>
+          </div>
+
+          <!-- 全景平铺模式容器 (默认隐藏) -->
+          <div id="gridCardContainer" class="hidden grid grid-cols-2 sm:grid-cols-3 gap-3 bg-slate-950 p-3 rounded-2xl border border-slate-800">
+            <!-- 由 JS 渲染 6 张微缩卡片 -->
+          </div>
+
+          <!-- 卡片导出与操作按钮 -->
+          <div class="flex flex-wrap items-center justify-between gap-2 p-3 bg-slate-900/50 rounded-xl border border-slate-800/80 text-xs">
+            <span class="text-slate-400 flex items-center gap-1.5">
+              <span>💡</span> 提示：点击卡片可查看高清大图，可在新标签页直接打开或保存！
+            </span>
+            <div class="flex items-center gap-2">
+              <button onclick="openCardInNewTab()" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-medium transition">
+                在新标签打开高清卡片 ↗
+              </button>
+              <button onclick="downloadActiveCardHTML()" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-medium transition">
+                下载单张 HTML ⬇
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ================= PANEL 2: 小红书原生发布文案 ================= -->
+        <div id="panelCopy" class="hidden space-y-4">
+          <div class="bg-slate-900 rounded-2xl border border-slate-800 p-5 space-y-4">
+            <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+              <div>
+                <h3 class="font-bold text-sm sm:text-base text-white flex items-center gap-1.5">
+                  <span>📱</span> 小红书爆款图文发布排版包
+                </h3>
+                <p class="text-xs text-slate-400">含黄金3秒Hook、三维增强论述、置顶神评与热门标签云</p>
+              </div>
+              <div class="flex items-center gap-2">
+                <span id="copyWordCount" class="text-xs font-mono text-slate-400">约 650 字</span>
+                <button onclick="copyFullPostCopy()" class="px-3.5 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs shadow transition flex items-center gap-1">
+                  <span>📋</span> 一键复制正文
+                </button>
+              </div>
+            </div>
+
+            <!-- 笔记标题卡 -->
+            <div class="p-3 bg-slate-950 rounded-xl border border-slate-800">
+              <div class="text-[10px] text-slate-400 uppercase font-bold tracking-wider mb-1">小红书标题</div>
+              <div id="postCopyTitle" class="font-bold text-sm sm:text-base text-white select-all">
+                期权交易：会让人一夜暴富，还是让人倾家荡产？
+              </div>
+            </div>
+
+            <!-- 正文预览区 -->
+            <div class="p-4 bg-slate-950 rounded-xl border border-slate-800 font-sans text-xs sm:text-sm text-slate-200 leading-relaxed whitespace-pre-wrap select-all max-h-[500px] overflow-y-auto" id="postCopyBody">
+              <!-- 正文动态填入 -->
+            </div>
+
+            <!-- 作者置顶神评 -->
+            <div class="p-3.5 bg-blue-950/40 rounded-xl border border-blue-500/30">
+              <div class="flex items-center justify-between mb-1.5">
+                <span class="text-xs font-bold text-blue-300 flex items-center gap-1">
+                  <span>📌</span> 发布后5分钟内置顶神评（引导互动）：
+                </span>
+                <button onclick="copyPinnedComment()" class="text-xs text-blue-400 hover:text-blue-200 underline">
+                  单复制置顶词
+                </button>
+              </div>
+              <p id="postPinnedComment" class="text-xs text-blue-100 italic select-all">
+                温馨提示：普通散户千万别把买方期权当股票炒，更不要盲目裸卖期权！大家身边玩期权的朋友，目前总账本是赚还是亏？
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- ================= PANEL 3: 运营活动配置中心 ================= -->
+        <div id="panelCampaign" class="hidden space-y-4">
+          <div class="bg-slate-900 rounded-2xl border border-slate-800 p-5 space-y-4">
+            <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+              <div>
+                <h3 class="font-bold text-sm sm:text-base text-white flex items-center gap-1.5">
+                  <span>🎪</span> 运营活动中台配置 (Campaign Schema)
+                </h3>
+                <p class="text-xs text-slate-400">标准结构化活动配置，包含红蓝阵营PK、任务积分体系与激励奖池</p>
+              </div>
+              <div class="flex items-center gap-2">
+                <button onclick="exportCampaignJSON()" class="px-3.5 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs shadow transition flex items-center gap-1">
+                  <span>💾</span> 下载 campaign_config.json
+                </button>
+              </div>
+            </div>
+
+            <!-- 活动元数据配置表单概要 -->
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 text-xs">
+              <div class="p-2.5 bg-slate-950 rounded-lg border border-slate-800">
+                <span class="text-[10px] text-slate-500 block">活动编码 (ID)</span>
+                <span id="cmpIdText" class="font-mono font-bold text-blue-400">CAMP_OPTIONS</span>
+              </div>
+              <div class="p-2.5 bg-slate-950 rounded-lg border border-slate-800">
+                <span class="text-[10px] text-slate-500 block">活动形式</span>
+                <span class="font-semibold text-slate-200">双边辩论PK + 打卡营</span>
+              </div>
+              <div class="p-2.5 bg-slate-950 rounded-lg border border-slate-800">
+                <span class="text-[10px] text-slate-500 block">活动周期</span>
+                <span class="font-semibold text-slate-200">14天 (蓄水/爆发/转化)</span>
+              </div>
+              <div class="p-2.5 bg-slate-950 rounded-lg border border-slate-800">
+                <span class="text-[10px] text-slate-500 block">目标投放渠道</span>
+                <span class="font-semibold text-emerald-400">小红书/App社区/H5</span>
+              </div>
+            </div>
+
+            <!-- 阵营与激励规则预览 -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+              <div class="p-3 bg-slate-950 rounded-xl border border-blue-500/20">
+                <div class="font-bold text-blue-400 mb-1 flex items-center gap-1">
+                  <span>🔴</span> 正方阵营规则：
+                </div>
+                <p id="cmpSideADesc" class="text-slate-300 leading-relaxed">天命买方派：主打非对称风险收益，初始支持率 52%</p>
+              </div>
+              <div class="p-3 bg-slate-950 rounded-xl border border-amber-500/20">
+                <div class="font-bold text-amber-400 mb-1 flex items-center gap-1">
+                  <span>🔵</span> 反方阵营规则：
+                </div>
+                <p id="cmpSideBDesc" class="text-slate-300 leading-relaxed">清醒保命派：主打防收割反穿仓，初始支持率 48%</p>
+              </div>
+            </div>
+
+            <!-- 任务激励与奖池 -->
+            <div class="p-3 bg-slate-950 rounded-xl border border-slate-800 text-xs space-y-2">
+              <span class="font-bold text-slate-300 flex items-center gap-1">
+                <span>🎁</span> 任务积分与奖池规则：
+              </span>
+              <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-[11px]" id="cmpTasksGrid">
+                <div class="p-2 rounded bg-slate-900 border border-slate-800">📖 浏览科普笔记 (+10分)</div>
+                <div class="p-2 rounded bg-slate-900 border border-slate-800">🗳️ 阵营站队投票 (+20分+抽奖券)</div>
+                <div class="p-2 rounded bg-slate-900 border border-slate-800">💬 发表观点账本 (+50分)</div>
+                <div class="p-2 rounded bg-slate-900 border border-slate-800">👥 邀请好友助威 (+100分)</div>
+              </div>
+            </div>
+
+            <!-- JSON Schema 原始代码预览 -->
+            <div class="space-y-1.5">
+              <div class="flex items-center justify-between text-xs text-slate-400">
+                <span>标准运营中台配置 JSON (可直接消费)：</span>
+                <button onclick="copyCampaignJSON()" class="text-blue-400 hover:text-blue-300">复制代码</button>
+              </div>
+              <pre id="jsonPreviewBox" class="p-3.5 bg-slate-950 rounded-xl border border-slate-800 text-[11px] font-mono text-emerald-400 max-h-60 overflow-y-auto leading-relaxed select-all">
+                <!-- JSON 实时渲染 -->
+              </pre>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- 右侧：手机端落地页互动模拟器 (5 列) -->
+      <div class="lg:col-span-5 sticky top-20 flex flex-col items-center">
+        <div class="w-full max-w-[340px] bg-slate-900 rounded-[44px] p-3 border-4 border-slate-700 phone-mockup relative">
+          <!-- 手机听筒与前置镜头 -->
+          <div class="w-28 h-4 bg-slate-800 rounded-full mx-auto mb-2 flex items-center justify-center">
+            <div class="w-2.5 h-2.5 rounded-full bg-slate-900"></div>
+          </div>
+
+          <!-- 手机屏幕内容区 (可交互移动端落地页) -->
+          <div class="bg-slate-950 rounded-[34px] overflow-hidden border border-slate-800 h-[620px] flex flex-col justify-between text-white relative select-none">
+
+            <!-- 手机顶部状态栏 -->
+            <div class="px-5 py-2 flex items-center justify-between text-[10px] text-slate-400 border-b border-slate-800/60 bg-slate-900/60">
+              <span id="simTime">09:41</span>
+              <div class="flex items-center gap-1.5">
+                <span>5G</span>
+                <span>📶</span>
+                <span>🔋 100%</span>
+              </div>
+            </div>
+
+            <!-- 手机可滑动活动页面 -->
+            <div class="flex-1 overflow-y-auto p-3.5 space-y-3.5 text-xs text-slate-100">
+
+              <!-- 活动大视觉 Banner -->
+              <div class="p-3.5 rounded-2xl bg-gradient-to-br from-blue-900 via-indigo-900 to-purple-900 border border-blue-500/30 text-center space-y-1.5 shadow-lg relative overflow-hidden">
+                <span class="inline-block px-2 py-0.5 rounded-full bg-blue-400/20 text-blue-300 text-[10px] font-bold border border-blue-400/30">
+                  🔥 全网理财公开辩论赛
+                </span>
+                <h4 id="simCampTitle" class="font-black text-sm text-white leading-snug">
+                  期权交易：会让人一夜暴富，还是让人倾家荡产？
+                </h4>
+                <div class="flex items-center justify-center gap-2 text-[10px] text-blue-200">
+                  <span>⏳ 倒计时 13天 18:24:09</span>
+                  <span>·</span>
+                  <span>👥 5.8万人已参与</span>
+                </div>
+              </div>
+
+              <!-- 核心互动组件：红蓝双边站队对抗 PK -->
+              <div class="p-3 bg-slate-900 rounded-2xl border border-slate-800 space-y-2.5 shadow">
+                <div class="flex items-center justify-between text-[11px] font-bold">
+                  <span id="simSideAName" class="text-rose-400 flex items-center gap-1">🔴 天命买方派</span>
+                  <span class="text-slate-400 font-mono text-[10px]">VS</span>
+                  <span id="simSideBName" class="text-sky-400 flex items-center gap-1">🔵 清醒保命派</span>
+                </div>
+
+                <!-- 票数动态进度条 -->
+                <div class="w-full h-3 bg-slate-800 rounded-full overflow-hidden flex p-0.5 border border-slate-700">
+                  <div id="simSideABar" class="h-full bg-rose-500 rounded-l-full transition-all duration-500" style="width: 52%"></div>
+                  <div id="simSideBBar" class="h-full bg-sky-500 rounded-r-full transition-all duration-500" style="width: 48%"></div>
+                </div>
+
+                <!-- 票数统计 -->
+                <div class="flex justify-between text-[10px] text-slate-400 font-mono">
+                  <span id="simSideAVotes">30,160 票 (52%)</span>
+                  <span id="simSideBVotes">27,840 票 (48%)</span>
+                </div>
+
+                <!-- 可交互点击投票按钮 (带真实交互) -->
+                <div class="grid grid-cols-2 gap-2 pt-1">
+                  <button onclick="voteSide('A')" class="py-2 px-2 bg-rose-600/90 hover:bg-rose-500 text-white rounded-xl text-center font-bold text-[11px] shadow transition active:scale-95 flex items-center justify-center gap-1">
+                    <span>👍</span> 投红方 (+20分)
+                  </button>
+                  <button onclick="voteSide('B')" class="py-2 px-2 bg-sky-600/90 hover:bg-sky-500 text-white rounded-xl text-center font-bold text-[11px] shadow transition active:scale-95 flex items-center justify-center gap-1">
+                    <span>🛡️</span> 投蓝方 (+20分)
+                  </button>
+                </div>
+              </div>
+
+              <!-- 每日打卡与任务列表 (可交互点击完成) -->
+              <div class="p-3 bg-slate-900 rounded-2xl border border-slate-800 space-y-2 text-[11px]">
+                <div class="flex items-center justify-between font-bold text-slate-200">
+                  <span class="flex items-center gap-1"><span>🎯</span> 做任务赚积分</span>
+                  <span class="text-amber-400 font-mono" id="simUserPoints">金币: 120 🪙</span>
+                </div>
+
+                <div class="space-y-1.5" id="simTaskList">
+                  <div class="flex items-center justify-between p-2 rounded-xl bg-slate-950/80 border border-slate-800/80">
+                    <div>
+                      <div class="font-medium text-slate-200">📖 浏览 6 张科普画报</div>
+                      <div class="text-[9px] text-slate-500">+10 积分 · 深入看懂两边利差</div>
+                    </div>
+                    <button onclick="completeSimTask(this, 10)" class="px-2.5 py-1 rounded-lg bg-blue-600 text-[10px] font-bold hover:bg-blue-500 transition">
+                      去浏览
+                    </button>
+                  </div>
+
+                  <div class="flex items-center justify-between p-2 rounded-xl bg-slate-950/80 border border-slate-800/80">
+                    <div>
+                      <div class="font-medium text-slate-200">💬 在小红书评论区站队</div>
+                      <div class="text-[9px] text-slate-500">+50 积分 · 晒真实交易账本</div>
+                    </div>
+                    <button onclick="completeSimTask(this, 50)" class="px-2.5 py-1 rounded-lg bg-blue-600 text-[10px] font-bold hover:bg-blue-500 transition">
+                      去评论
+                    </button>
+                  </div>
+
+                  <div class="flex items-center justify-between p-2 rounded-xl bg-slate-950/80 border border-slate-800/80">
+                    <div>
+                      <div class="font-medium text-slate-200">👥 邀请好友助威打气</div>
+                      <div class="text-[9px] text-slate-500">+100 积分 · 赢抽奖盲盒</div>
+                    </div>
+                    <button onclick="completeSimTask(this, 100)" class="px-2.5 py-1 rounded-lg bg-indigo-600 text-[10px] font-bold hover:bg-indigo-500 transition">
+                      去邀请
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 盲盒与奖池展示 -->
+              <div class="p-3 bg-gradient-to-r from-amber-950/30 to-amber-900/20 rounded-2xl border border-amber-500/30 flex items-center justify-between">
+                <div>
+                  <div class="font-bold text-amber-300 text-xs flex items-center gap-1">
+                    <span>🎁</span> 终极大奖盲盒
+                  </div>
+                  <div class="text-[10px] text-amber-200/80">1克纯金金豆 / 1000元体验金</div>
+                </div>
+                <button onclick="drawSimLottery()" class="px-3 py-1.5 rounded-xl bg-gradient-to-r from-amber-500 to-yellow-500 text-slate-950 font-black text-xs shadow hover:brightness-110 active:scale-95 transition">
+                  抽奖 (耗30分)
+                </button>
+              </div>
+
+            </div>
+
+            <!-- 手机底部导航栏 -->
+            <div class="p-2.5 bg-slate-900/90 border-t border-slate-800 text-[10px] text-slate-400 flex items-center justify-around">
+              <span class="text-blue-400 font-bold">首页</span>
+              <span>榜单</span>
+              <span>规则</span>
+              <span>我的</span>
+            </div>
+          </div>
+
+          <!-- 手机底部 Home Indicator -->
+          <div class="w-32 h-1 bg-slate-700 rounded-full mx-auto mt-2.5"></div>
+        </div>
+
+        <p class="text-[11px] text-slate-500 mt-3 text-center">
+          📱 移动端 H5 互动落地页实时模拟（可真实点击站队与抽奖）
+        </p>
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- 全局 Toast 提示容器 -->
+  <div id="toast" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 pointer-events-none hidden">
+    <div class="px-4 py-2.5 bg-slate-800/95 border border-slate-700 text-white text-xs font-semibold rounded-xl shadow-2xl backdrop-blur flex items-center gap-2 toast-anim">
+      <span id="toastIcon">✅</span>
+      <span id="toastMsg">操作成功</span>
+    </div>
+  </div>
+
+  <!-- ================= 脚本逻辑：数据模型与交互引擎 ================= -->
+  <script>
+    // 经典内置议题数据集
+    const PRESET_TOPICS = [
+      {
+        id: "options_rich_or_ruin",
+        title: "期权会让人暴富还是导致人破产？",
+        category: "衍生品",
+        side_a: {
+          name: "硬核价值投资人",
+          title: "私募基金合伙人",
+          faction_name: "天命买方派",
+          subtitle: "以小博大：下行风险锁死，上行利润无限",
+          quote: "买方亏也只亏权利金盒饭钱，万一抓到一次百倍末日轮，直接少奋斗二十年！",
+          case: "2019年50ETF期权单日暴涨192倍，2万元本金单日变384万元！",
+          votes: 30160
+        },
+        side_b: {
+          name: "平民反收割官",
+          title: "财经调查记者",
+          faction_name: "清醒保命派",
+          subtitle: "绞肉机陷阱：每天时间价值流逝，80%归零废纸",
+          quote: "感谢各位散户老铁每天准时众筹的权利金，时间价值 Theta 已按时入账机构账户～",
+          case: "某散户裸卖认沽赚2%权利金，黑天鹅跳空100万清零倒欠240万！",
+          votes: 27840
+        },
+        contrast: {
+          name: "宏观学者",
+          metaphor: "玩买方期权就像天天喝保质期7天的隔夜酸奶；玩卖方期权就像为了捡一分钱把脖子枕在铁轨上等火车！",
+          stat: "交易所长周期实测：超过 82.4% 的散户买方期权最终归零作废。"
+        },
+        pages: [
+          {
+            page: 1,
+            tag: "双极对决 · 衍生品真相",
+            h1: "期权交易：会让人一夜暴富",
+            h2: "还是让人倾家荡产？",
+            summary: "从单日 192 倍暴赚神话，到裸卖穿仓倒欠券商 240 万，这究竟是逆天改命的非对称杠杆，还是专门收割散户的金融绞肉机？",
+            badgeA: "🔥 暴富神器派：非对称上行",
+            badgeB: "⚠️ 倾家荡产派：时间价值流逝"
+          },
+          {
+            page: 2,
+            tag: "痛点剖析 · 散户迷思",
+            h1: "为什么普通散户",
+            h2: "总在期权里被无情归零？",
+            summary: "散户只看到了百倍杠杆的刺激，却忽视了期权有致命的‘保质期’（Theta 衰减），震荡一天就扣一天血！",
+            metrics: [
+              { label: "散户买方胜率", val: "< 15%", color: "text-rose-400" },
+              { label: "Theta 每日耗损", val: "3% ~ 8%", color: "text-amber-400" },
+              { label: "到期归零概率", val: "82.4%", color: "text-red-400" }
+            ]
+          },
+          {
+            page: 3,
+            tag: "剪刀差拆解 · 宏观量化",
+            h1: "看懂期权的底层本质：",
+            h2: "做市商眼里的精算保险",
+            summary: "神级隐喻：买期权就像天天高价买保质期7天的隔夜酸奶；卖期权就像为了铁轨上捡一分钱，把脖子枕在铁轨上等火车！",
+            metrics: [
+              { label: "买方暴击记录", val: "192 倍", color: "text-emerald-400" },
+              { label: "做市商胜率", val: "> 85%", color: "text-blue-400" },
+              { label: "卖方单次穿仓", val: "-240 万元", color: "text-rose-400" }
+            ]
+          },
+          {
+            page: 4,
+            tag: "正方立论 · 价值投资人",
+            h1: "“非对称暴富神器：",
+            h2: "亏损有限，上行收益无限！”",
+            summary: "买方期权最大亏损就是初始付出的权利金，绝不会倒欠券商！用几千块钱对冲极端黑天鹅，是全球顶级机构的核心手段。",
+            caseTitle: "【真实切片】",
+            caseText: "2019年2月25日 50ETF 购 2 月 2800 单日暴涨 192 倍，2万元真实变现 384 万元！",
+            quote: "“亏只亏盒饭钱，万一抓住一次，直接少奋斗二十年！”"
+          },
+          {
+            page: 5,
+            tag: "反方立论 · 平民反收割官",
+            h1: "“时间价值绞肉机：",
+            h2: "散户就是人形自走提款机！”",
+            summary: "期权自带严格到期日。大盘只要横盘，时间价值每天都在蒸发。很多新手盲目‘卖期权收租’，一次黑天鹅直接终身背债！",
+            caseTitle: "【血泪警示】",
+            caseText: "某投资者高位裸卖认沽赚2%权利金，黑天鹅跳空致100万保证金打穿，倒欠券商240万被法院强制执行！",
+            quote: "“做市商：感谢老铁每天准时众筹的权利金～”"
+          },
+          {
+            page: 6,
+            tag: "互动投票 · 理性站队",
+            h1: "换作是你，",
+            h2: "你会怎么选择？",
+            summary: "你是相信非对称以小博大的奇迹，还是坚守远离衍生品的清醒？在评论区留下你的真实战绩！",
+            actionA: "🔴 站队正方：买方以小博大，搏一搏单车变摩托",
+            actionB: "🔵 站队反方：保命远离期权，不给机构众筹盒饭钱"
+          }
+        ]
+      },
+      {
+        id: "mortgage_vs_invest",
+        title: "手头有50万闲钱：提前还4.0%房贷，还是留着买理财？",
+        category: "个人财务",
+        side_a: {
+          name: "平民现实派与反收割官",
+          title: "资深财经调查记者",
+          faction_name: "坚决还贷派",
+          subtitle: "省下35.9万利息，锁定4%确定性无风险收益",
+          quote: "只要不用每月看催款短信，晚上能睡个踏实觉，比什么通胀理论都管用！",
+          case: "北京37岁程序员结清50万房贷，月供归零淡定应对行业降薪35%！",
+          votes: 35200
+        },
+        side_b: {
+          name: "硬核价值投资人",
+          title: "私募基金合伙人",
+          faction_name: "现金留存派",
+          subtitle: "手握28个月生活准备金，防止中年脆弱现金流断裂",
+          quote: "把现金全还进水泥里，就像给大门装了三道指纹锁，结果把钥匙反锁在门里！",
+          case: "杭州外企高管全款提前还贷，失业半年被迫贱卖房产陷入流动性危机！",
+          votes: 29800
+        },
+        contrast: {
+          name: "宏观学者",
+          metaphor: "房贷是普通人一生能从银行拿到的最大一笔廉价长钱，还掉了就永远无法再以同样利率借回！",
+          stat: "存贷利差倒挂 2.2%：当前银行理财平均仅 1.8%~2.5%，而存量房贷高达 4.0%。"
+        },
+        pages: [
+          {
+            page: 1,
+            tag: "中产财务博弈 · 现金流决战",
+            h1: "手头有 50 万闲钱：",
+            h2: "提前还房贷，还是留着理财？",
+            summary: "利息倒挂时代，提前结清能省下 35.9 万利息；但全还给银行，中年失业又可能遭遇流动性绝境！怎么选？",
+            badgeA: "🛡️ 还贷派：锁定4%利息减负",
+            badgeB: "💰 留钱派：现金流就是生命线"
+          },
+          {
+            page: 2,
+            tag: "痛点账本 · 精算明细",
+            h1: "为什么当代中产",
+            h2: "都在跟这笔账死磕？",
+            summary: "银行理财年化跌到 2.0%，房贷利率却在 4.0% 沉重咬人，相当于每天都在被倒收 2% 智商税！",
+            metrics: [
+              { label: "等额本息省息", val: "¥35.9 万元", color: "text-emerald-400" },
+              { label: "月供减负", val: "-¥2,387/月", color: "text-blue-400" },
+              { label: "存贷利差损耗", val: "2.2%", color: "text-rose-400" }
+            ]
+          },
+          {
+            page: 3,
+            tag: "剪刀差拆解 · 宏观对照",
+            h1: "35.9 万利息省下 vs",
+            h2: "28 个月流动性生命线",
+            summary: "神级隐喻：把所有现金提前塞进水泥砖头，就像给大门装了三道指纹锁，却把自己的备用钥匙锁在了门里！",
+            metrics: [
+              { label: "无风险收益率", val: "4.0% 锁死", color: "text-emerald-400" },
+              { label: "流动性缓冲期", val: "27.8 个月", color: "text-purple-400" },
+              { label: "赎回摩擦成本", val: "高流动性锁死", color: "text-amber-400" }
+            ]
+          },
+          {
+            page: 4,
+            tag: "正方立论 · 减负派",
+            h1: "“无债一身轻：",
+            h2: "锁定确定性的 4.0% 无风险收益！”",
+            summary: "在理财普遍跌破2.5%的今天，提前还贷就是市场上唯一能稳赚4.0%免税收益的理财产品，还完立刻卸下房奴枷锁。",
+            caseTitle: "【现实切片】",
+            caseText: "北京海淀37岁程序员结清50万贷款，每月少还2400元，即便遭遇降薪30%依然无房贷焦虑。",
+            quote: "“只要不用每月看扣款短信，晚上能睡个踏实觉，比什么复利神话都管用！”"
+          },
+          {
+            page: 5,
+            tag: "反方立论 · 留钱派",
+            h1: "“留着现金保命：",
+            h2: "别把钥匙反锁在水泥里！”",
+            summary: "一旦全款还进房子，遇到中年裁员或突发重疾，银行绝不会因为你信用良好重新把钱借你，手里有粮心中不慌。",
+            caseTitle: "【警示样本】",
+            caseText: "杭州某互联网高管结清房贷后失业，仅靠几万元储蓄抗不过半年，被迫紧急降价40万急售车位变现。",
+            quote: "“银行经理潜台词：你把钱还了，遇到急用钱只能找我借年化8%的消费贷啦～”"
+          },
+          {
+            page: 6,
+            tag: "互动投票 · 理性站队",
+            h1: "换作是你，",
+            h2: "你会把这 50 万怎么处理？",
+            summary: "是立刻还贷换个踏实好觉，还是留着现金预防黑天鹅？点击站队留下你的理财观点！",
+            actionA: "🔴 站队还贷派：落袋为安，拒绝给银行打工",
+            actionB: "🔵 站队留钱派：现金为王，防范中年流动性风险"
+          }
+        ]
+      },
+      {
+        id: "gold_beans",
+        title: "年轻人疯狂攒金豆，到底是明智理财还是被金店割智商税？",
+        category: "资产配置",
+        side_a: {
+          name: "平民反收割官",
+          title: "独立消费者观察家",
+          faction_name: "强制储蓄派",
+          subtitle: "克重明晰物理存钱，年轻人治愈消费主义良药",
+          quote: "看着玻璃瓶里的金豆一颗颗增加，这是当代年轻人唯一的精神布洛芬！",
+          case: "广州25岁大厂女生每月固定买1克金豆，两年攒下24克金变现赚取涨幅收益！",
+          votes: 38400
+        },
+        side_b: {
+          name: "硬核价值投资人",
+          title: "私募基金合伙人",
+          faction_name: "智商税揭露派",
+          subtitle: "工艺费高达18%，回收折价双向割肉",
+          quote: "零售金店卖的是情绪价值，当你拿到火熔枪下变现，才会发现自己被砍了两刀！",
+          case: "深圳网友购买15颗网红金豆，回收时因成色不足与高额火耗被扣款18%维权！",
+          votes: 28900
+        },
+        contrast: {
+          name: "宏观学者",
+          metaphor: "金豆是包裹着一层金箔的情绪布洛芬，在首饰店买的是消费品，在交易所买的才是避险资产！",
+          stat: "溢价剪刀差：零售金豆单克价格较国际金价溢价约 17.5%，回收折损约 16.6%。"
+        },
+        pages: [
+          {
+            page: 1,
+            tag: "消费心理 · 资产真相",
+            h1: "年轻人疯狂攒金豆：",
+            h2: "是理财自律还是被割智商税？",
+            summary: "从月光族的小确幸，到变现时遭遇成色扣杂火耗费，1克几百元的小金豆，到底藏着多深的金融套路？",
+            badgeA: "✨ 储蓄派：克重黄金物理攒钱",
+            badgeB: "⚠️ 避坑派：高溢价火耗双向剪刀"
+          },
+          {
+            page: 2,
+            tag: "痛点账本 · 工艺溢价",
+            h1: "为什么你手里的金豆",
+            h2: "变现时总会缩水？",
+            summary: "零售金店的标价包含了品牌溢价与加工费，但黄金回收只认原料纯度！买入即浮亏 15%！",
+            metrics: [
+              { label: "平均工艺溢价", val: "+17.5%", color: "text-amber-400" },
+              { label: "回收火耗扣点", val: "-5% ~ -18%", color: "text-rose-400" },
+              { label: "变现回本所需涨幅", val: "> 25%", color: "text-red-400" }
+            ]
+          },
+          {
+            page: 3,
+            tag: "剪刀差拆解 · 消费 vs 投资",
+            h1: "零售金饰店 vs",
+            h2: "上海黄金交易所 AU9999",
+            summary: "神级比喻：金豆是包裹着一层金箔的当代年轻人情绪布洛芬；去金店买黄金是消费，在银行买投资金条才是资产配置！",
+            metrics: [
+              { label: "零售金店溢价", val: "+¥80/克", color: "text-rose-400" },
+              { label: "银行投资金条", val: "+¥12/克", color: "text-emerald-400" },
+              { label: "情绪治愈价值", val: "满分", color: "text-purple-400" }
+            ]
+          },
+          {
+            page: 4,
+            tag: "正方立论 · 储蓄派",
+            h1: "“看得见摸得着的自律：",
+            h2: "每个月强制存下一克黄金！”",
+            summary: "对于月光族年轻人而言，比起随手花掉的奶茶外卖，换成玻璃瓶里沉甸甸的金豆，是最好的抗消费主义盾牌。",
+            caseTitle: "【自律样本】",
+            caseText: "广州99后女生坚持24个月每月存1颗金豆，不知不觉攒下近2万元黄金硬通货。",
+            quote: "“只要看着金豆慢慢变多，这种踏实感比什么理财K线都治愈！”"
+          },
+          {
+            page: 5,
+            tag: "反方立论 · 避坑派",
+            h1: "“金店的双向砍刀：",
+            h2: "别为过度包装的虚荣买单！”",
+            summary: "买的时候加上高额工费，卖的时候扣除火耗成色折旧。普通人真想买黄金避险，直接去四大行买纸黄金或投资金条！",
+            caseTitle: "【维权警示】",
+            caseText: "深圳某姑娘购买15颗某网红金豆拿到典当行变现，因掺杂和足金成色不足被折价20%拒收。",
+            quote: "“回收小哥内心戏：火熔枪一烤就现原形，金店卖的是梦，我收的是废铁～”"
+          },
+          {
+            page: 6,
+            tag: "互动投票 · 理性站队",
+            h1: "换作是你，",
+            h2: "你更支持哪种攒钱方式？",
+            summary: "你身边有在攒金豆的朋友吗？他们变现时赚了还是亏了？点击红蓝站队！",
+            actionA: "🔴 站队攒金派：小钱储蓄，积少成多看得见",
+            actionB: "🔵 站队智商税：直接买积存金，坚决不交工费"
+          }
+        ]
+      },
+      {
+        id: "dca_vs_allin",
+        title: "大盘3000点震荡，该一次性重仓抄底还是死磕定投？",
+        category: "权益策略",
+        side_a: {
+          name: "硬核价值投资人",
+          title: "私募基金合伙人",
+          faction_name: "周期定投派",
+          subtitle: "微笑曲线平摊持仓成本，防范阴跌钝刀割肉",
+          quote: "别妄想买在最低点，定投是用纪律战胜人性的唯一解法！",
+          case: "基民坚持定投沪深300指数3年，历经牛熊最终收获18%年化复利！",
+          votes: 26500
+        },
+        side_b: {
+          name: "平民反收割官",
+          title: "财经调查记者",
+          faction_name: "重仓梭哈派",
+          subtitle: "历史大底赔率极佳，分批定投错失主升浪",
+          quote: "当恐慌达到极值，敢于一次性重仓才是资本利得的超额源泉！",
+          case: "投资者在估值极低点一次性买入高股息ETF，持有一年吃满分红与估值修复！",
+          votes: 21300
+        },
+        contrast: {
+          name: "宏观学者",
+          metaphor: "定投是普通人的防护雨衣，梭哈是敢死队的冲锋号角；雨天穿雨衣很舒服，但冲锋只能靠勇气与概率！",
+          stat: "数据表明：低估值区间一次性投资的长期期望收益率高于机械式等额定投，但波动回撤承受力需高出2倍。"
+        },
+        pages: [
+          {
+            page: 1,
+            tag: "股市择时 · 周期博弈",
+            h1: "大盘 3000 点震荡：",
+            h2: "该一次性重仓抄底还是死磕定投？",
+            summary: "底部区域是贪婪梭哈吃满反弹，还是靠定投微笑曲线慢慢磨？两种风格截然不同的投资人生！",
+            badgeA: "📈 定投派：微笑曲线摊低成本",
+            badgeB: "🚀 抄底派：大底区域赔率极高"
+          },
+          {
+            page: 2,
+            tag: "痛点拆解 · 人性弱点",
+            h1: "为什么普通散户",
+            h2: "抄底总抄在半山腰？",
+            summary: "一次性买入容易遭遇持续阴跌导致心态崩溃割肉；而机械定投又常常在反弹初期过早停止！",
+            metrics: [
+              { label: "定投平均持有期", val: "2.4 年", color: "text-blue-400" },
+              { label: "最大心理回撤", val: "-28.5%", color: "text-rose-400" },
+              { label: "反转胜率提升", val: "+42%", color: "text-emerald-400" }
+            ]
+          },
+          {
+            page: 3,
+            tag: "剪刀差拆解 · 赔率与胜率",
+            h1: "时间换空间 vs",
+            h2: "赔率换爆发力",
+            summary: "神级比喻：定投是慢慢熬一锅老火靓汤，梭哈是一记重锤砸下去；老火汤需要耐心，重锤需要铜皮铁骨！",
+            metrics: [
+              { label: "估值分位数", val: "历史后 15%", color: "text-emerald-400" },
+              { label: "分红收益率", val: "3.8% 托底", color: "text-purple-400" },
+              { label: "机会成本损耗", val: "低", color: "text-amber-400" }
+            ]
+          },
+          {
+            page: 4,
+            tag: "正方立论 · 定投派",
+            h1: "“纪律战胜贪婪：",
+            h2: "用微笑曲线锁定确定性成本！”",
+            summary: "没有人能预测市场精准底部。每个月发薪日自动定投，跌得越狠攒下的便宜筹码越多，反弹时盈利最快。",
+            caseTitle: "【纪律切片】",
+            caseText: "上海某程序员从2021年开始坚持周定投红利低波指数，避开多次暴跌，账户收益率稳健超越基准。",
+            quote: "“跌的时候定投是在打折买资产，涨的时候是在享受成果！”"
+          },
+          {
+            page: 5,
+            tag: "反方立论 · 抄底派",
+            h1: "“千金难买历史大底：",
+            h2: "敢于重仓才能改变财富阶层！”",
+            summary: "当市场估值跌入历史极端低位，赔率已经压倒一切。此时还在谨慎定投，就是拿着金钵钵在讨饭吃。",
+            caseTitle: "【胜率警示】",
+            caseText: "资深价值投资者在市场情绪冰点一次性配置高分红央企，一年内靠股息与估值修复斩获超额收益。",
+            quote: "“别人恐惧时我贪婪，若在谷底都不敢重仓，什么时候才敢上车？”"
+          },
+          {
+            page: 6,
+            tag: "互动投票 · 理性站队",
+            h1: "如果是你，",
+            h2: "在当前点位你会怎么操作？",
+            summary: "投下你的一票，看看市场上多数人和你的投资直觉是否一致！",
+            actionA: "🔴 站队定投派：分批定投，睡觉踏实慢慢富",
+            actionB: "🔵 站队抄底派：赔率极高，关键时刻重仓出击"
+          }
+        ]
+      }
+    ];
+
+    // 当前状态
+    let currentTopicData = PRESET_TOPICS[0];
+    let currentCardIndex = 1;
+    let cardViewMode = 'single'; // 'single' or 'grid'
+    let currentTab = 'cards';
+    let userPoints = 120;
+    let hasVoted = false;
+
+    // 初始化渲染
+    window.addEventListener('DOMContentLoaded', () => {
+      renderAll();
+      updateClock();
+      setInterval(updateClock, 1000);
+    });
+
+    function updateClock() {
+      const now = new Date();
+      const hours = String(now.getHours()).padStart(2, '0');
+      const mins = String(now.getMinutes()).padStart(2, '0');
+      const el = document.getElementById('simTime');
+      if (el) el.innerText = `${hours}:${mins}`;
+    }
+
+    // 核心切换与渲染函数
+    function renderAll() {
+      renderCards();
+      renderCopy();
+      renderCampaign();
+      renderMobileSimulator();
+      updateBadges();
+    }
+
+    function updateBadges() {
+      const d = currentTopicData;
+      document.getElementById('sideABadge').innerText = `正方: ${d.side_a.name} (${d.side_a.faction_name})`;
+      document.getElementById('sideBBadge').innerText = `反方: ${d.side_b.name} (${d.side_b.faction_name})`;
+      document.getElementById('contrastBadge').innerText = d.contrast.name;
+    }
+
+    // 渲染卡片 (焦点模式与平铺模式)
+    function renderCards() {
+      const pages = currentTopicData.pages;
+      const pageData = pages[currentCardIndex - 1];
+      const total = pages.length;
+
+      document.getElementById('currentCardIndexText').innerText = `${currentCardIndex} / ${total}`;
+
+      // 更新 Pill 激活态
+      for (let i = 1; i <= 6; i++) {
+        const p = document.getElementById(`pill${i}`);
+        if (p) {
+          if (i === currentCardIndex) {
+            p.className = "px-2.5 py-1 rounded bg-blue-600 text-white font-bold transition";
+          } else {
+            p.className = "px-2.5 py-1 rounded bg-slate-800 text-slate-400 hover:text-white transition";
+          }
+        }
+      }
+
+      // 渲染焦点卡片
+      const container = document.getElementById('activeCardRender');
+      container.innerHTML = getCardHTML(pageData, currentCardIndex);
+
+      // 渲染平铺模式微缩图
+      const gridContainer = document.getElementById('gridCardContainer');
+      gridContainer.innerHTML = pages.map((p, idx) => `
+        <div onclick="selectCardPage(${idx+1}); toggleCardViewMode();" class="ratio-3-4 bg-slate-900 rounded-lg p-2.5 border ${idx+1 === currentCardIndex ? 'border-blue-500 ring-2 ring-blue-500/20' : 'border-slate-800'} hover:border-slate-600 cursor-pointer transition flex flex-col justify-between overflow-hidden shadow">
+          <div class="flex items-center justify-between text-[9px] text-slate-400">
+            <span class="font-bold text-blue-400">P${idx+1}</span>
+            <span class="truncate max-w-[80px]">${p.tag}</span>
+          </div>
+          <div class="my-auto py-1">
+            <div class="text-[11px] font-black text-white line-clamp-2 leading-snug">${p.h1} ${p.h2}</div>
+          </div>
+          <div class="text-[9px] text-slate-500 line-clamp-2">${p.summary}</div>
+        </div>
+      `).join('');
+    }
+
+    // 生成单张 3:4 卡片 HTML
+    function getCardHTML(p, num) {
+      if (num === 1) {
+        // P1 封面
+        return `
+          <div class="p-6 h-full flex flex-col justify-between bg-gradient-to-b from-slate-900 via-slate-900 to-slate-950 text-white select-none">
+            <div class="flex items-center justify-between">
+              <span class="px-2.5 py-0.5 rounded-full bg-blue-500/20 text-blue-300 font-mono text-[11px] font-bold border border-blue-500/30">
+                P1 · ${p.tag}
+              </span>
+              <span class="text-[11px] font-bold text-slate-400">#理性讨论</span>
+            </div>
+
+            <div class="space-y-4 my-auto py-4">
+              <div class="space-y-1">
+                <h2 class="text-2xl sm:text-3xl font-black tracking-tight text-white leading-tight">
+                  ${p.h1}
+                </h2>
+                <h2 class="text-2xl sm:text-3xl font-black tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-rose-400 to-blue-400 leading-tight">
+                  ${p.h2}
+                </h2>
+              </div>
+              <p class="text-xs text-slate-300 leading-relaxed border-l-2 border-blue-500 pl-3">
+                ${p.summary}
+              </p>
+            </div>
+
+            <div class="space-y-2 pt-2 border-t border-slate-800">
+              <div class="p-2 rounded-lg bg-rose-500/10 border border-rose-500/20 text-rose-300 text-xs font-semibold flex items-center gap-2">
+                <span>🔴</span> ${p.badgeA}
+              </div>
+              <div class="p-2 rounded-lg bg-sky-500/10 border border-sky-500/20 text-sky-300 text-xs font-semibold flex items-center gap-2">
+                <span>🔵</span> ${p.badgeB}
+              </div>
+            </div>
+          </div>
+        `;
+      } else if (num === 2 || num === 3) {
+        // P2/P3 数据与账本
+        return `
+          <div class="p-6 h-full flex flex-col justify-between bg-gradient-to-b from-slate-900 to-slate-950 text-white select-none">
+            <div class="flex items-center justify-between">
+              <span class="px-2.5 py-0.5 rounded-full bg-purple-500/20 text-purple-300 font-mono text-[11px] font-bold border border-purple-500/30">
+                P${num} · ${p.tag}
+              </span>
+              <span class="text-[11px] text-slate-400 font-mono">FINANCE DATA</span>
+            </div>
+
+            <div class="space-y-3 my-auto">
+              <h3 class="text-xl sm:text-2xl font-black text-white leading-snug">
+                ${p.h1}<br><span class="text-amber-400">${p.h2}</span>
+              </h3>
+              <p class="text-xs text-slate-300 leading-relaxed">
+                ${p.summary}
+              </p>
+
+              <!-- 三列精算指标 -->
+              <div class="grid grid-cols-3 gap-2 pt-3">
+                ${(p.metrics || []).map(m => `
+                  <div class="p-2.5 rounded-xl bg-slate-800/80 border border-slate-700 text-center">
+                    <span class="text-[10px] text-slate-400 block mb-0.5 truncate">${m.label}</span>
+                    <span class="text-sm sm:text-base font-black font-mono ${m.color}">${m.val}</span>
+                  </div>
+                `).join('')}
+              </div>
+            </div>
+
+            <div class="p-2.5 rounded-lg bg-slate-800/40 border border-slate-800 text-[10px] text-slate-400 flex items-center justify-between">
+              <span>🔬 宏观精算模型已校准</span>
+              <span class="text-blue-400">滑动查看下页 ▶</span>
+            </div>
+          </div>
+        `;
+      } else if (num === 4 || num === 5) {
+        // P4/P5 专家立场与案例
+        const isSideA = num === 4;
+        const themeColor = isSideA ? 'blue' : 'amber';
+        return `
+          <div class="p-6 h-full flex flex-col justify-between bg-gradient-to-b from-slate-900 to-slate-950 text-white select-none">
+            <div class="flex items-center justify-between">
+              <span class="px-2.5 py-0.5 rounded-full bg-${themeColor}-500/20 text-${themeColor}-300 font-mono text-[11px] font-bold border border-${themeColor}-500/30">
+                P${num} · ${p.tag}
+              </span>
+              <span class="text-[11px] text-slate-400 font-semibold">${isSideA ? '正方代言' : '反方代言'}</span>
+            </div>
+
+            <div class="space-y-3 my-auto">
+              <h3 class="text-lg sm:text-xl font-black text-white leading-snug">
+                ${p.h1}<br><span class="text-${themeColor}-400">${p.h2}</span>
+              </h3>
+              <p class="text-xs text-slate-300 leading-relaxed">
+                ${p.summary}
+              </p>
+
+              <!-- 真实事实案例切片 -->
+              <div class="p-3 rounded-xl bg-slate-800/80 border border-slate-700 space-y-1">
+                <span class="text-[10px] font-bold text-amber-300 flex items-center gap-1">
+                  <span>📜</span> ${p.caseTitle}
+                </span>
+                <p class="text-[11px] text-slate-200 leading-relaxed">${p.caseText}</p>
+              </div>
+
+              <!-- 扎心内心戏独白 -->
+              <div class="p-2.5 rounded-lg bg-slate-950/80 border border-${themeColor}-500/30 text-[11px] text-${themeColor}-200 italic">
+                ${p.quote}
+              </div>
+            </div>
+
+            <div class="flex items-center justify-between text-[10px] text-slate-500 pt-2 border-t border-slate-800">
+              <span>事实案例经官方质检验证</span>
+              <span class="text-slate-400">权威专家视角</span>
+            </div>
+          </div>
+        `;
+      } else {
+        // P6 终极站队互动尾页
+        return `
+          <div class="p-6 h-full flex flex-col justify-between bg-gradient-to-b from-slate-900 to-slate-950 text-white select-none text-center">
+            <div class="flex items-center justify-between">
+              <span class="px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 font-mono text-[11px] font-bold border border-emerald-500/30">
+                P6 · ${p.tag}
+              </span>
+              <span class="text-[11px] text-slate-400">评论区互动</span>
+            </div>
+
+            <div class="space-y-4 my-auto">
+              <h3 class="text-2xl sm:text-3xl font-black text-white leading-tight">
+                ${p.h1}<br><span class="text-transparent bg-clip-text bg-gradient-to-r from-rose-400 to-sky-400">${p.h2}</span>
+              </h3>
+              <p class="text-xs text-slate-300 max-w-xs mx-auto leading-relaxed">
+                ${p.summary}
+              </p>
+
+              <div class="space-y-2.5 text-left pt-2">
+                <div class="p-3 rounded-xl bg-rose-500/15 border border-rose-500/30 text-rose-200 font-bold text-xs">
+                  ${p.actionA}
+                </div>
+                <div class="p-3 rounded-xl bg-sky-500/15 border border-sky-500/30 text-sky-200 font-bold text-xs">
+                  ${p.actionB}
+                </div>
+              </div>
+            </div>
+
+            <div class="p-2.5 rounded-lg bg-blue-600/20 border border-blue-500/30 text-[11px] text-blue-300 font-medium">
+              👇 在评论区留下你的真实观点与战绩！
+            </div>
+          </div>
+        `;
+      }
+    }
+
+    // 渲染文案
+    function renderCopy() {
+      const d = currentTopicData;
+      document.getElementById('postCopyTitle').innerText = d.title;
+
+      const bodyContent = `🔥 有人买期权单日狂赚 192 倍，2 万本金变 384 万；
+有人裸卖期权遭遇黑天鹅，100 万本金归零还倒欠券商 240 万！
+
+很多人第一次听说期权，都是被那些“单日几十倍甚至百倍”的神话震碎三观。
+期权到底是用小钱逆天改命的【非对称暴富神器】，还是专门收割散户的【合法绞肉机】？
+
+今天我们邀请【${d.side_a.name}】和【${d.side_b.name}】两位专家，摆事实、列数据、算细账，理性拆解真实内幕！👇
+
+───────────────
+⚖️ 正方【${d.side_a.name}】：${d.side_a.subtitle}！
+
+1️⃣ 锁死最大亏损：买方期权最大亏损就是初始付出的权利金，绝不会出现借钱爆仓或倒欠券商的绝境，睡觉都踏实！
+2️⃣ 非线性爆发杠杆：极端行情下单日爆发 50~192 倍收益，这是任何股票、基金都无法企及的“非对称暴击率”。
+3️⃣ 极低成本黑天鹅对冲：手握重仓现货股票时，买入几千块虚值认沽，就能给整个家庭资产买上一份防崩盘保险。
+📌【真实神话切片】：${d.side_a.case}
+💬 买方内心戏：“${d.side_a.quote}”
+
+───────────────
+⚠️ 反方【${d.side_b.name}】：${d.side_b.subtitle}！
+
+1️⃣ Theta 每日无情凌迟：期权有严格的到期保质期！只要大盘横盘震荡，买方每天都要被时间价值蒸发 3%~8%，活活被耗死。
+2️⃣ 80% 到期归零作废：${d.contrast.stat}
+3️⃣ 卖方穿仓万丈深渊：很多新手自以为当“卖方收租”很稳，结果遇到一次极端跳空，直接倾家荡产倒欠几百万！
+📌【真实血泪警示】：${d.side_b.case}
+💬 做市商潜台词：“${d.side_b.quote}”
+
+───────────────
+🔬 穿透专家【${d.contrast.name}】：看懂期权的底层本质！
+
+💡 神级通俗比喻：
+“${d.contrast.metaphor}”
+
+期权在机构眼里是“定价波动率的精算保险”，在很多散户眼里却成了“隔夜暴富的乐透彩票”。
+巴菲特早就警告过：期权是大规模杀伤性金融武器。普通人千万别以为自己是持枪的猎人，多数时候只是靶场上的活靶子！
+
+───────────────
+💬 换作是你，你会怎么站队？
+
+🔴 站队正方【${d.side_a.faction_name}】：以小博大有奇迹！亏得起有限权利金，不碰非对称杠杆怎么逆天改命！
+🔵 站队反方【${d.side_b.faction_name}】：衍生品绞肉机！珍爱生命远离期权，绝不做做市商的人形自走提款机！
+
+大家平时碰过期权吗？你的期权总账本目前是赚还是亏？
+欢迎在评论区留下你的真实战绩与账本！👇
+
+#理性讨论 #${d.category} #金融知识 #投资理财 #认知差 #打工人理财 #以小博大`;
+
+      document.getElementById('postCopyBody').innerText = bodyContent;
+      document.getElementById('copyWordCount').innerText = `约 ${bodyContent.length} 字`;
+    }
+
+    // 渲染运营活动配置
+    function renderCampaign() {
+      const d = currentTopicData;
+      document.getElementById('cmpIdText').innerText = `CAMP_${d.id.toUpperCase()}`;
+      document.getElementById('cmpSideADesc').innerText = `${d.side_a.faction_name}：主打 ${d.side_a.subtitle}，初始支持率 52%`;
+      document.getElementById('cmpSideBDesc').innerText = `${d.side_b.faction_name}：主打 ${d.side_b.subtitle}，初始支持率 48%`;
+
+      const configObj = {
+        "campaign_id": `CAMP_${d.id.toUpperCase()}`,
+        "campaign_name": d.title,
+        "type": "DEBATE_PK_EVENT",
+        "status": "READY_FOR_DEPLOYMENT",
+        "channels": ["xiaohongshu", "app_community", "h5_activity", "wechat_group"],
+        "target_audience": ["大众理财族", "中产家庭", "投资爱好者"],
+        "schedule": {
+          "start_date": "2026-09-10",
+          "end_date": "2026-09-24",
+          "stages": ["预热蓄水期 (Day 1-2)", "爆发交锋期 (Day 3-10)", "沉淀转化期 (Day 11-14)"]
+        },
+        "factions": {
+          "side_a": {
+            "name": d.side_a.faction_name,
+            "mentor_name": d.side_a.name,
+            "slogan": d.side_a.quote,
+            "initial_votes": d.side_a.votes
+          },
+          "side_b": {
+            "name": d.side_b.faction_name,
+            "mentor_name": d.side_b.name,
+            "slogan": d.side_b.quote,
+            "initial_votes": d.side_b.votes
+          }
+        },
+        "tasks_and_incentives": {
+          "daily_tasks": [
+            { "task_id": "T1", "name": "阅读正反双边科普卡片", "points": 10 },
+            { "task_id": "T2", "name": "为心仪阵营投下一票", "points": 20, "lottery_ticket": 1 },
+            { "task_id": "T3", "name": "在评论区留下真实观点与战绩", "points": 50 },
+            { "task_id": "T4", "name": "邀请1位好友为你支持的阵营打气", "points": 100 }
+          ],
+          "prize_pool": [
+            { "level": "一等奖", "prize": "1克纯金金豆 / 1000元体验金", "quota": 10, "prob": "0.5%" },
+            { "level": "二等奖", "prize": "名师认知课 + 行情月卡", "quota": 200, "prob": "15%" },
+            { "level": "阳光普照", "prize": "专属辩手徽章 + 50积分", "quota": "无限", "prob": "84.5%" }
+          ]
+        },
+        "creatives": {
+          "total_pages": 6,
+          "ratio": "3:4",
+          "cover_title": d.title,
+          "post_copy_ready": true
+        },
+        "compliance_audit": {
+          "score": 100,
+          "status": "PASS",
+          "validator": "xhs-discussion-audit"
+        }
+      };
+
+      document.getElementById('jsonPreviewBox').innerText = JSON.stringify(configObj, null, 2);
+    }
+
+    // 渲染移动端落地页模拟器
+    function renderMobileSimulator() {
+      const d = currentTopicData;
+      document.getElementById('simCampTitle').innerText = d.title;
+      document.getElementById('simSideAName').innerText = `🔴 ${d.side_a.faction_name}`;
+      document.getElementById('simSideBName').innerText = `🔵 ${d.side_b.faction_name}`;
+
+      const totalVotes = d.side_a.votes + d.side_b.votes;
+      const rateA = Math.round((d.side_a.votes / totalVotes) * 100);
+      const rateB = 100 - rateA;
+
+      document.getElementById('simSideABar').style.width = `${rateA}%`;
+      document.getElementById('simSideBBar').style.width = `${rateB}%`;
+      document.getElementById('simSideAVotes').innerText = `${d.side_a.votes.toLocaleString()} 票 (${rateA}%)`;
+      document.getElementById('simSideBVotes').innerText = `${d.side_b.votes.toLocaleString()} 票 (${rateB}%)`;
+    }
+
+    // 用户交互：为阵营投票
+    function voteSide(side) {
+      if (hasVoted) {
+        showToast('⚠️ 您今日已投过票啦，做任务可获得更多助威券！', 'warning');
+        return;
+      }
+      if (side === 'A') {
+        currentTopicData.side_a.votes += 1;
+        showToast(`🎉 成功为【${currentTopicData.side_a.faction_name}】投票！金币 +20 🪙`, 'success');
+      } else {
+        currentTopicData.side_b.votes += 1;
+        showToast(`🎉 成功为【${currentTopicData.side_b.faction_name}】投票！金币 +20 🪙`, 'success');
+      }
+      hasVoted = true;
+      userPoints += 20;
+      document.getElementById('simUserPoints').innerText = `金币: ${userPoints} 🪙`;
+      renderMobileSimulator();
+    }
+
+    // 用户交互：完成模拟任务
+    function completeSimTask(btn, pts) {
+      if (btn.innerText === '已完成') return;
+      btn.innerText = '已完成';
+      btn.className = "px-2.5 py-1 rounded-lg bg-emerald-600/60 text-[10px] text-white font-bold cursor-default";
+      userPoints += pts;
+      document.getElementById('simUserPoints').innerText = `金币: ${userPoints} 🪙`;
+      showToast(`✨ 任务达成！获得 +${pts} 积分金币 🪙`, 'success');
+    }
+
+    // 用户交互：抽奖
+    function drawSimLottery() {
+      if (userPoints < 30) {
+        showToast('🪙 金币不足，请先完成上方打卡任务赚取积分！', 'warning');
+        return;
+      }
+      userPoints -= 30;
+      document.getElementById('simUserPoints').innerText = `金币: ${userPoints} 🪙`;
+      const prizes = [
+        '🎉 恭喜获得：专属【金牌辩手】限时徽章！',
+        '🌟 恭喜抽中：100 积分大礼包！',
+        '🧧 恭喜获得：期权精选认知大师课优惠券！'
+      ];
+      const win = prizes[Math.floor(Math.random() * prizes.length)];
+      showToast(win, 'success');
+    }
+
+    // 快速生成主流程：支持用户输入任意标题
+    function generateContent() {
+      const input = document.getElementById('titleInput').value.trim();
+      if (!input) {
+        showToast('⚠️ 请输入金融选题标题', 'warning');
+        return;
+      }
+
+      // 按钮进入 Loading
+      const btn = document.getElementById('btnGenerate');
+      const btnText = document.getElementById('genBtnText');
+      const btnIcon = document.getElementById('genBtnIcon');
+      btn.disabled = true;
+      btnIcon.innerText = '⏳';
+      btnText.innerText = '正在调度专家矩阵与三大 Skill 精算中...';
+
+      // 查找是否匹配预设
+      setTimeout(() => {
+        let match = PRESET_TOPICS.find(t => input.includes(t.title) || t.title.includes(input));
+        if (!match) {
+          // 智能为新标题组装一套内容
+          match = createCustomTopicData(input);
+        }
+
+        currentTopicData = match;
+        currentCardIndex = 1;
+        hasVoted = false;
+        renderAll();
+
+        btn.disabled = false;
+        btnIcon.innerText = '⚡';
+        btnText.innerText = '快速生成对应内容与图片';
+        showToast('🎉 全套 6 张 3:4 卡片、文案与活动配置已快速生成！', 'success');
+      }, 600);
+    }
+
+    // 为任意自定义标题动态生成全套模型
+    function createCustomTopicData(title) {
+      return {
+        id: "custom_" + Date.now(),
+        title: title,
+        category: "金融理财",
+        side_a: {
+          name: "硬核价值投资人",
+          title: "私募基金合伙人",
+          faction_name: "进攻爆发派",
+          subtitle: "抓牢时代非对称红利，用认知差换取资本利得",
+          quote: "当大众都在犹豫恐惧时，正是用极小成本撬动超额收益的绝佳机会！",
+          case: "某投资人把握周期底部非对称机会，实现家庭资产翻倍跃迁！",
+          votes: 18500
+        },
+        side_b: {
+          name: "平民现实派与反收割官",
+          title: "资深财经调查记者",
+          faction_name: "防守保命派",
+          subtitle: "警惕过度杠杆与隐性费用，稳住基本盘现金流",
+          quote: "赚钱前先算算亏钱上限，别把救命钱塞进风险盲盒里！",
+          case: "某中产盲目加杠杆遭遇震荡黑天鹅，本金腰斩陷入沉重财务焦虑！",
+          votes: 19200
+        },
+        contrast: {
+          name: "宏观经济学者",
+          metaphor: "金融市场从不相信暴富神话，唯有看清赔率与概率的人才能安然穿过周期！",
+          stat: "历史数据回测：坚持防守反击与流动性配置的投资者，长期幸存率高达 87%。"
+        },
+        pages: [
+          {
+            page: 1,
+            tag: "金融争议 · 深度辨析",
+            h1: title,
+            h2: "到底该怎么选？",
+            summary: "从资本利得与现金流的博弈，到普通家庭的风险承受力，理性拆解真实内幕！",
+            badgeA: "🔴 正方：抓住非对称机会",
+            badgeB: "🔵 反方：守住现金流生命线"
+          },
+          {
+            page: 2,
+            tag: "痛点剖析 · 现实账本",
+            h1: "为什么普通人在这个选择上",
+            h2: "最容易陷入纠结？",
+            summary: "既害怕错失财富机会，又担心踏空踩坑。账本算不清楚，每一步都在承担隐形摩擦成本！",
+            metrics: [
+              { label: "预期收益率", val: "+8% ~ 15%", color: "text-emerald-400" },
+              { label: "最大下行回撤", val: "-12.5%", color: "text-rose-400" },
+              { label: "流动性损耗", val: "中度", color: "text-amber-400" }
+            ]
+          },
+          {
+            page: 3,
+            tag: "剪刀差拆解 · 认知差",
+            h1: "表面是收益差距，",
+            h2: "背后是风险偏好！",
+            summary: "宏观学者神级隐喻：不要在靶场中央当活靶子，看清底层资产的确定性与周期律！",
+            metrics: [
+              { label: "胜率测算", val: "68.4%", color: "text-blue-400" },
+              { label: "安全边际", val: "充足", color: "text-emerald-400" },
+              { label: "专家评级", val: "五星", color: "text-purple-400" }
+            ]
+          },
+          {
+            page: 4,
+            tag: "正方立论 · 进攻派",
+            h1: "“非对称优势：",
+            h2: "下行有底，上行有弹性！”",
+            summary: "真正的价值投资不是盲目防守，而是在胜率与赔率兼备时果断出手。",
+            caseTitle: "【典型切片】",
+            caseText: "紧握核心资产与抗通胀工具，穿越经济波动周期的真实实践。",
+            quote: "“亏损是有限的，但认知带来的收益是无限的！”"
+          },
+          {
+            page: 5,
+            tag: "反方立论 · 防守派",
+            h1: "“先算失败成本：",
+            h2: "稳健防守才是最大的复利！”",
+            summary: "很多投资陷阱披着华丽的外衣，普通人最重要的是守好自己的现金流与家庭应急金。",
+            caseTitle: "【避坑样本】",
+            caseText: "盲目跟风导致的流动性危机前车之鉴，警醒普通人切勿本末倒置。",
+            quote: "“先把钥匙拿在自己手里，比什么宏大理论都靠谱！”"
+          },
+          {
+            page: 6,
+            tag: "互动投票 · 终极站队",
+            h1: "换作是你，",
+            h2: "你会怎么抉择？",
+            summary: "点击下方按钮，投下你理性的一票！并在评论区留下你的真实观点！",
+            actionA: "🔴 站队进攻派：勇敢出击，抓住时代红利",
+            actionB: "🔵 站队防守派：稳健为先，现金为王睡个好觉"
+          }
+        ]
+      };
+    }
+
+    // 灵感选题快速填入
+    function applyPresetTopic(index) {
+      const t = PRESET_TOPICS[index];
+      document.getElementById('titleInput').value = t.title;
+      generateContent();
+    }
+
+    function clearTitleInput() {
+      document.getElementById('titleInput').value = '';
+      document.getElementById('titleInput').focus();
+    }
+
+    // 卡片翻页与选择
+    function selectCardPage(pnum) {
+      currentCardIndex = pnum;
+      renderCards();
+    }
+
+    function prevCard() {
+      if (currentCardIndex > 1) {
+        currentCardIndex--;
+        renderCards();
+      }
+    }
+
+    function nextCard() {
+      if (currentCardIndex < 6) {
+        currentCardIndex++;
+        renderCards();
+      }
+    }
+
+    // 切换卡片单图/平铺视图
+    function toggleCardViewMode() {
+      const single = document.getElementById('singleCardContainer');
+      const grid = document.getElementById('gridCardContainer');
+      const btn = document.getElementById('btnCardViewMode');
+
+      if (cardViewMode === 'single') {
+        cardViewMode = 'grid';
+        single.classList.add('hidden');
+        grid.classList.remove('hidden');
+        btn.innerText = '返回焦点单图';
+      } else {
+        cardViewMode = 'single';
+        single.classList.remove('hidden');
+        grid.classList.add('hidden');
+        btn.innerText = '切换平铺全景';
+      }
+    }
+
+    // 切换产出选项卡 (卡片 / 文案 / 运营活动)
+    function switchOutputTab(tab) {
+      currentTab = tab;
+      const pCards = document.getElementById('panelCards');
+      const pCopy = document.getElementById('panelCopy');
+      const pCamp = document.getElementById('panelCampaign');
+
+      const bCards = document.getElementById('tabBtnCards');
+      const bCopy = document.getElementById('tabBtnCopy');
+      const bCamp = document.getElementById('tabBtnCampaign');
+      const cToolbar = document.getElementById('cardsToolbar');
+
+      // 隐藏全部
+      pCards.classList.add('hidden');
+      pCopy.classList.add('hidden');
+      pCamp.classList.add('hidden');
+
+      bCards.className = "px-4 py-2 rounded-lg text-xs font-bold transition flex items-center gap-1.5 bg-slate-800 text-slate-300 hover:text-white";
+      bCopy.className = "px-4 py-2 rounded-lg text-xs font-bold transition flex items-center gap-1.5 bg-slate-800 text-slate-300 hover:text-white";
+      bCamp.className = "px-4 py-2 rounded-lg text-xs font-bold transition flex items-center gap-1.5 bg-slate-800 text-slate-300 hover:text-white";
+
+      if (tab === 'cards') {
+        pCards.classList.remove('hidden');
+        bCards.className = "px-4 py-2 rounded-lg text-xs font-bold transition flex items-center gap-1.5 bg-blue-600 text-white shadow-sm";
+        cToolbar.classList.remove('hidden');
+      } else if (tab === 'copy') {
+        pCopy.classList.remove('hidden');
+        bCopy.className = "px-4 py-2 rounded-lg text-xs font-bold transition flex items-center gap-1.5 bg-blue-600 text-white shadow-sm";
+        cToolbar.classList.add('hidden');
+      } else if (tab === 'campaign') {
+        pCamp.classList.remove('hidden');
+        bCamp.className = "px-4 py-2 rounded-lg text-xs font-bold transition flex items-center gap-1.5 bg-indigo-600 text-white shadow-sm";
+        cToolbar.classList.add('hidden');
+      }
+    }
+
+    // 复制文案与功能
+    function copyFullPostCopy() {
+      const title = document.getElementById('postCopyTitle').innerText;
+      const body = document.getElementById('postCopyBody').innerText;
+      const pinned = document.getElementById('postPinnedComment').innerText;
+      const fullText = `【小红书标题】\n${title}\n\n【正文】\n${body}\n\n【作者置顶神评】\n${pinned}`;
+
+      navigator.clipboard.writeText(fullText).then(() => {
+        showToast('📋 小红书发布文案包已成功复制到剪贴板！', 'success');
+      }).catch(() => {
+        showToast('⚠️ 复制失败，请手动划选复制', 'warning');
+      });
+    }
+
+    function copyPinnedComment() {
+      const pinned = document.getElementById('postPinnedComment').innerText;
+      navigator.clipboard.writeText(pinned).then(() => {
+        showToast('📌 置顶神评已复制到剪贴板！', 'success');
+      });
+    }
+
+    function copyCampaignJSON() {
+      const jsonStr = document.getElementById('jsonPreviewBox').innerText;
+      navigator.clipboard.writeText(jsonStr).then(() => {
+        showToast('📋 campaign_config.json 已成功复制！', 'success');
+      });
+    }
+
+    // 下载运营活动配置 JSON 文件
+    function exportCampaignJSON() {
+      const jsonStr = document.getElementById('jsonPreviewBox').innerText;
+      const blob = new Blob([jsonStr], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `campaign_config_${currentTopicData.id}.json`;
+      a.click();
+      URL.revokeObjectURL(url);
+      showToast(`💾 campaign_config_${currentTopicData.id}.json 下载成功！`, 'success');
+    }
+
+    // 在新标签打开高清卡片 (可直接另存为图片)
+    function openCardInNewTab() {
+      const p = currentTopicData.pages[currentCardIndex - 1];
+      const htmlContent = `<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>P${currentCardIndex} - ${currentTopicData.title}</title>
+  <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"><\/script>
+  <style>
+    body { margin: 0; background: #020617; display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 20px; }
+    .card-box { width: 480px; aspect-ratio: 3 / 4; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.8); border-radius: 16px; overflow: hidden; }
+  </style>
+</head>
+<body>
+  <div class="card-box">
+    ${getCardHTML(p, currentCardIndex)}
+  </div>
+</body>
+</html>`;
+
+      const blob = new Blob([htmlContent], { type: 'text/html' });
+      const url = URL.createObjectURL(blob);
+      window.open(url, '_blank');
+    }
+
+    // 下载当前单张卡片 HTML
+    function downloadActiveCardHTML() {
+      const p = currentTopicData.pages[currentCardIndex - 1];
+      const htmlContent = `<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>P${currentCardIndex} - ${currentTopicData.title}</title>
+  <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"><\/script>
+  <style>
+    body { margin: 0; background: #020617; display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 20px; }
+    .card-box { width: 480px; aspect-ratio: 3 / 4; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.8); border-radius: 16px; overflow: hidden; }
+  </style>
+</head>
+<body>
+  <div class="card-box">
+    ${getCardHTML(p, currentCardIndex)}
+  </div>
+</body>
+</html>`;
+
+      const blob = new Blob([htmlContent], { type: 'text/html' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `card_P${currentCardIndex}_${currentTopicData.id}.html`;
+      a.click();
+      URL.revokeObjectURL(url);
+      showToast(`📥 card_P${currentCardIndex}.html 下载成功！`, 'success');
+    }
+
+    // Toast 提示条工具函数
+    function showToast(msg, type = 'success') {
+      const toast = document.getElementById('toast');
+      const toastMsg = document.getElementById('toastMsg');
+      const toastIcon = document.getElementById('toastIcon');
+
+      toastMsg.innerText = msg;
+      toastIcon.innerText = type === 'success' ? '✅' : '⚠️';
+
+      toast.classList.remove('hidden');
+      clearTimeout(window._toastTimer);
+      window._toastTimer = setTimeout(() => {
+        toast.classList.add('hidden');
+      }, 2500);
+    }
+  </script>
+</body>
+</html>

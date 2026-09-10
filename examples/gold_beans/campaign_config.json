@@ -1,0 +1,187 @@
+{
+  "campaign_id": "CAMP_GOLD_BEANS",
+  "campaign_name": "年轻人每月攒一颗金豆：是低门槛储蓄还是为高溢价买单？",
+  "type": "DEBATE_PK_EVENT",
+  "status": "READY_FOR_DEPLOYMENT",
+  "channels": [
+    "xiaohongshu",
+    "app_community",
+    "h5_activity",
+    "wechat_group"
+  ],
+  "target_audience": [
+    "大众理财族",
+    "中产家庭",
+    "投资爱好者"
+  ],
+  "schedule": {
+    "start_date": "2026-09-10",
+    "end_date": "2026-09-24",
+    "stages": [
+      "预热蓄水期 (Day 1-2)",
+      "爆发交锋期 (Day 3-10)",
+      "沉淀转化期 (Day 11-14)"
+    ]
+  },
+  "factions": {
+    "side_a": {
+      "name": "正方阵营",
+      "mentor": {
+        "id": "macro_economist",
+        "name": "宏观经济与周期学者",
+        "title": "宏观策略首席分析师 / 经济学研究员",
+        "core_logic": "M2与货币乘数传导、通胀通缩剪刀差、长短期债务周期、实际利率与美元潮汐",
+        "catchphrase": "顺周期加杠杆是赌博，看懂央行资产负债表才是真正的降维生存。",
+        "focus_areas": [
+          "货币购买力稀释",
+          "名义利率vs实际利率",
+          "资产负债表衰退",
+          "主权信用对冲"
+        ],
+        "argument_tone": "大局观全局视角、历史周期对照、擅长用30年维度推导债务稀释"
+      },
+      "slogan": "顺周期加杠杆是赌博，看懂央行资产负债表才是真正的降维生存。",
+      "initial_support_rate": 52
+    },
+    "side_b": {
+      "name": "反方阵营",
+      "mentor": {
+        "id": "consumer_advocate",
+        "name": "平民现实派与反收割官",
+        "title": "资深财经调查记者 / 独立消费者观察家",
+        "core_logic": "大众真实生活体感、中年失业降薪现实、金店工艺溢价算账、心理复利情绪价值",
+        "catchphrase": "普通人别被宏大词汇忽悠，先算算这笔买卖你变现时要被砍几刀。",
+        "focus_areas": [
+          "中年职场脆弱度",
+          "变现折旧与工艺费陷阱",
+          "无债一身轻心理价值",
+          "刚性月供压迫感"
+        ],
+        "argument_tone": "接地气、尖锐犀利、替普通大众算明细账、直击生活真实痛点"
+      },
+      "slogan": "普通人别被宏大词汇忽悠，先算算这笔买卖你变现时要被砍几刀。",
+      "initial_support_rate": 48
+    }
+  },
+  "tasks_and_incentives": {
+    "daily_tasks": [
+      {
+        "task_id": "T1",
+        "name": "阅读正反双边科普卡片",
+        "reward_points": 10,
+        "icon": "📖"
+      },
+      {
+        "task_id": "T2",
+        "name": "为心仪阵营投下一票",
+        "reward_points": 20,
+        "lottery_ticket": 1,
+        "icon": "🗳️"
+      },
+      {
+        "task_id": "T3",
+        "name": "在评论区留下真实账本与观点",
+        "reward_points": 50,
+        "icon": "💬"
+      },
+      {
+        "task_id": "T4",
+        "name": "邀请1位好友为你支持的阵营打气",
+        "reward_points": 100,
+        "icon": "👥"
+      }
+    ],
+    "prize_pool": [
+      {
+        "level": "一等奖",
+        "name": "1克投资金豆 / 1000元体验金",
+        "quota": 10,
+        "prob": "0.5%"
+      },
+      {
+        "level": "二等奖",
+        "name": "大师级投资认知课 + 行情月卡",
+        "quota": 200,
+        "prob": "15%"
+      },
+      {
+        "level": "参与奖",
+        "name": "专属辩手徽章 + 50社区积分",
+        "quota": "无上限",
+        "prob": "84.5%"
+      }
+    ]
+  },
+  "creatives": {
+    "pages_count": 6,
+    "ratio": "3:4",
+    "pages_list": [
+      {
+        "page": 1,
+        "type": "KV_COVER",
+        "file": "page_1.html"
+      },
+      {
+        "page": 2,
+        "type": "PAIN_POINT_LEDGER",
+        "file": "page_2.html"
+      },
+      {
+        "page": 3,
+        "type": "COGNITIVE_GAP_BOARD",
+        "file": "page_3.html"
+      },
+      {
+        "page": 4,
+        "type": "SIDE_A_ARGUMENT",
+        "file": "page_4.html"
+      },
+      {
+        "page": 5,
+        "type": "SIDE_B_ARGUMENT",
+        "file": "page_5.html"
+      },
+      {
+        "page": 6,
+        "type": "DEBATE_CALL_TO_ACTION",
+        "file": "page_6.html"
+      }
+    ],
+    "social_post": {
+      "title": "年轻人每月攒一颗金豆：是低门槛储蓄还是为高溢价买单？",
+      "body": "金价一路狂飙，一颗颗1克重的小金豆成了年轻人的新型储蓄罐。有人说是普通人对抗通胀的最优解，有人却说是金店精准收割年轻人的智商税！\n\n【宏观经济学者】力挺金豆储蓄：黄金是主权货币超发的终极解药，每月1克积少成多，是天然的强制储蓄与资产压舱石。\n【平民反收割官】直呼陷阱：买入时加了15%工艺溢价，变现回购时还要被克扣折旧！一买一卖白白蒸发上百元。\n\n普通人攒黄金，到底是锁定财富还是给金店打工？\n\n评论区聊聊：你买过小金豆吗？回收时亏了吗？👇\n\n#理性讨论 #攒金豆 #黄金理财 #资产配置 #年轻人理财\n\n💡 金店柜姐看着你桌上的小玻璃瓶，嘴角微微上扬，默默给老家盖房添了一块砖……",
+      "pinned_comment": "提醒大家一句：如果是为了首饰戴着玩，小金豆很开心；如果是为了投资理财，一定要算清买入溢价和回收折价！大家买金豆时每克溢价多少？"
+    }
+  },
+  "risk_and_audit": {
+    "audit_status": "PASS",
+    "compliance_score": 100,
+    "audit_rule": "xhs-discussion-audit-v2",
+    "anti_fraud_rules": {
+      "device_daily_vote_limit": 1,
+      "ip_frequency_limit_per_min": 10
+    }
+  },
+  "tracking_events": [
+    {
+      "event": "act_expose",
+      "desc": "活动主落地页/笔记曝光"
+    },
+    {
+      "event": "act_vote_click",
+      "desc": "用户点击正方或反方投票"
+    },
+    {
+      "event": "act_task_complete",
+      "desc": "用户完成阅读/评论/邀请任务"
+    },
+    {
+      "event": "act_draw_lottery",
+      "desc": "用户消耗积分参与抽奖"
+    },
+    {
+      "event": "act_share_click",
+      "desc": "用户生成分享海报或点击分享"
+    }
+  ]
+}

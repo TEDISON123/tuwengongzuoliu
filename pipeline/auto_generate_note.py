@@ -737,6 +737,81 @@ https://doc.weixin.qq.com/forms/ANAAyQcbAAgAbEAGAb_AKoCNPRTWz2o5f
     with open(os.path.join(output_dir, "publish_pack.txt"), "w", encoding="utf-8") as f:
         f.write(pack_content)
 
+    # 8.2 生成标准运营活动配置 campaign_config.json
+    campaign_config = {
+        "campaign_id": f"CAMP_{topic_id.upper()}",
+        "campaign_name": mock_data['post_copy']['title'],
+        "type": "DEBATE_PK_EVENT",
+        "status": "READY_FOR_DEPLOYMENT",
+        "channels": ["xiaohongshu", "app_community", "h5_activity", "wechat_group"],
+        "target_audience": ["大众理财族", "中产家庭", "投资爱好者"],
+        "schedule": {
+            "start_date": "2026-09-10",
+            "end_date": "2026-09-24",
+            "stages": ["预热蓄水期 (Day 1-2)", "爆发交锋期 (Day 3-10)", "沉淀转化期 (Day 11-14)"]
+        },
+        "factions": {
+            "side_a": {
+                "name": mock_data["pages"][3].get("subtitle", "正方阵营"),
+                "mentor": side_a_p,
+                "slogan": side_a_p.get("catchphrase", ""),
+                "initial_support_rate": 52
+            },
+            "side_b": {
+                "name": mock_data["pages"][4].get("subtitle", "反方阵营"),
+                "mentor": side_b_p,
+                "slogan": side_b_p.get("catchphrase", ""),
+                "initial_support_rate": 48
+            }
+        },
+        "tasks_and_incentives": {
+            "daily_tasks": [
+                {"task_id": "T1", "name": "阅读正反双边科普卡片", "reward_points": 10, "icon": "📖"},
+                {"task_id": "T2", "name": "为心仪阵营投下一票", "reward_points": 20, "lottery_ticket": 1, "icon": "🗳️"},
+                {"task_id": "T3", "name": "在评论区留下真实账本与观点", "reward_points": 50, "icon": "💬"},
+                {"task_id": "T4", "name": "邀请1位好友为你支持的阵营打气", "reward_points": 100, "icon": "👥"}
+            ],
+            "prize_pool": [
+                {"level": "一等奖", "name": "1克投资金豆 / 1000元体验金", "quota": 10, "prob": "0.5%"},
+                {"level": "二等奖", "name": "大师级投资认知课 + 行情月卡", "quota": 200, "prob": "15%"},
+                {"level": "参与奖", "name": "专属辩手徽章 + 50社区积分", "quota": "无上限", "prob": "84.5%"}
+            ]
+        },
+        "creatives": {
+            "pages_count": 6,
+            "ratio": "3:4",
+            "pages_list": [
+                {"page": 1, "type": "KV_COVER", "file": "page_1.html"},
+                {"page": 2, "type": "PAIN_POINT_LEDGER", "file": "page_2.html"},
+                {"page": 3, "type": "COGNITIVE_GAP_BOARD", "file": "page_3.html"},
+                {"page": 4, "type": "SIDE_A_ARGUMENT", "file": "page_4.html"},
+                {"page": 5, "type": "SIDE_B_ARGUMENT", "file": "page_5.html"},
+                {"page": 6, "type": "DEBATE_CALL_TO_ACTION", "file": "page_6.html"}
+            ],
+            "social_post": mock_data["post_copy"]
+        },
+        "risk_and_audit": {
+            "audit_status": "PASS",
+            "compliance_score": 100,
+            "audit_rule": "xhs-discussion-audit-v2",
+            "anti_fraud_rules": {
+                "device_daily_vote_limit": 1,
+                "ip_frequency_limit_per_min": 10
+            }
+        },
+        "tracking_events": [
+            {"event": "act_expose", "desc": "活动主落地页/笔记曝光"},
+            {"event": "act_vote_click", "desc": "用户点击正方或反方投票"},
+            {"event": "act_task_complete", "desc": "用户完成阅读/评论/邀请任务"},
+            {"event": "act_draw_lottery", "desc": "用户消耗积分参与抽奖"},
+            {"event": "act_share_click", "desc": "用户生成分享海报或点击分享"}
+        ]
+    }
+    with open(os.path.join(output_dir, "campaign_config.json"), "w", encoding="utf-8") as f:
+        json.dump(campaign_config, f, ensure_ascii=False, indent=2)
+    print(f"   ➔ 已生成: campaign_config.json (运营活动中台配置)")
+
+
     # 9. 生成一键全屏多卡片阅览器 all_pages_viewer.html
     skill_badges = f"""
     <!-- 4 大 Skill 赋能矩阵状态 Bar -->

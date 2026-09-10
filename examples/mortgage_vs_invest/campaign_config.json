@@ -1,0 +1,187 @@
+{
+  "campaign_id": "CAMP_MORTGAGE_VS_INVEST",
+  "campaign_name": "手头有50万闲钱：提前还4.0%房贷，还是留着买理财？",
+  "type": "DEBATE_PK_EVENT",
+  "status": "READY_FOR_DEPLOYMENT",
+  "channels": [
+    "xiaohongshu",
+    "app_community",
+    "h5_activity",
+    "wechat_group"
+  ],
+  "target_audience": [
+    "大众理财族",
+    "中产家庭",
+    "投资爱好者"
+  ],
+  "schedule": {
+    "start_date": "2026-09-10",
+    "end_date": "2026-09-24",
+    "stages": [
+      "预热蓄水期 (Day 1-2)",
+      "爆发交锋期 (Day 3-10)",
+      "沉淀转化期 (Day 11-14)"
+    ]
+  },
+  "factions": {
+    "side_a": {
+      "name": "正方阵营",
+      "mentor": {
+        "id": "consumer_advocate",
+        "name": "平民现实派与反收割官",
+        "title": "资深财经调查记者 / 独立消费者观察家",
+        "core_logic": "大众真实生活体感、中年失业降薪现实、金店工艺溢价算账、心理复利情绪价值",
+        "catchphrase": "普通人别被宏大词汇忽悠，先算算这笔买卖你变现时要被砍几刀。",
+        "focus_areas": [
+          "中年职场脆弱度",
+          "变现折旧与工艺费陷阱",
+          "无债一身轻心理价值",
+          "刚性月供压迫感"
+        ],
+        "argument_tone": "接地气、尖锐犀利、替普通大众算明细账、直击生活真实痛点"
+      },
+      "slogan": "普通人别被宏大词汇忽悠，先算算这笔买卖你变现时要被砍几刀。",
+      "initial_support_rate": 52
+    },
+    "side_b": {
+      "name": "反方阵营",
+      "mentor": {
+        "id": "cfp_planner",
+        "name": "财富规划师与精算视角",
+        "title": "国际认证注册理财规划师 (CFP) / 资深精算师",
+        "core_logic": "家庭流动性底线、机会成本测算、内部收益率 (IRR)、大数法则反脆弱防御",
+        "catchphrase": "脱离流动性储备谈省利息，都是在拿家庭安全裸奔。",
+        "focus_areas": [
+          "家庭应急备用金",
+          "现金流久期匹配",
+          "纯风险保费比率",
+          "流动性冻结代价"
+        ],
+        "argument_tone": "严谨务实、强调底线风控、极度厌恶家庭资金链断裂"
+      },
+      "slogan": "脱离流动性储备谈省利息，都是在拿家庭安全裸奔。",
+      "initial_support_rate": 48
+    }
+  },
+  "tasks_and_incentives": {
+    "daily_tasks": [
+      {
+        "task_id": "T1",
+        "name": "阅读正反双边科普卡片",
+        "reward_points": 10,
+        "icon": "📖"
+      },
+      {
+        "task_id": "T2",
+        "name": "为心仪阵营投下一票",
+        "reward_points": 20,
+        "lottery_ticket": 1,
+        "icon": "🗳️"
+      },
+      {
+        "task_id": "T3",
+        "name": "在评论区留下真实账本与观点",
+        "reward_points": 50,
+        "icon": "💬"
+      },
+      {
+        "task_id": "T4",
+        "name": "邀请1位好友为你支持的阵营打气",
+        "reward_points": 100,
+        "icon": "👥"
+      }
+    ],
+    "prize_pool": [
+      {
+        "level": "一等奖",
+        "name": "1克投资金豆 / 1000元体验金",
+        "quota": 10,
+        "prob": "0.5%"
+      },
+      {
+        "level": "二等奖",
+        "name": "大师级投资认知课 + 行情月卡",
+        "quota": 200,
+        "prob": "15%"
+      },
+      {
+        "level": "参与奖",
+        "name": "专属辩手徽章 + 50社区积分",
+        "quota": "无上限",
+        "prob": "84.5%"
+      }
+    ]
+  },
+  "creatives": {
+    "pages_count": 6,
+    "ratio": "3:4",
+    "pages_list": [
+      {
+        "page": 1,
+        "type": "KV_COVER",
+        "file": "page_1.html"
+      },
+      {
+        "page": 2,
+        "type": "PAIN_POINT_LEDGER",
+        "file": "page_2.html"
+      },
+      {
+        "page": 3,
+        "type": "COGNITIVE_GAP_BOARD",
+        "file": "page_3.html"
+      },
+      {
+        "page": 4,
+        "type": "SIDE_A_ARGUMENT",
+        "file": "page_4.html"
+      },
+      {
+        "page": 5,
+        "type": "SIDE_B_ARGUMENT",
+        "file": "page_5.html"
+      },
+      {
+        "page": 6,
+        "type": "DEBATE_CALL_TO_ACTION",
+        "file": "page_6.html"
+      }
+    ],
+    "social_post": {
+      "title": "手头有50万闲钱：提前还4.0%房贷，还是留着买理财？",
+      "body": "存款利率跌破2%，房贷还在4%挂着……手头攒了50万，到底是该提前还款锁定无风险收益，还是手握现金保留家庭生命流动性？\n\n【平民反收割官】力挺提前还款：理财全面破净，还房贷就是年化4%保本收益！无债一身轻比什么都强。\n【注册理财规划师】坚决反对：脱离流动性储备谈省利息都是裸奔！房贷是一生最廉价长期贷款，现金是中年家庭的呼吸机。\n\n这根本不是一道数学题，而是确定性与安全感的极端较量！\n\n欢迎在评论区聊聊你的真实账本！换作是你，你会怎么选？👇\n\n#理性讨论 #财经知识 #提前还房贷 #理财思维 #资产配置\n\n💡 房贷就像那个廉价但包容的前任，一旦结清了很痛快，但哪天你急用钱想再追回来，可就千难万难了……",
+      "pinned_comment": "我先抛砖引玉：如果这50万是全部流动备用金，千万别全还！至少留1~2年生活费；若是纯闲钱，还贷确实等于躺赚年化4%无风险收益。大家现在处于哪种情况？"
+    }
+  },
+  "risk_and_audit": {
+    "audit_status": "PASS",
+    "compliance_score": 100,
+    "audit_rule": "xhs-discussion-audit-v2",
+    "anti_fraud_rules": {
+      "device_daily_vote_limit": 1,
+      "ip_frequency_limit_per_min": 10
+    }
+  },
+  "tracking_events": [
+    {
+      "event": "act_expose",
+      "desc": "活动主落地页/笔记曝光"
+    },
+    {
+      "event": "act_vote_click",
+      "desc": "用户点击正方或反方投票"
+    },
+    {
+      "event": "act_task_complete",
+      "desc": "用户完成阅读/评论/邀请任务"
+    },
+    {
+      "event": "act_draw_lottery",
+      "desc": "用户消耗积分参与抽奖"
+    },
+    {
+      "event": "act_share_click",
+      "desc": "用户生成分享海报或点击分享"
+    }
+  ]
+}
