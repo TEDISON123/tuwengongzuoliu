@@ -24,6 +24,10 @@
    * **P6 站队**：A/B 投票箱，直击灵魂二选一促评 Hook。
 5. **官方履约风控集成**：自动打包小红书发布文案、官方指定活动标签、作者前 5 分钟置顶神评及腾讯文档收集表直达链接。
 6. **多专家视角交锋矩阵 (Expert Personas Matrix)**：针对不同金融议题，自动路由并注入 6 大硬核专家角色（注册理财规划师/精算视角、宏观经济周期学者、硬核价值投资人、商业战略CFO、平民反收割官、法律风控律师），在封面 P1 展示交锋 Badge、P3 深度穿透认知剪刀差、P4/P5 注入专家专属立论与标志金句，彻底告别单一口吻与假大空教程。
+7. **三维内容增强 Skill 矩阵 (3-Dimensional Content Boosters)**：
+   * **事实案例 Skill (`fact-case-injector`)**：自动嵌入典型中产财务切片、避坑事实警示与商业历史对照样本，让抽象理论落地为“具体的真人账本”；
+   * **数据精算 Skill (`data-enhancer`)**：内置房贷提前还款省利息精算、存贷利差计算器、黄金买入工艺溢价与变现折价率公式，提供硬核数据背书；
+   * **幽默网感 Skill (`humor-refiner`)**：融入神级通俗隐喻、当代打工人扎心自嘲与反讽括号内心戏 OS，在严守小红书合规底线的前提下极大提升趣味度与完读率。
 
 ---
 
@@ -37,30 +41,41 @@ tuwengongzuoliu/
 │   ├── finance_knowledge_graph_planning.md        # 金融知识图谱与50+话题矩阵规划
 │   ├── finance_note_production_workflow.md        # 金融图文工业化生产全流程工作流
 │   └── automated_image_text_workflow_architecture.md # 全自动化技术架构与数据流规范
-├── skills/
-│   └── xhs-discussion-audit/                      # 官方合规自检与改写 Skill 引擎
-│       ├── SKILL.md                               # 技能标准规范与判定树
-│       ├── rules.json                             # 规则、死穴特征词与垂类配置
-│       └── scripts/
-│           └── audit_note.py                      # 自动化体检与诊断打分 Python 脚本
+├── skills/                                        # 四大标准化工业级 Skill 引擎
+│   ├── xhs-discussion-audit/                      # 1. 官方合规自检与改写 Skill (拦截四大死穴)
+│   │   ├── SKILL.md
+│   │   ├── rules.json
+│   │   └── scripts/audit_note.py
+│   ├── fact-case-injector/                        # 2. 事实案例与中产切片 Skill (增强代入感)
+│   │   ├── SKILL.md
+│   │   ├── database/case_library.json
+│   │   └── scripts/inject_cases.py
+│   ├── data-enhancer/                             # 3. 数据精算与量化利差 Skill (增强权威信任)
+│   │   ├── SKILL.md
+│   │   └── scripts/
+│   │       ├── finance_math.py                    # 房贷利差、黄金溢价等数学引擎
+│   │       └── enhance_data.py
+│   └── humor-refiner/                             # 4. 幽默改造与网感赋能 Skill (提升完读率)
+│       ├── SKILL.md
+│       └── scripts/refine_humor.py                # 神级比喻、打工人自嘲与括号OS
 ├── pipeline/
-│   ├── auto_generate_note.py                      # 核心自动化调度脚本 (端到端流水线)
+│   ├── auto_generate_note.py                      # 核心全自动装配主流水线 (串联四大 Skill)
 │   └── expert_personas.json                       # 专家视角角色库与议题路由配置表
 ├── templates/                                     # 交互式组件与模板
 │   ├── incentive_calculator.html                  # 活动收益测算与冲档助手 (Generative UI)
 │   ├── finance_graph_explorer.html                # 交互式知识图谱话题罗盘
 │   └── pipeline_controller.html                   # 全自动化流水线交互控制器
 ├── examples/
-│   ├── mortgage_vs_invest/                        # 示例1：提前还贷 vs 留现金买理财 (反收割官 VS 理财规划师)
-│   │   ├── page_1.html ~ page_6.html              # 融入专家视角的 3:4 独立图文卡片 (HTML+Tailwind)
-│   │   ├── all_pages_viewer.html                  # 包含专家交锋矩阵的全景预览看板
+│   ├── mortgage_vs_invest/                        # 示例1：提前还贷 vs 买理财 (三维增强版)
+│   │   ├── page_1.html ~ page_6.html              # 融入案例、精算看板、幽默金句的卡片
+│   │   ├── all_pages_viewer.html                  # 包含四大 Skill 装配状态的全景看板
 │   │   ├── audit_report.json                      # 自动化体检达标报告 (100分 PASS)
-│   │   └── publish_pack.txt                       # 复制即发文案包 (含专家视角配置与置顶神评)
-│   └── gold_beans/                                # 示例2：年轻人攒金豆是储蓄还是被割 (宏观学者 VS 反收割官)
-│       ├── page_1.html ~ page_6.html              # 标准 3:4 独立图文卡片
-│       ├── all_pages_viewer.html                  # 全景图文看板
-│       ├── audit_report.json                      # 100分 PASS 报告
-│       └── publish_pack.txt                       # 完整发布包
+│   │   └── publish_pack.txt                       # 完整发布文案包 (含神级比喻与置顶神评)
+│   └── gold_beans/                                # 示例2：年轻人攒金豆争议 (三维增强版)
+│       ├── page_1.html ~ page_6.html
+│       ├── all_pages_viewer.html
+│       ├── audit_report.json
+│       └── publish_pack.txt
 └── README.md
 ```
 
@@ -68,46 +83,38 @@ tuwengongzuoliu/
 
 ## 🚀 快速启动指南 (Quick Start)
 
-### 1. 查看支持的专家视角与议题路由
+### 1. 运行全自动图文生产 (默认全开四大 Skill 赋能)
+
+在终端中执行以下命令，即可针对特定议题一键完成**专家路由 + 数据精算 + 案例注入 + 幽默改造 + 合规自检 + 3:4 卡片渲染 + 物料打包**：
 
 ```bash
-python3 pipeline/auto_generate_note.py --list-experts
-```
-
-### 2. 运行预设立论全自动图文生成 (融入多专家视角)
-
-在终端中执行以下命令，即可针对特定议题一键完成专家路由、脚本生成、质量体检、3:4卡片渲染与文案打包：
-
-```bash
-# 运行提前还贷 vs 理财议题 (平民反收割官 VS 注册理财规划师)
+# 运行提前还贷 vs 理财议题 (平民反收割官 VS 注册理财规划师 | 宏观学者穿透)
 python3 pipeline/auto_generate_note.py --topic-id mortgage_vs_invest --output examples/mortgage_vs_invest
 
-# 运行攒金豆议题 (宏观经济学者 VS 平民反收割官)
+# 运行攒金豆议题 (宏观经济学者 VS 平民反收割官 | 价值投资人穿透)
 python3 pipeline/auto_generate_note.py --topic-id gold_beans --output examples/gold_beans
 ```
 
-### 3. 独立运行内容合规体检工具
-
-你可以直接使用审核引擎检验任意标题或笔记草稿是否符合官方投流标准：
+### 2. 独立调用四大 Skill
 
 ```bash
-python3 skills/xhs-discussion-audit/scripts/audit_note.py \
-  --title "博士求职日记：今天去面试了大厂，建了个交流群" \
-  --category "职场"
-```
+# ① 运行小红书「理性讨论」合规体检 Skill
+python3 skills/xhs-discussion-audit/scripts/audit_note.py --title "手头有50万闲钱，提前还贷还是买理财？"
 
-输出示例：
-```markdown
-# 📋 小红书「理性讨论」活动合规审核报告
-- 审核结论：REJECTED (非活动投流范式 ❌)
-- 议题指数评分：10 / 100 分
-- 违规项：命中死穴【个人流水账】，读者无法展开立场对辩，不予投流。
-- 改写建议：改为《博士求职时，学校背景和顶级顶刊经历，哪个更关键？》
+# ② 运行事实案例库检索 Skill
+python3 skills/fact-case-injector/scripts/inject_cases.py --topic-id mortgage_vs_invest
+
+# ③ 运行金融精算模型 Skill (如测算50万4%房贷30年省息账本)
+python3 skills/data-enhancer/scripts/finance_math.py --calc mortgage --amount 500000 --rate 0.040
+
+# ④ 运行幽默比喻与扎心金句库 Skill
+python3 skills/humor-refiner/scripts/refine_humor.py --list-quotes
 ```
 
 ### 3. 查看全景卡片看板与发布物料
 
 生成完毕后，双击打开 `examples/mortgage_vs_invest/all_pages_viewer.html`：
+* 查看顶部 **四大 Skill 装配流水线状态** 与 **专家交锋矩阵**；
 * 同步并排预览 P1 至 P6 高清大字报卡片；
 * 底部一键复制标题、正文、Hashtag 与作者置顶神评。
 
