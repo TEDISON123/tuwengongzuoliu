@@ -3,31 +3,31 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>金融内容制作者工作台 - 一键生成图文与运营活动配置</title>
+  <title>金融内容制作者工作台 - 纯白轻量版</title>
   <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
   <style>
     /* 3:4 Ratio card styling */
     .ratio-3-4 {
       aspect-ratio: 3 / 4;
     }
-    /* Custom scrollbar */
+    /* Custom light scrollbar */
     ::-webkit-scrollbar {
       width: 6px;
       height: 6px;
     }
     ::-webkit-scrollbar-track {
-      background: #0f172a;
+      background: #f8fafc;
     }
     ::-webkit-scrollbar-thumb {
-      background: #334155;
+      background: #cbd5e1;
       border-radius: 3px;
     }
     ::-webkit-scrollbar-thumb:hover {
-      background: #475569;
+      background: #94a3b8;
     }
-    /* Phone frame shadow */
-    .phone-mockup {
-      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7), 0 0 0 12px #1e293b, 0 0 0 14px #334155;
+    /* White Phone frame shadow */
+    .phone-mockup-white {
+      box-shadow: 0 25px 50px -12px rgba(15, 23, 42, 0.15), 0 0 0 10px #e2e8f0, 0 0 0 12px #cbd5e1;
     }
     /* Toast animation */
     @keyframes slideUp {
@@ -39,62 +39,62 @@
     }
   </style>
 </head>
-<body class="bg-slate-950 text-slate-100 min-h-screen font-sans antialiased flex flex-col selection:bg-blue-600 selection:text-white">
+<body class="bg-slate-50 text-slate-800 min-h-screen font-sans antialiased flex flex-col selection:bg-blue-600 selection:text-white">
 
-  <!-- ================= 顶部导航栏 ================= -->
-  <header class="border-b border-slate-800 bg-slate-900/80 backdrop-blur sticky top-0 z-50">
+  <!-- ================= 纯白顶部导航栏 ================= -->
+  <header class="border-b border-slate-200 bg-white/90 backdrop-blur sticky top-0 z-50 shadow-sm">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
       <div class="flex items-center gap-3">
-        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-500 flex items-center justify-center shadow-lg shadow-blue-500/20 text-white font-bold text-xl">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-600 flex items-center justify-center shadow-md shadow-blue-500/20 text-white font-bold text-xl">
           ⚡
         </div>
         <div>
           <div class="flex items-center gap-2">
-            <h1 class="font-black text-base sm:text-lg tracking-tight text-white flex items-center gap-1.5">
-              金融图文工坊 <span class="text-xs px-2 py-0.5 rounded-full bg-blue-500/20 text-blue-400 border border-blue-500/30 font-medium">制作者 Studio</span>
+            <h1 class="font-black text-base sm:text-lg tracking-tight text-slate-900 flex items-center gap-1.5">
+              金融图文工坊 <span class="text-xs px-2 py-0.5 rounded-full bg-blue-50 text-blue-600 border border-blue-200 font-semibold">制作者 Studio · 纯白版</span>
             </h1>
           </div>
-          <p class="text-xs text-slate-400 hidden sm:block">输入一个标题 ➔ 自动生成 6 张 3:4 高清图文卡片 + 小红书文案 + 运营活动配置</p>
+          <p class="text-xs text-slate-500 hidden sm:block">输入一个标题 ➔ 秒级生成 6 张 3:4 高清图文卡片 + 小红书文案 + 运营活动配置</p>
         </div>
       </div>
 
       <!-- 右侧动作按钮 -->
       <div class="flex items-center gap-2">
-        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-xs font-medium">
-          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 text-xs font-medium">
+          <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
           合规自检 100分
         </span>
-        <button onclick="exportCampaignJSON()" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold border border-slate-700 transition flex items-center gap-1.5">
+        <button onclick="exportCampaignJSON()" class="px-3 py-1.5 rounded-lg bg-white hover:bg-slate-50 text-slate-700 text-xs font-semibold border border-slate-300 shadow-sm transition flex items-center gap-1.5">
           <span>📥</span> 导出中台配置 JSON
         </button>
-        <button onclick="copyFullPostCopy()" class="px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold shadow-sm transition flex items-center gap-1.5">
+        <button onclick="copyFullPostCopy()" class="px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold shadow-sm transition flex items-center gap-1.5">
           <span>📋</span> 复制发布文案
         </button>
       </div>
     </div>
   </header>
 
-  <!-- ================= 主体内容区 ================= -->
+  <!-- ================= 主体内容区 (纯白底色与卡片) ================= -->
   <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
 
-    <!-- 1. 核心输入区：标题快速生成引擎 -->
-    <section class="bg-gradient-to-b from-slate-900 to-slate-900/60 rounded-2xl border border-slate-800 p-5 shadow-xl relative overflow-hidden">
-      <div class="absolute -right-16 -top-16 w-64 h-64 bg-blue-500/10 rounded-full blur-3xl pointer-events-none"></div>
-      <div class="absolute -left-16 -bottom-16 w-64 h-64 bg-purple-500/10 rounded-full blur-3xl pointer-events-none"></div>
+    <!-- 1. 核心输入区：标题快速生成引擎 (清新白卡片) -->
+    <section class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm relative overflow-hidden">
+      <div class="absolute -right-16 -top-16 w-64 h-64 bg-blue-100/50 rounded-full blur-3xl pointer-events-none"></div>
+      <div class="absolute -left-16 -bottom-16 w-64 h-64 bg-indigo-100/40 rounded-full blur-3xl pointer-events-none"></div>
 
       <div class="relative z-10 space-y-4">
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
           <div>
-            <span class="text-xs font-bold text-blue-400 tracking-wider uppercase">Content Generator</span>
-            <h2 class="text-lg sm:text-xl font-black text-white flex items-center gap-2">
+            <span class="text-xs font-bold text-blue-600 tracking-wider uppercase">Content Studio</span>
+            <h2 class="text-lg sm:text-xl font-black text-slate-900 flex items-center gap-2">
               <span>🎯</span> 金融选题一键极速生成
             </h2>
           </div>
-          <div class="flex items-center gap-2 text-xs text-slate-400">
-            <span>内置 Skill:</span>
-            <span class="text-slate-300">📊 数据精算</span> · 
-            <span class="text-slate-300">📜 事实切片</span> · 
-            <span class="text-slate-300">🎭 幽默隐喻</span>
+          <div class="flex items-center gap-2 text-xs text-slate-500">
+            <span>工业级 Skill:</span>
+            <span class="text-slate-700 font-medium">📊 数据精算</span> · 
+            <span class="text-slate-700 font-medium">📜 事实切片</span> · 
+            <span class="text-slate-700 font-medium">🎭 幽默隐喻</span>
           </div>
         </div>
 
@@ -106,199 +106,199 @@
               type="text"
               value="期权会让人暴富还是导致人破产？"
               placeholder="请输入具有争议性或强认知的金融标题，例如：提前还房贷还是留钱理财？"
-              class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3.5 text-sm sm:text-base text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 font-medium transition"
+              class="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-3.5 text-sm sm:text-base text-slate-900 placeholder-slate-400 focus:bg-white focus:outline-none focus:border-blue-600 focus:ring-4 focus:ring-blue-500/10 font-medium transition"
               onkeydown="if(event.key === 'Enter') generateContent()"
             />
-            <button onclick="clearTitleInput()" class="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300 text-xs">
+            <button onclick="clearTitleInput()" class="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 text-xs">
               ✕
             </button>
           </div>
           <button 
             id="btnGenerate"
             onclick="generateContent()"
-            class="px-6 py-3.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold text-sm sm:text-base rounded-xl shadow-lg shadow-blue-500/25 transition transform active:scale-95 flex items-center justify-center gap-2 shrink-0 cursor-pointer"
+            class="px-6 py-3.5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm sm:text-base rounded-xl shadow-md shadow-blue-500/20 transition transform active:scale-95 flex items-center justify-center gap-2 shrink-0 cursor-pointer"
           >
             <span id="genBtnIcon">⚡</span>
             <span id="genBtnText">快速生成对应内容与图片</span>
           </button>
         </div>
 
-        <!-- 热门选题灵感 Pills -->
+        <!-- 热门选题灵感 Pills (浅灰背景白字悬浮) -->
         <div class="space-y-1.5 pt-1">
-          <div class="flex items-center gap-2 text-xs text-slate-400">
+          <div class="flex items-center gap-2 text-xs text-slate-500">
             <span>🔥 热门金融争议题库（点击即填）：</span>
           </div>
           <div class="flex flex-wrap gap-2 text-xs">
-            <button onclick="applyPresetTopic(0)" class="px-3 py-1.5 rounded-lg bg-slate-800/80 hover:bg-slate-700 border border-slate-700/80 text-slate-300 hover:text-white transition flex items-center gap-1.5">
+            <button onclick="applyPresetTopic(0)" class="px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 border border-slate-200 text-slate-700 font-medium transition flex items-center gap-1.5">
               <span>⚖️</span> 期权会让人暴富还是导致人破产？
-              <span class="px-1.5 py-0.2 bg-blue-500/20 text-blue-300 rounded text-[10px]">衍生品</span>
+              <span class="px-1.5 py-0.2 bg-blue-100 text-blue-700 rounded text-[10px]">衍生品</span>
             </button>
-            <button onclick="applyPresetTopic(1)" class="px-3 py-1.5 rounded-lg bg-slate-800/80 hover:bg-slate-700 border border-slate-700/80 text-slate-300 hover:text-white transition flex items-center gap-1.5">
+            <button onclick="applyPresetTopic(1)" class="px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 border border-slate-200 text-slate-700 font-medium transition flex items-center gap-1.5">
               <span>🏠</span> 手头有50万闲钱：提前还4.0%房贷，还是留着买理财？
-              <span class="px-1.5 py-0.2 bg-emerald-500/20 text-emerald-300 rounded text-[10px]">中产现金流</span>
+              <span class="px-1.5 py-0.2 bg-emerald-100 text-emerald-700 rounded text-[10px]">中产现金流</span>
             </button>
-            <button onclick="applyPresetTopic(2)" class="px-3 py-1.5 rounded-lg bg-slate-800/80 hover:bg-slate-700 border border-slate-700/80 text-slate-300 hover:text-white transition flex items-center gap-1.5">
+            <button onclick="applyPresetTopic(2)" class="px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 border border-slate-200 text-slate-700 font-medium transition flex items-center gap-1.5">
               <span>🪙</span> 年轻人疯狂攒金豆，到底是明智理财还是被割智商税？
-              <span class="px-1.5 py-0.2 bg-amber-500/20 text-amber-300 rounded text-[10px]">黄金实物</span>
+              <span class="px-1.5 py-0.2 bg-amber-100 text-amber-700 rounded text-[10px]">黄金实物</span>
             </button>
-            <button onclick="applyPresetTopic(3)" class="px-3 py-1.5 rounded-lg bg-slate-800/80 hover:bg-slate-700 border border-slate-700/80 text-slate-300 hover:text-white transition flex items-center gap-1.5">
+            <button onclick="applyPresetTopic(3)" class="px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 border border-slate-200 text-slate-700 font-medium transition flex items-center gap-1.5">
               <span>📉</span> 大盘3000点震荡，该一次性重仓抄底还是死磕定投？
-              <span class="px-1.5 py-0.2 bg-purple-500/20 text-purple-300 rounded text-[10px]">权益策略</span>
+              <span class="px-1.5 py-0.2 bg-purple-100 text-purple-700 rounded text-[10px]">权益策略</span>
             </button>
           </div>
         </div>
 
-        <!-- 专家对决与配置指示条 -->
-        <div id="expertMatchBar" class="p-3 bg-slate-950/70 rounded-xl border border-slate-800 flex flex-wrap items-center justify-between gap-3 text-xs">
+        <!-- 专家对决与配置指示条 (浅白底灰边) -->
+        <div id="expertMatchBar" class="p-3 bg-slate-50 rounded-xl border border-slate-200 flex flex-wrap items-center justify-between gap-3 text-xs">
           <div class="flex items-center gap-2">
-            <span class="text-slate-400">当前议题专家对决：</span>
-            <span id="sideABadge" class="px-2 py-0.5 rounded bg-blue-500/20 text-blue-300 border border-blue-500/30 font-semibold">正方: 硬核价值投资人</span>
-            <span class="text-slate-600">VS</span>
-            <span id="sideBBadge" class="px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/30 font-semibold">反方: 平民现实派反收割官</span>
+            <span class="text-slate-500">当前议题专家对决：</span>
+            <span id="sideABadge" class="px-2 py-0.5 rounded bg-blue-100 text-blue-800 border border-blue-200 font-semibold">正方: 硬核价值投资人</span>
+            <span class="text-slate-400">VS</span>
+            <span id="sideBBadge" class="px-2 py-0.5 rounded bg-amber-100 text-amber-800 border border-amber-200 font-semibold">反方: 平民现实派反收割官</span>
           </div>
           <div class="flex items-center gap-2">
-            <span class="text-slate-400">穿透视角:</span>
-            <span id="contrastBadge" class="text-purple-300 font-medium">宏观经济与周期学者</span>
+            <span class="text-slate-500">穿透视角:</span>
+            <span id="contrastBadge" class="text-purple-700 font-medium">宏观经济与周期学者</span>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- 2. 工作台主区域：左侧产出中心 (文案/卡片/活动配置) + 右侧实时移动端落地页模拟器 -->
+    <!-- 2. 工作台主区域：左侧产出中心 (文案/卡片/活动配置) + 右侧纯白手机端落地页模拟器 -->
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
 
       <!-- 左侧产出区 (7 列) -->
       <div class="lg:col-span-7 space-y-4">
 
-        <!-- 产出类型 Tab 切换栏 -->
-        <div class="flex items-center justify-between border-b border-slate-800 pb-2">
+        <!-- 产出类型 Tab 切换栏 (纯白清爽设计) -->
+        <div class="flex items-center justify-between border-b border-slate-200 pb-2">
           <div class="flex items-center gap-2">
             <button id="tabBtnCards" onclick="switchOutputTab('cards')" class="px-4 py-2 rounded-lg text-xs font-bold transition flex items-center gap-1.5 bg-blue-600 text-white shadow-sm">
               <span>🖼️</span> 6 张 3:4 图文卡片
             </button>
-            <button id="tabBtnCopy" onclick="switchOutputTab('copy')" class="px-4 py-2 rounded-lg text-xs font-bold transition flex items-center gap-1.5 bg-slate-800 text-slate-300 hover:text-white">
+            <button id="tabBtnCopy" onclick="switchOutputTab('copy')" class="px-4 py-2 rounded-lg text-xs font-bold transition flex items-center gap-1.5 bg-white border border-slate-200 text-slate-700 hover:bg-slate-100">
               <span>📝</span> 小红书发布文案
             </button>
-            <button id="tabBtnCampaign" onclick="switchOutputTab('campaign')" class="px-4 py-2 rounded-lg text-xs font-bold transition flex items-center gap-1.5 bg-slate-800 text-slate-300 hover:text-white">
+            <button id="tabBtnCampaign" onclick="switchOutputTab('campaign')" class="px-4 py-2 rounded-lg text-xs font-bold transition flex items-center gap-1.5 bg-white border border-slate-200 text-slate-700 hover:bg-slate-100">
               <span>🎪</span> 运营活动配置中心
             </button>
           </div>
 
           <!-- 模式切换/辅助功能 -->
           <div id="cardsToolbar" class="flex items-center gap-2">
-            <button onclick="toggleCardViewMode()" id="btnCardViewMode" class="text-xs text-slate-400 hover:text-slate-200 px-2.5 py-1 rounded bg-slate-800/80 border border-slate-700">
+            <button onclick="toggleCardViewMode()" id="btnCardViewMode" class="text-xs text-slate-600 hover:text-slate-900 px-2.5 py-1 rounded bg-white border border-slate-200 shadow-sm">
               切换平铺全景
             </button>
           </div>
         </div>
 
-        <!-- ================= PANEL 1: 6 张 3:4 图文卡片展示 ================= -->
+        <!-- ================= PANEL 1: 6 张 3:4 图文卡片展示 (纯白雅致版) ================= -->
         <div id="panelCards" class="space-y-4">
           <!-- 卡片指示器导航条 -->
-          <div class="flex items-center justify-between bg-slate-900/60 p-2.5 rounded-xl border border-slate-800 text-xs">
+          <div class="flex items-center justify-between bg-white p-2.5 rounded-xl border border-slate-200 shadow-sm text-xs">
             <div class="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0" id="cardNavPills">
               <button onclick="selectCardPage(1)" id="pill1" class="px-2.5 py-1 rounded bg-blue-600 text-white font-bold">P1 封面</button>
-              <button onclick="selectCardPage(2)" id="pill2" class="px-2.5 py-1 rounded bg-slate-800 text-slate-400 hover:text-white">P2 痛点</button>
-              <button onclick="selectCardPage(3)" id="pill3" class="px-2.5 py-1 rounded bg-slate-800 text-slate-400 hover:text-white">P3 剪刀差</button>
-              <button onclick="selectCardPage(4)" id="pill4" class="px-2.5 py-1 rounded bg-slate-800 text-slate-400 hover:text-white">P4 正方</button>
-              <button onclick="selectCardPage(5)" id="pill5" class="px-2.5 py-1 rounded bg-slate-800 text-slate-400 hover:text-white">P5 反方</button>
-              <button onclick="selectCardPage(6)" id="pill6" class="px-2.5 py-1 rounded bg-slate-800 text-slate-400 hover:text-white">P6 互动</button>
+              <button onclick="selectCardPage(2)" id="pill2" class="px-2.5 py-1 rounded bg-slate-100 text-slate-600 hover:text-slate-900">P2 痛点</button>
+              <button onclick="selectCardPage(3)" id="pill3" class="px-2.5 py-1 rounded bg-slate-100 text-slate-600 hover:text-slate-900">P3 剪刀差</button>
+              <button onclick="selectCardPage(4)" id="pill4" class="px-2.5 py-1 rounded bg-slate-100 text-slate-600 hover:text-slate-900">P4 正方</button>
+              <button onclick="selectCardPage(5)" id="pill5" class="px-2.5 py-1 rounded bg-slate-100 text-slate-600 hover:text-slate-900">P5 反方</button>
+              <button onclick="selectCardPage(6)" id="pill6" class="px-2.5 py-1 rounded bg-slate-100 text-slate-600 hover:text-slate-900">P6 互动</button>
             </div>
             <div class="flex items-center gap-2 shrink-0">
-              <button onclick="prevCard()" class="p-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-300">◀</button>
-              <span id="currentCardIndexText" class="text-slate-400 font-mono text-xs">1 / 6</span>
-              <button onclick="nextCard()" class="p-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-300">▶</button>
+              <button onclick="prevCard()" class="px-2 py-1 rounded bg-slate-100 hover:bg-slate-200 text-slate-700">◀</button>
+              <span id="currentCardIndexText" class="text-slate-600 font-mono text-xs">1 / 6</span>
+              <button onclick="nextCard()" class="px-2 py-1 rounded bg-slate-100 hover:bg-slate-200 text-slate-700">▶</button>
             </div>
           </div>
 
-          <!-- 焦点单卡片容器 (3:4 标准比例) -->
-          <div id="singleCardContainer" class="flex justify-center bg-slate-950 p-4 rounded-2xl border border-slate-800 relative">
-            <div class="w-full max-w-[420px] ratio-3-4 bg-slate-900 rounded-xl overflow-hidden border border-slate-700 shadow-2xl relative flex flex-col justify-between" id="activeCardRender">
+          <!-- 焦点单卡片容器 (3:4 标准比例 · 纯白质感大底) -->
+          <div id="singleCardContainer" class="flex justify-center bg-white p-6 rounded-2xl border border-slate-200 shadow-sm relative">
+            <div class="w-full max-w-[420px] ratio-3-4 bg-white rounded-2xl overflow-hidden border border-slate-200 shadow-2xl relative flex flex-col justify-between" id="activeCardRender">
               <!-- 由 JavaScript 动态渲染卡片内容 -->
             </div>
           </div>
 
           <!-- 全景平铺模式容器 (默认隐藏) -->
-          <div id="gridCardContainer" class="hidden grid grid-cols-2 sm:grid-cols-3 gap-3 bg-slate-950 p-3 rounded-2xl border border-slate-800">
+          <div id="gridCardContainer" class="hidden grid grid-cols-2 sm:grid-cols-3 gap-3 bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
             <!-- 由 JS 渲染 6 张微缩卡片 -->
           </div>
 
           <!-- 卡片导出与操作按钮 -->
-          <div class="flex flex-wrap items-center justify-between gap-2 p-3 bg-slate-900/50 rounded-xl border border-slate-800/80 text-xs">
-            <span class="text-slate-400 flex items-center gap-1.5">
-              <span>💡</span> 提示：点击卡片可查看高清大图，可在新标签页直接打开或保存！
+          <div class="flex flex-wrap items-center justify-between gap-2 p-3 bg-white rounded-xl border border-slate-200 text-xs shadow-sm">
+            <span class="text-slate-500 flex items-center gap-1.5">
+              <span>💡</span> 提示：点击卡片可查看高清大图，可在新标签页直接打开或另存为图片！
             </span>
             <div class="flex items-center gap-2">
-              <button onclick="openCardInNewTab()" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-medium transition">
+              <button onclick="openCardInNewTab()" class="px-3 py-1.5 rounded-lg bg-white hover:bg-slate-50 text-slate-700 border border-slate-300 font-medium shadow-sm transition">
                 在新标签打开高清卡片 ↗
               </button>
-              <button onclick="downloadActiveCardHTML()" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-medium transition">
+              <button onclick="downloadActiveCardHTML()" class="px-3 py-1.5 rounded-lg bg-white hover:bg-slate-50 text-slate-700 border border-slate-300 font-medium shadow-sm transition">
                 下载单张 HTML ⬇
               </button>
             </div>
           </div>
         </div>
 
-        <!-- ================= PANEL 2: 小红书原生发布文案 ================= -->
+        <!-- ================= PANEL 2: 小红书原生发布文案 (纯白卡片) ================= -->
         <div id="panelCopy" class="hidden space-y-4">
-          <div class="bg-slate-900 rounded-2xl border border-slate-800 p-5 space-y-4">
-            <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+          <div class="bg-white rounded-2xl border border-slate-200 p-6 space-y-4 shadow-sm">
+            <div class="flex items-center justify-between border-b border-slate-200 pb-3">
               <div>
-                <h3 class="font-bold text-sm sm:text-base text-white flex items-center gap-1.5">
+                <h3 class="font-bold text-sm sm:text-base text-slate-900 flex items-center gap-1.5">
                   <span>📱</span> 小红书爆款图文发布排版包
                 </h3>
-                <p class="text-xs text-slate-400">含黄金3秒Hook、三维增强论述、置顶神评与热门标签云</p>
+                <p class="text-xs text-slate-500">含黄金3秒Hook、三维增强论述、置顶神评与热门标签云</p>
               </div>
               <div class="flex items-center gap-2">
-                <span id="copyWordCount" class="text-xs font-mono text-slate-400">约 650 字</span>
-                <button onclick="copyFullPostCopy()" class="px-3.5 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs shadow transition flex items-center gap-1">
+                <span id="copyWordCount" class="text-xs font-mono text-slate-500">约 650 字</span>
+                <button onclick="copyFullPostCopy()" class="px-3.5 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs shadow transition flex items-center gap-1">
                   <span>📋</span> 一键复制正文
                 </button>
               </div>
             </div>
 
             <!-- 笔记标题卡 -->
-            <div class="p-3 bg-slate-950 rounded-xl border border-slate-800">
-              <div class="text-[10px] text-slate-400 uppercase font-bold tracking-wider mb-1">小红书标题</div>
-              <div id="postCopyTitle" class="font-bold text-sm sm:text-base text-white select-all">
+            <div class="p-3 bg-slate-50 rounded-xl border border-slate-200">
+              <div class="text-[10px] text-slate-500 uppercase font-bold tracking-wider mb-1">小红书标题</div>
+              <div id="postCopyTitle" class="font-bold text-sm sm:text-base text-slate-900 select-all">
                 期权交易：会让人一夜暴富，还是让人倾家荡产？
               </div>
             </div>
 
-            <!-- 正文预览区 -->
-            <div class="p-4 bg-slate-950 rounded-xl border border-slate-800 font-sans text-xs sm:text-sm text-slate-200 leading-relaxed whitespace-pre-wrap select-all max-h-[500px] overflow-y-auto" id="postCopyBody">
+            <!-- 正文预览区 (纯白舒适阅读底色) -->
+            <div class="p-4 bg-slate-50 rounded-xl border border-slate-200 font-sans text-xs sm:text-sm text-slate-800 leading-relaxed whitespace-pre-wrap select-all max-h-[500px] overflow-y-auto" id="postCopyBody">
               <!-- 正文动态填入 -->
             </div>
 
             <!-- 作者置顶神评 -->
-            <div class="p-3.5 bg-blue-950/40 rounded-xl border border-blue-500/30">
+            <div class="p-3.5 bg-blue-50/70 rounded-xl border border-blue-200">
               <div class="flex items-center justify-between mb-1.5">
-                <span class="text-xs font-bold text-blue-300 flex items-center gap-1">
+                <span class="text-xs font-bold text-blue-900 flex items-center gap-1">
                   <span>📌</span> 发布后5分钟内置顶神评（引导互动）：
                 </span>
-                <button onclick="copyPinnedComment()" class="text-xs text-blue-400 hover:text-blue-200 underline">
+                <button onclick="copyPinnedComment()" class="text-xs text-blue-600 hover:text-blue-800 font-medium underline">
                   单复制置顶词
                 </button>
               </div>
-              <p id="postPinnedComment" class="text-xs text-blue-100 italic select-all">
+              <p id="postPinnedComment" class="text-xs text-blue-800 italic select-all font-medium">
                 温馨提示：普通散户千万别把买方期权当股票炒，更不要盲目裸卖期权！大家身边玩期权的朋友，目前总账本是赚还是亏？
               </p>
             </div>
           </div>
         </div>
 
-        <!-- ================= PANEL 3: 运营活动配置中心 ================= -->
+        <!-- ================= PANEL 3: 运营活动配置中心 (纯白卡片) ================= -->
         <div id="panelCampaign" class="hidden space-y-4">
-          <div class="bg-slate-900 rounded-2xl border border-slate-800 p-5 space-y-4">
-            <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+          <div class="bg-white rounded-2xl border border-slate-200 p-6 space-y-4 shadow-sm">
+            <div class="flex items-center justify-between border-b border-slate-200 pb-3">
               <div>
-                <h3 class="font-bold text-sm sm:text-base text-white flex items-center gap-1.5">
+                <h3 class="font-bold text-sm sm:text-base text-slate-900 flex items-center gap-1.5">
                   <span>🎪</span> 运营活动中台配置 (Campaign Schema)
                 </h3>
-                <p class="text-xs text-slate-400">标准结构化活动配置，包含红蓝阵营PK、任务积分体系与激励奖池</p>
+                <p class="text-xs text-slate-500">标准结构化活动配置，包含红蓝阵营PK、任务积分体系与激励奖池</p>
               </div>
               <div class="flex items-center gap-2">
-                <button onclick="exportCampaignJSON()" class="px-3.5 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs shadow transition flex items-center gap-1">
+                <button onclick="exportCampaignJSON()" class="px-3.5 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs shadow transition flex items-center gap-1">
                   <span>💾</span> 下载 campaign_config.json
                 </button>
               </div>
@@ -306,60 +306,60 @@
 
             <!-- 活动元数据配置表单概要 -->
             <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 text-xs">
-              <div class="p-2.5 bg-slate-950 rounded-lg border border-slate-800">
+              <div class="p-2.5 bg-slate-50 rounded-lg border border-slate-200">
                 <span class="text-[10px] text-slate-500 block">活动编码 (ID)</span>
-                <span id="cmpIdText" class="font-mono font-bold text-blue-400">CAMP_OPTIONS</span>
+                <span id="cmpIdText" class="font-mono font-bold text-blue-600">CAMP_OPTIONS</span>
               </div>
-              <div class="p-2.5 bg-slate-950 rounded-lg border border-slate-800">
+              <div class="p-2.5 bg-slate-50 rounded-lg border border-slate-200">
                 <span class="text-[10px] text-slate-500 block">活动形式</span>
-                <span class="font-semibold text-slate-200">双边辩论PK + 打卡营</span>
+                <span class="font-semibold text-slate-800">双边辩论PK + 打卡营</span>
               </div>
-              <div class="p-2.5 bg-slate-950 rounded-lg border border-slate-800">
+              <div class="p-2.5 bg-slate-50 rounded-lg border border-slate-200">
                 <span class="text-[10px] text-slate-500 block">活动周期</span>
-                <span class="font-semibold text-slate-200">14天 (蓄水/爆发/转化)</span>
+                <span class="font-semibold text-slate-800">14天 (蓄水/爆发/转化)</span>
               </div>
-              <div class="p-2.5 bg-slate-950 rounded-lg border border-slate-800">
+              <div class="p-2.5 bg-slate-50 rounded-lg border border-slate-200">
                 <span class="text-[10px] text-slate-500 block">目标投放渠道</span>
-                <span class="font-semibold text-emerald-400">小红书/App社区/H5</span>
+                <span class="font-semibold text-emerald-600">小红书/App社区/H5</span>
               </div>
             </div>
 
             <!-- 阵营与激励规则预览 -->
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
-              <div class="p-3 bg-slate-950 rounded-xl border border-blue-500/20">
-                <div class="font-bold text-blue-400 mb-1 flex items-center gap-1">
+              <div class="p-3 bg-rose-50/50 rounded-xl border border-rose-200">
+                <div class="font-bold text-rose-700 mb-1 flex items-center gap-1">
                   <span>🔴</span> 正方阵营规则：
                 </div>
-                <p id="cmpSideADesc" class="text-slate-300 leading-relaxed">天命买方派：主打非对称风险收益，初始支持率 52%</p>
+                <p id="cmpSideADesc" class="text-slate-700 leading-relaxed">天命买方派：主打非对称风险收益，初始支持率 52%</p>
               </div>
-              <div class="p-3 bg-slate-950 rounded-xl border border-amber-500/20">
-                <div class="font-bold text-amber-400 mb-1 flex items-center gap-1">
+              <div class="p-3 bg-sky-50/50 rounded-xl border border-sky-200">
+                <div class="font-bold text-sky-700 mb-1 flex items-center gap-1">
                   <span>🔵</span> 反方阵营规则：
                 </div>
-                <p id="cmpSideBDesc" class="text-slate-300 leading-relaxed">清醒保命派：主打防收割反穿仓，初始支持率 48%</p>
+                <p id="cmpSideBDesc" class="text-slate-700 leading-relaxed">清醒保命派：主打防收割反穿仓，初始支持率 48%</p>
               </div>
             </div>
 
             <!-- 任务激励与奖池 -->
-            <div class="p-3 bg-slate-950 rounded-xl border border-slate-800 text-xs space-y-2">
-              <span class="font-bold text-slate-300 flex items-center gap-1">
+            <div class="p-3 bg-slate-50 rounded-xl border border-slate-200 text-xs space-y-2">
+              <span class="font-bold text-slate-800 flex items-center gap-1">
                 <span>🎁</span> 任务积分与奖池规则：
               </span>
               <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-[11px]" id="cmpTasksGrid">
-                <div class="p-2 rounded bg-slate-900 border border-slate-800">📖 浏览科普笔记 (+10分)</div>
-                <div class="p-2 rounded bg-slate-900 border border-slate-800">🗳️ 阵营站队投票 (+20分+抽奖券)</div>
-                <div class="p-2 rounded bg-slate-900 border border-slate-800">💬 发表观点账本 (+50分)</div>
-                <div class="p-2 rounded bg-slate-900 border border-slate-800">👥 邀请好友助威 (+100分)</div>
+                <div class="p-2 rounded bg-white border border-slate-200 shadow-sm text-slate-800">📖 浏览科普笔记 (+10分)</div>
+                <div class="p-2 rounded bg-white border border-slate-200 shadow-sm text-slate-800">🗳️ 阵营站队投票 (+20分+抽奖券)</div>
+                <div class="p-2 rounded bg-white border border-slate-200 shadow-sm text-slate-800">💬 发表观点账本 (+50分)</div>
+                <div class="p-2 rounded bg-white border border-slate-200 shadow-sm text-slate-800">👥 邀请好友助威 (+100分)</div>
               </div>
             </div>
 
             <!-- JSON Schema 原始代码预览 -->
             <div class="space-y-1.5">
-              <div class="flex items-center justify-between text-xs text-slate-400">
+              <div class="flex items-center justify-between text-xs text-slate-500">
                 <span>标准运营中台配置 JSON (可直接消费)：</span>
-                <button onclick="copyCampaignJSON()" class="text-blue-400 hover:text-blue-300">复制代码</button>
+                <button onclick="copyCampaignJSON()" class="text-blue-600 hover:text-blue-800 font-semibold">复制代码</button>
               </div>
-              <pre id="jsonPreviewBox" class="p-3.5 bg-slate-950 rounded-xl border border-slate-800 text-[11px] font-mono text-emerald-400 max-h-60 overflow-y-auto leading-relaxed select-all">
+              <pre id="jsonPreviewBox" class="p-3.5 bg-slate-900 rounded-xl border border-slate-800 text-[11px] font-mono text-emerald-400 max-h-60 overflow-y-auto leading-relaxed select-all">
                 <!-- JSON 实时渲染 -->
               </pre>
             </div>
@@ -368,19 +368,19 @@
 
       </div>
 
-      <!-- 右侧：手机端落地页互动模拟器 (5 列) -->
+      <!-- 右侧：纯白物理外壳手机端落地页互动模拟器 (5 列) -->
       <div class="lg:col-span-5 sticky top-20 flex flex-col items-center">
-        <div class="w-full max-w-[340px] bg-slate-900 rounded-[44px] p-3 border-4 border-slate-700 phone-mockup relative">
-          <!-- 手机听筒与前置镜头 -->
-          <div class="w-28 h-4 bg-slate-800 rounded-full mx-auto mb-2 flex items-center justify-center">
-            <div class="w-2.5 h-2.5 rounded-full bg-slate-900"></div>
+        <div class="w-full max-w-[340px] bg-slate-100 rounded-[44px] p-3 border-4 border-slate-300 phone-mockup-white relative shadow-2xl">
+          <!-- 手机听筒与前置镜头 (钛白银风格) -->
+          <div class="w-28 h-4 bg-slate-200 rounded-full mx-auto mb-2 flex items-center justify-center">
+            <div class="w-2.5 h-2.5 rounded-full bg-slate-400"></div>
           </div>
 
-          <!-- 手机屏幕内容区 (可交互移动端落地页) -->
-          <div class="bg-slate-950 rounded-[34px] overflow-hidden border border-slate-800 h-[620px] flex flex-col justify-between text-white relative select-none">
+          <!-- 手机屏幕内容区 (纯白可交互移动端落地页) -->
+          <div class="bg-white rounded-[34px] overflow-hidden border border-slate-200 h-[620px] flex flex-col justify-between text-slate-800 relative select-none shadow-inner">
 
-            <!-- 手机顶部状态栏 -->
-            <div class="px-5 py-2 flex items-center justify-between text-[10px] text-slate-400 border-b border-slate-800/60 bg-slate-900/60">
+            <!-- 手机顶部状态栏 (纯白) -->
+            <div class="px-5 py-2 flex items-center justify-between text-[10px] text-slate-500 border-b border-slate-100 bg-white">
               <span id="simTime">09:41</span>
               <div class="flex items-center gap-1.5">
                 <span>5G</span>
@@ -389,104 +389,104 @@
               </div>
             </div>
 
-            <!-- 手机可滑动活动页面 -->
-            <div class="flex-1 overflow-y-auto p-3.5 space-y-3.5 text-xs text-slate-100">
+            <!-- 手机可滑动活动页面 (纯白清新质感) -->
+            <div class="flex-1 overflow-y-auto p-3.5 space-y-3.5 text-xs text-slate-800">
 
-              <!-- 活动大视觉 Banner -->
-              <div class="p-3.5 rounded-2xl bg-gradient-to-br from-blue-900 via-indigo-900 to-purple-900 border border-blue-500/30 text-center space-y-1.5 shadow-lg relative overflow-hidden">
-                <span class="inline-block px-2 py-0.5 rounded-full bg-blue-400/20 text-blue-300 text-[10px] font-bold border border-blue-400/30">
+              <!-- 活动大视觉 Banner (明艳蓝紫渐变) -->
+              <div class="p-4 rounded-2xl bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-600 text-white text-center space-y-1.5 shadow-md relative overflow-hidden">
+                <span class="inline-block px-2.5 py-0.5 rounded-full bg-white/20 text-white text-[10px] font-bold backdrop-blur border border-white/30">
                   🔥 全网理财公开辩论赛
                 </span>
                 <h4 id="simCampTitle" class="font-black text-sm text-white leading-snug">
                   期权交易：会让人一夜暴富，还是让人倾家荡产？
                 </h4>
-                <div class="flex items-center justify-center gap-2 text-[10px] text-blue-200">
+                <div class="flex items-center justify-center gap-2 text-[10px] text-blue-100">
                   <span>⏳ 倒计时 13天 18:24:09</span>
                   <span>·</span>
                   <span>👥 5.8万人已参与</span>
                 </div>
               </div>
 
-              <!-- 核心互动组件：红蓝双边站队对抗 PK -->
-              <div class="p-3 bg-slate-900 rounded-2xl border border-slate-800 space-y-2.5 shadow">
+              <!-- 核心互动组件：红蓝双边站队对抗 PK (纯白底色带柔和阴影) -->
+              <div class="p-3.5 bg-slate-50 rounded-2xl border border-slate-200 space-y-2.5 shadow-sm">
                 <div class="flex items-center justify-between text-[11px] font-bold">
-                  <span id="simSideAName" class="text-rose-400 flex items-center gap-1">🔴 天命买方派</span>
+                  <span id="simSideAName" class="text-rose-600 flex items-center gap-1">🔴 天命买方派</span>
                   <span class="text-slate-400 font-mono text-[10px]">VS</span>
-                  <span id="simSideBName" class="text-sky-400 flex items-center gap-1">🔵 清醒保命派</span>
+                  <span id="simSideBName" class="text-sky-600 flex items-center gap-1">🔵 清醒保命派</span>
                 </div>
 
                 <!-- 票数动态进度条 -->
-                <div class="w-full h-3 bg-slate-800 rounded-full overflow-hidden flex p-0.5 border border-slate-700">
+                <div class="w-full h-3 bg-slate-200 rounded-full overflow-hidden flex p-0.5">
                   <div id="simSideABar" class="h-full bg-rose-500 rounded-l-full transition-all duration-500" style="width: 52%"></div>
                   <div id="simSideBBar" class="h-full bg-sky-500 rounded-r-full transition-all duration-500" style="width: 48%"></div>
                 </div>
 
                 <!-- 票数统计 -->
-                <div class="flex justify-between text-[10px] text-slate-400 font-mono">
+                <div class="flex justify-between text-[10px] text-slate-500 font-mono">
                   <span id="simSideAVotes">30,160 票 (52%)</span>
                   <span id="simSideBVotes">27,840 票 (48%)</span>
                 </div>
 
-                <!-- 可交互点击投票按钮 (带真实交互) -->
+                <!-- 可交互点击投票按钮 -->
                 <div class="grid grid-cols-2 gap-2 pt-1">
-                  <button onclick="voteSide('A')" class="py-2 px-2 bg-rose-600/90 hover:bg-rose-500 text-white rounded-xl text-center font-bold text-[11px] shadow transition active:scale-95 flex items-center justify-center gap-1">
+                  <button onclick="voteSide('A')" class="py-2 px-2 bg-rose-600 hover:bg-rose-700 text-white rounded-xl text-center font-bold text-[11px] shadow-sm transition active:scale-95 flex items-center justify-center gap-1">
                     <span>👍</span> 投红方 (+20分)
                   </button>
-                  <button onclick="voteSide('B')" class="py-2 px-2 bg-sky-600/90 hover:bg-sky-500 text-white rounded-xl text-center font-bold text-[11px] shadow transition active:scale-95 flex items-center justify-center gap-1">
+                  <button onclick="voteSide('B')" class="py-2 px-2 bg-sky-600 hover:bg-sky-700 text-white rounded-xl text-center font-bold text-[11px] shadow-sm transition active:scale-95 flex items-center justify-center gap-1">
                     <span>🛡️</span> 投蓝方 (+20分)
                   </button>
                 </div>
               </div>
 
-              <!-- 每日打卡与任务列表 (可交互点击完成) -->
-              <div class="p-3 bg-slate-900 rounded-2xl border border-slate-800 space-y-2 text-[11px]">
-                <div class="flex items-center justify-between font-bold text-slate-200">
+              <!-- 每日打卡与任务列表 -->
+              <div class="p-3 bg-slate-50 rounded-2xl border border-slate-200 space-y-2 text-[11px]">
+                <div class="flex items-center justify-between font-bold text-slate-900">
                   <span class="flex items-center gap-1"><span>🎯</span> 做任务赚积分</span>
-                  <span class="text-amber-400 font-mono" id="simUserPoints">金币: 120 🪙</span>
+                  <span class="text-amber-600 font-mono font-bold" id="simUserPoints">金币: 120 🪙</span>
                 </div>
 
                 <div class="space-y-1.5" id="simTaskList">
-                  <div class="flex items-center justify-between p-2 rounded-xl bg-slate-950/80 border border-slate-800/80">
+                  <div class="flex items-center justify-between p-2 rounded-xl bg-white border border-slate-200 shadow-sm">
                     <div>
-                      <div class="font-medium text-slate-200">📖 浏览 6 张科普画报</div>
-                      <div class="text-[9px] text-slate-500">+10 积分 · 深入看懂两边利差</div>
+                      <div class="font-medium text-slate-800">📖 浏览 6 张科普画报</div>
+                      <div class="text-[9px] text-slate-400">+10 积分 · 深入看懂两边利差</div>
                     </div>
-                    <button onclick="completeSimTask(this, 10)" class="px-2.5 py-1 rounded-lg bg-blue-600 text-[10px] font-bold hover:bg-blue-500 transition">
+                    <button onclick="completeSimTask(this, 10)" class="px-2.5 py-1 rounded-lg bg-blue-600 text-[10px] text-white font-bold hover:bg-blue-700 transition">
                       去浏览
                     </button>
                   </div>
 
-                  <div class="flex items-center justify-between p-2 rounded-xl bg-slate-950/80 border border-slate-800/80">
+                  <div class="flex items-center justify-between p-2 rounded-xl bg-white border border-slate-200 shadow-sm">
                     <div>
-                      <div class="font-medium text-slate-200">💬 在小红书评论区站队</div>
-                      <div class="text-[9px] text-slate-500">+50 积分 · 晒真实交易账本</div>
+                      <div class="font-medium text-slate-800">💬 在小红书评论区站队</div>
+                      <div class="text-[9px] text-slate-400">+50 积分 · 晒真实交易账本</div>
                     </div>
-                    <button onclick="completeSimTask(this, 50)" class="px-2.5 py-1 rounded-lg bg-blue-600 text-[10px] font-bold hover:bg-blue-500 transition">
+                    <button onclick="completeSimTask(this, 50)" class="px-2.5 py-1 rounded-lg bg-blue-600 text-[10px] text-white font-bold hover:bg-blue-700 transition">
                       去评论
                     </button>
                   </div>
 
-                  <div class="flex items-center justify-between p-2 rounded-xl bg-slate-950/80 border border-slate-800/80">
+                  <div class="flex items-center justify-between p-2 rounded-xl bg-white border border-slate-200 shadow-sm">
                     <div>
-                      <div class="font-medium text-slate-200">👥 邀请好友助威打气</div>
-                      <div class="text-[9px] text-slate-500">+100 积分 · 赢抽奖盲盒</div>
+                      <div class="font-medium text-slate-800">👥 邀请好友助威打气</div>
+                      <div class="text-[9px] text-slate-400">+100 积分 · 赢抽奖盲盒</div>
                     </div>
-                    <button onclick="completeSimTask(this, 100)" class="px-2.5 py-1 rounded-lg bg-indigo-600 text-[10px] font-bold hover:bg-indigo-500 transition">
+                    <button onclick="completeSimTask(this, 100)" class="px-2.5 py-1 rounded-lg bg-indigo-600 text-[10px] text-white font-bold hover:bg-indigo-700 transition">
                       去邀请
                     </button>
                   </div>
                 </div>
               </div>
 
-              <!-- 盲盒与奖池展示 -->
-              <div class="p-3 bg-gradient-to-r from-amber-950/30 to-amber-900/20 rounded-2xl border border-amber-500/30 flex items-center justify-between">
+              <!-- 盲盒与奖池展示 (暖金清新卡片) -->
+              <div class="p-3 bg-amber-50 rounded-2xl border border-amber-200 flex items-center justify-between shadow-sm">
                 <div>
-                  <div class="font-bold text-amber-300 text-xs flex items-center gap-1">
+                  <div class="font-bold text-amber-900 text-xs flex items-center gap-1">
                     <span>🎁</span> 终极大奖盲盒
                   </div>
-                  <div class="text-[10px] text-amber-200/80">1克纯金金豆 / 1000元体验金</div>
+                  <div class="text-[10px] text-amber-700">1克纯金金豆 / 1000元体验金</div>
                 </div>
-                <button onclick="drawSimLottery()" class="px-3 py-1.5 rounded-xl bg-gradient-to-r from-amber-500 to-yellow-500 text-slate-950 font-black text-xs shadow hover:brightness-110 active:scale-95 transition">
+                <button onclick="drawSimLottery()" class="px-3 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-white font-black text-xs shadow-sm active:scale-95 transition">
                   抽奖 (耗30分)
                 </button>
               </div>
@@ -494,8 +494,8 @@
             </div>
 
             <!-- 手机底部导航栏 -->
-            <div class="p-2.5 bg-slate-900/90 border-t border-slate-800 text-[10px] text-slate-400 flex items-center justify-around">
-              <span class="text-blue-400 font-bold">首页</span>
+            <div class="p-2.5 bg-slate-50 border-t border-slate-200 text-[10px] text-slate-500 flex items-center justify-around">
+              <span class="text-blue-600 font-bold">首页</span>
               <span>榜单</span>
               <span>规则</span>
               <span>我的</span>
@@ -503,7 +503,7 @@
           </div>
 
           <!-- 手机底部 Home Indicator -->
-          <div class="w-32 h-1 bg-slate-700 rounded-full mx-auto mt-2.5"></div>
+          <div class="w-32 h-1 bg-slate-300 rounded-full mx-auto mt-2.5"></div>
         </div>
 
         <p class="text-[11px] text-slate-500 mt-3 text-center">
@@ -517,15 +517,14 @@
 
   <!-- 全局 Toast 提示容器 -->
   <div id="toast" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 pointer-events-none hidden">
-    <div class="px-4 py-2.5 bg-slate-800/95 border border-slate-700 text-white text-xs font-semibold rounded-xl shadow-2xl backdrop-blur flex items-center gap-2 toast-anim">
+    <div class="px-4 py-2.5 bg-slate-900 text-white text-xs font-semibold rounded-xl shadow-2xl flex items-center gap-2 toast-anim">
       <span id="toastIcon">✅</span>
       <span id="toastMsg">操作成功</span>
     </div>
   </div>
 
-  <!-- ================= 脚本逻辑：数据模型与交互引擎 ================= -->
+  <!-- ================= 脚本逻辑：数据模型与纯白卡片交互引擎 ================= -->
   <script>
-    // 经典内置议题数据集
     const PRESET_TOPICS = [
       {
         id: "options_rich_or_ruin",
@@ -571,9 +570,9 @@
             h2: "总在期权里被无情归零？",
             summary: "散户只看到了百倍杠杆的刺激，却忽视了期权有致命的‘保质期’（Theta 衰减），震荡一天就扣一天血！",
             metrics: [
-              { label: "散户买方胜率", val: "< 15%", color: "text-rose-400" },
-              { label: "Theta 每日耗损", val: "3% ~ 8%", color: "text-amber-400" },
-              { label: "到期归零概率", val: "82.4%", color: "text-red-400" }
+              { label: "散户买方胜率", val: "< 15%", color: "text-rose-600" },
+              { label: "Theta 每日耗损", val: "3% ~ 8%", color: "text-amber-600" },
+              { label: "到期归零概率", val: "82.4%", color: "text-red-600" }
             ]
           },
           {
@@ -583,9 +582,9 @@
             h2: "做市商眼里的精算保险",
             summary: "神级隐喻：买期权就像天天高价买保质期7天的隔夜酸奶；卖期权就像为了铁轨上捡一分钱，把脖子枕在铁轨上等火车！",
             metrics: [
-              { label: "买方暴击记录", val: "192 倍", color: "text-emerald-400" },
-              { label: "做市商胜率", val: "> 85%", color: "text-blue-400" },
-              { label: "卖方单次穿仓", val: "-240 万元", color: "text-rose-400" }
+              { label: "买方暴击记录", val: "192 倍", color: "text-emerald-600" },
+              { label: "做市商胜率", val: "> 85%", color: "text-blue-600" },
+              { label: "卖方单次穿仓", val: "-240 万元", color: "text-rose-600" }
             ]
           },
           {
@@ -663,9 +662,9 @@
             h2: "都在跟这笔账死磕？",
             summary: "银行理财年化跌到 2.0%，房贷利率却在 4.0% 沉重咬人，相当于每天都在被倒收 2% 智商税！",
             metrics: [
-              { label: "等额本息省息", val: "¥35.9 万元", color: "text-emerald-400" },
-              { label: "月供减负", val: "-¥2,387/月", color: "text-blue-400" },
-              { label: "存贷利差损耗", val: "2.2%", color: "text-rose-400" }
+              { label: "等额本息省息", val: "¥35.9 万元", color: "text-emerald-600" },
+              { label: "月供减负", val: "-¥2,387/月", color: "text-blue-600" },
+              { label: "存贷利差损耗", val: "2.2%", color: "text-rose-600" }
             ]
           },
           {
@@ -675,9 +674,9 @@
             h2: "28 个月流动性生命线",
             summary: "神级隐喻：把所有现金提前塞进水泥砖头，就像给大门装了三道指纹锁，却把自己的备用钥匙锁在了门里！",
             metrics: [
-              { label: "无风险收益率", val: "4.0% 锁死", color: "text-emerald-400" },
-              { label: "流动性缓冲期", val: "27.8 个月", color: "text-purple-400" },
-              { label: "赎回摩擦成本", val: "高流动性锁死", color: "text-amber-400" }
+              { label: "无风险收益率", val: "4.0% 锁死", color: "text-emerald-600" },
+              { label: "流动性缓冲期", val: "27.8 个月", color: "text-purple-600" },
+              { label: "赎回摩擦成本", val: "高流动性锁死", color: "text-amber-600" }
             ]
           },
           {
@@ -755,9 +754,9 @@
             h2: "变现时总会缩水？",
             summary: "零售金店的标价包含了品牌溢价与加工费，但黄金回收只认原料纯度！买入即浮亏 15%！",
             metrics: [
-              { label: "平均工艺溢价", val: "+17.5%", color: "text-amber-400" },
-              { label: "回收火耗扣点", val: "-5% ~ -18%", color: "text-rose-400" },
-              { label: "变现回本所需涨幅", val: "> 25%", color: "text-red-400" }
+              { label: "平均工艺溢价", val: "+17.5%", color: "text-amber-600" },
+              { label: "回收火耗扣点", val: "-5% ~ -18%", color: "text-rose-600" },
+              { label: "变现回本所需涨幅", val: "> 25%", color: "text-red-600" }
             ]
           },
           {
@@ -767,9 +766,9 @@
             h2: "上海黄金交易所 AU9999",
             summary: "神级比喻：金豆是包裹着一层金箔的当代年轻人情绪布洛芬；去金店买黄金是消费，在银行买投资金条才是资产配置！",
             metrics: [
-              { label: "零售金店溢价", val: "+¥80/克", color: "text-rose-400" },
-              { label: "银行投资金条", val: "+¥12/克", color: "text-emerald-400" },
-              { label: "情绪治愈价值", val: "满分", color: "text-purple-400" }
+              { label: "零售金店溢价", val: "+¥80/克", color: "text-rose-600" },
+              { label: "银行投资金条", val: "+¥12/克", color: "text-emerald-600" },
+              { label: "情绪治愈价值", val: "满分", color: "text-purple-600" }
             ]
           },
           {
@@ -847,9 +846,9 @@
             h2: "抄底总抄在半山腰？",
             summary: "一次性买入容易遭遇持续阴跌导致心态崩溃割肉；而机械定投又常常在反弹初期过早停止！",
             metrics: [
-              { label: "定投平均持有期", val: "2.4 年", color: "text-blue-400" },
-              { label: "最大心理回撤", val: "-28.5%", color: "text-rose-400" },
-              { label: "反转胜率提升", val: "+42%", color: "text-emerald-400" }
+              { label: "定投平均持有期", val: "2.4 年", color: "text-blue-600" },
+              { label: "最大心理回撤", val: "-28.5%", color: "text-rose-600" },
+              { label: "反转胜率提升", val: "+42%", color: "text-emerald-600" }
             ]
           },
           {
@@ -859,9 +858,9 @@
             h2: "赔率换爆发力",
             summary: "神级比喻：定投是慢慢熬一锅老火靓汤，梭哈是一记重锤砸下去；老火汤需要耐心，重锤需要铜皮铁骨！",
             metrics: [
-              { label: "估值分位数", val: "历史后 15%", color: "text-emerald-400" },
-              { label: "分红收益率", val: "3.8% 托底", color: "text-purple-400" },
-              { label: "机会成本损耗", val: "低", color: "text-amber-400" }
+              { label: "估值分位数", val: "历史后 15%", color: "text-emerald-600" },
+              { label: "分红收益率", val: "3.8% 托底", color: "text-purple-600" },
+              { label: "机会成本损耗", val: "低", color: "text-amber-600" }
             ]
           },
           {
@@ -897,15 +896,13 @@
       }
     ];
 
-    // 当前状态
     let currentTopicData = PRESET_TOPICS[0];
     let currentCardIndex = 1;
-    let cardViewMode = 'single'; // 'single' or 'grid'
+    let cardViewMode = 'single';
     let currentTab = 'cards';
     let userPoints = 120;
     let hasVoted = false;
 
-    // 初始化渲染
     window.addEventListener('DOMContentLoaded', () => {
       renderAll();
       updateClock();
@@ -920,7 +917,6 @@
       if (el) el.innerText = `${hours}:${mins}`;
     }
 
-    // 核心切换与渲染函数
     function renderAll() {
       renderCards();
       renderCopy();
@@ -936,7 +932,6 @@
       document.getElementById('contrastBadge').innerText = d.contrast.name;
     }
 
-    // 渲染卡片 (焦点模式与平铺模式)
     function renderCards() {
       const pages = currentTopicData.pages;
       const pageData = pages[currentCardIndex - 1];
@@ -944,46 +939,43 @@
 
       document.getElementById('currentCardIndexText').innerText = `${currentCardIndex} / ${total}`;
 
-      // 更新 Pill 激活态
       for (let i = 1; i <= 6; i++) {
         const p = document.getElementById(`pill${i}`);
         if (p) {
           if (i === currentCardIndex) {
             p.className = "px-2.5 py-1 rounded bg-blue-600 text-white font-bold transition";
           } else {
-            p.className = "px-2.5 py-1 rounded bg-slate-800 text-slate-400 hover:text-white transition";
+            p.className = "px-2.5 py-1 rounded bg-slate-100 text-slate-600 hover:text-slate-900 transition";
           }
         }
       }
 
-      // 渲染焦点卡片
       const container = document.getElementById('activeCardRender');
-      container.innerHTML = getCardHTML(pageData, currentCardIndex);
+      container.innerHTML = getWhiteCardHTML(pageData, currentCardIndex);
 
-      // 渲染平铺模式微缩图
       const gridContainer = document.getElementById('gridCardContainer');
       gridContainer.innerHTML = pages.map((p, idx) => `
-        <div onclick="selectCardPage(${idx+1}); toggleCardViewMode();" class="ratio-3-4 bg-slate-900 rounded-lg p-2.5 border ${idx+1 === currentCardIndex ? 'border-blue-500 ring-2 ring-blue-500/20' : 'border-slate-800'} hover:border-slate-600 cursor-pointer transition flex flex-col justify-between overflow-hidden shadow">
-          <div class="flex items-center justify-between text-[9px] text-slate-400">
-            <span class="font-bold text-blue-400">P${idx+1}</span>
+        <div onclick="selectCardPage(${idx+1}); toggleCardViewMode();" class="ratio-3-4 bg-white rounded-xl p-3 border ${idx+1 === currentCardIndex ? 'border-blue-500 ring-2 ring-blue-500/20 shadow-md' : 'border-slate-200'} hover:border-slate-400 cursor-pointer transition flex flex-col justify-between overflow-hidden shadow-sm">
+          <div class="flex items-center justify-between text-[9px] text-slate-500">
+            <span class="font-bold text-blue-600">P${idx+1}</span>
             <span class="truncate max-w-[80px]">${p.tag}</span>
           </div>
           <div class="my-auto py-1">
-            <div class="text-[11px] font-black text-white line-clamp-2 leading-snug">${p.h1} ${p.h2}</div>
+            <div class="text-[11px] font-black text-slate-900 line-clamp-2 leading-snug">${p.h1} ${p.h2}</div>
           </div>
           <div class="text-[9px] text-slate-500 line-clamp-2">${p.summary}</div>
         </div>
       `).join('');
     }
 
-    // 生成单张 3:4 卡片 HTML
-    function getCardHTML(p, num) {
+    // 生成纯白底色杂志风 3:4 卡片 HTML
+    function getWhiteCardHTML(p, num) {
       if (num === 1) {
-        // P1 封面
+        // P1 纯白大字报封面
         return `
-          <div class="p-6 h-full flex flex-col justify-between bg-gradient-to-b from-slate-900 via-slate-900 to-slate-950 text-white select-none">
+          <div class="p-6 h-full flex flex-col justify-between bg-white text-slate-900 select-none border border-slate-100 rounded-2xl">
             <div class="flex items-center justify-between">
-              <span class="px-2.5 py-0.5 rounded-full bg-blue-500/20 text-blue-300 font-mono text-[11px] font-bold border border-blue-500/30">
+              <span class="px-2.5 py-0.5 rounded-full bg-blue-50 text-blue-700 font-mono text-[11px] font-bold border border-blue-200">
                 P1 · ${p.tag}
               </span>
               <span class="text-[11px] font-bold text-slate-400">#理性讨论</span>
@@ -991,61 +983,61 @@
 
             <div class="space-y-4 my-auto py-4">
               <div class="space-y-1">
-                <h2 class="text-2xl sm:text-3xl font-black tracking-tight text-white leading-tight">
+                <h2 class="text-2xl sm:text-3xl font-black tracking-tight text-slate-950 leading-tight">
                   ${p.h1}
                 </h2>
-                <h2 class="text-2xl sm:text-3xl font-black tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-rose-400 to-blue-400 leading-tight">
+                <h2 class="text-2xl sm:text-3xl font-black tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-rose-600 via-purple-600 to-blue-600 leading-tight">
                   ${p.h2}
                 </h2>
               </div>
-              <p class="text-xs text-slate-300 leading-relaxed border-l-2 border-blue-500 pl-3">
+              <p class="text-xs text-slate-600 leading-relaxed border-l-2 border-blue-500 pl-3">
                 ${p.summary}
               </p>
             </div>
 
-            <div class="space-y-2 pt-2 border-t border-slate-800">
-              <div class="p-2 rounded-lg bg-rose-500/10 border border-rose-500/20 text-rose-300 text-xs font-semibold flex items-center gap-2">
+            <div class="space-y-2 pt-2 border-t border-slate-100">
+              <div class="p-2.5 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 text-xs font-semibold flex items-center gap-2">
                 <span>🔴</span> ${p.badgeA}
               </div>
-              <div class="p-2 rounded-lg bg-sky-500/10 border border-sky-500/20 text-sky-300 text-xs font-semibold flex items-center gap-2">
+              <div class="p-2.5 rounded-xl bg-sky-50 border border-sky-200 text-sky-800 text-xs font-semibold flex items-center gap-2">
                 <span>🔵</span> ${p.badgeB}
               </div>
             </div>
           </div>
         `;
       } else if (num === 2 || num === 3) {
-        // P2/P3 数据与账本
+        // P2/P3 数据与账本 (纯白清新排版)
         return `
-          <div class="p-6 h-full flex flex-col justify-between bg-gradient-to-b from-slate-900 to-slate-950 text-white select-none">
+          <div class="p-6 h-full flex flex-col justify-between bg-white text-slate-900 select-none border border-slate-100 rounded-2xl">
             <div class="flex items-center justify-between">
-              <span class="px-2.5 py-0.5 rounded-full bg-purple-500/20 text-purple-300 font-mono text-[11px] font-bold border border-purple-500/30">
+              <span class="px-2.5 py-0.5 rounded-full bg-purple-50 text-purple-700 font-mono text-[11px] font-bold border border-purple-200">
                 P${num} · ${p.tag}
               </span>
               <span class="text-[11px] text-slate-400 font-mono">FINANCE DATA</span>
             </div>
 
             <div class="space-y-3 my-auto">
-              <h3 class="text-xl sm:text-2xl font-black text-white leading-snug">
-                ${p.h1}<br><span class="text-amber-400">${p.h2}</span>
+              <h3 class="text-xl sm:text-2xl font-black text-slate-900 leading-snug">
+                ${p.h1}<br><span class="text-amber-600">${p.h2}</span>
               </h3>
-              <p class="text-xs text-slate-300 leading-relaxed">
+              <p class="text-xs text-slate-600 leading-relaxed">
                 ${p.summary}
               </p>
 
-              <!-- 三列精算指标 -->
+              <!-- 三列浅底数据卡片 -->
               <div class="grid grid-cols-3 gap-2 pt-3">
                 ${(p.metrics || []).map(m => `
-                  <div class="p-2.5 rounded-xl bg-slate-800/80 border border-slate-700 text-center">
-                    <span class="text-[10px] text-slate-400 block mb-0.5 truncate">${m.label}</span>
+                  <div class="p-2.5 rounded-xl bg-slate-50 border border-slate-200 text-center shadow-sm">
+                    <span class="text-[10px] text-slate-500 block mb-0.5 truncate">${m.label}</span>
                     <span class="text-sm sm:text-base font-black font-mono ${m.color}">${m.val}</span>
                   </div>
                 `).join('')}
               </div>
             </div>
 
-            <div class="p-2.5 rounded-lg bg-slate-800/40 border border-slate-800 text-[10px] text-slate-400 flex items-center justify-between">
+            <div class="p-2.5 rounded-xl bg-slate-50 border border-slate-200 text-[10px] text-slate-500 flex items-center justify-between">
               <span>🔬 宏观精算模型已校准</span>
-              <span class="text-blue-400">滑动查看下页 ▶</span>
+              <span class="text-blue-600 font-semibold">滑动查看下页 ▶</span>
             </div>
           </div>
         `;
@@ -1054,72 +1046,72 @@
         const isSideA = num === 4;
         const themeColor = isSideA ? 'blue' : 'amber';
         return `
-          <div class="p-6 h-full flex flex-col justify-between bg-gradient-to-b from-slate-900 to-slate-950 text-white select-none">
+          <div class="p-6 h-full flex flex-col justify-between bg-white text-slate-900 select-none border border-slate-100 rounded-2xl">
             <div class="flex items-center justify-between">
-              <span class="px-2.5 py-0.5 rounded-full bg-${themeColor}-500/20 text-${themeColor}-300 font-mono text-[11px] font-bold border border-${themeColor}-500/30">
+              <span class="px-2.5 py-0.5 rounded-full bg-${themeColor}-50 text-${themeColor}-800 font-mono text-[11px] font-bold border border-${themeColor}-200">
                 P${num} · ${p.tag}
               </span>
-              <span class="text-[11px] text-slate-400 font-semibold">${isSideA ? '正方代言' : '反方代言'}</span>
+              <span class="text-[11px] text-slate-500 font-semibold">${isSideA ? '正方代言' : '反方代言'}</span>
             </div>
 
             <div class="space-y-3 my-auto">
-              <h3 class="text-lg sm:text-xl font-black text-white leading-snug">
-                ${p.h1}<br><span class="text-${themeColor}-400">${p.h2}</span>
+              <h3 class="text-lg sm:text-xl font-black text-slate-900 leading-snug">
+                ${p.h1}<br><span class="text-${themeColor}-700">${p.h2}</span>
               </h3>
-              <p class="text-xs text-slate-300 leading-relaxed">
+              <p class="text-xs text-slate-600 leading-relaxed">
                 ${p.summary}
               </p>
 
-              <!-- 真实事实案例切片 -->
-              <div class="p-3 rounded-xl bg-slate-800/80 border border-slate-700 space-y-1">
-                <span class="text-[10px] font-bold text-amber-300 flex items-center gap-1">
+              <!-- 真实事实案例切片 (浅雅底色) -->
+              <div class="p-3 rounded-xl bg-${themeColor}-50/60 border border-${themeColor}-200 space-y-1">
+                <span class="text-[10px] font-bold text-${themeColor}-900 flex items-center gap-1">
                   <span>📜</span> ${p.caseTitle}
                 </span>
-                <p class="text-[11px] text-slate-200 leading-relaxed">${p.caseText}</p>
+                <p class="text-[11px] text-slate-700 leading-relaxed">${p.caseText}</p>
               </div>
 
               <!-- 扎心内心戏独白 -->
-              <div class="p-2.5 rounded-lg bg-slate-950/80 border border-${themeColor}-500/30 text-[11px] text-${themeColor}-200 italic">
+              <div class="p-2.5 rounded-lg bg-slate-50 border border-slate-200 text-[11px] text-slate-600 italic">
                 ${p.quote}
               </div>
             </div>
 
-            <div class="flex items-center justify-between text-[10px] text-slate-500 pt-2 border-t border-slate-800">
+            <div class="flex items-center justify-between text-[10px] text-slate-400 pt-2 border-t border-slate-100">
               <span>事实案例经官方质检验证</span>
-              <span class="text-slate-400">权威专家视角</span>
+              <span class="text-slate-600 font-medium">权威专家视角</span>
             </div>
           </div>
         `;
       } else {
         // P6 终极站队互动尾页
         return `
-          <div class="p-6 h-full flex flex-col justify-between bg-gradient-to-b from-slate-900 to-slate-950 text-white select-none text-center">
+          <div class="p-6 h-full flex flex-col justify-between bg-white text-slate-900 select-none text-center border border-slate-100 rounded-2xl">
             <div class="flex items-center justify-between">
-              <span class="px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 font-mono text-[11px] font-bold border border-emerald-500/30">
+              <span class="px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-800 font-mono text-[11px] font-bold border border-emerald-200">
                 P6 · ${p.tag}
               </span>
               <span class="text-[11px] text-slate-400">评论区互动</span>
             </div>
 
             <div class="space-y-4 my-auto">
-              <h3 class="text-2xl sm:text-3xl font-black text-white leading-tight">
-                ${p.h1}<br><span class="text-transparent bg-clip-text bg-gradient-to-r from-rose-400 to-sky-400">${p.h2}</span>
+              <h3 class="text-2xl sm:text-3xl font-black text-slate-950 leading-tight">
+                ${p.h1}<br><span class="text-transparent bg-clip-text bg-gradient-to-r from-rose-600 to-sky-600">${p.h2}</span>
               </h3>
-              <p class="text-xs text-slate-300 max-w-xs mx-auto leading-relaxed">
+              <p class="text-xs text-slate-600 max-w-xs mx-auto leading-relaxed">
                 ${p.summary}
               </p>
 
               <div class="space-y-2.5 text-left pt-2">
-                <div class="p-3 rounded-xl bg-rose-500/15 border border-rose-500/30 text-rose-200 font-bold text-xs">
+                <div class="p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-900 font-bold text-xs shadow-sm">
                   ${p.actionA}
                 </div>
-                <div class="p-3 rounded-xl bg-sky-500/15 border border-sky-500/30 text-sky-200 font-bold text-xs">
+                <div class="p-3 rounded-xl bg-sky-50 border border-sky-200 text-sky-900 font-bold text-xs shadow-sm">
                   ${p.actionB}
                 </div>
               </div>
             </div>
 
-            <div class="p-2.5 rounded-lg bg-blue-600/20 border border-blue-500/30 text-[11px] text-blue-300 font-medium">
+            <div class="p-2.5 rounded-xl bg-blue-50 border border-blue-200 text-[11px] text-blue-800 font-medium">
               👇 在评论区留下你的真实观点与战绩！
             </div>
           </div>
@@ -1127,7 +1119,6 @@
       }
     }
 
-    // 渲染文案
     function renderCopy() {
       const d = currentTopicData;
       document.getElementById('postCopyTitle').innerText = d.title;
@@ -1182,7 +1173,6 @@
       document.getElementById('copyWordCount').innerText = `约 ${bodyContent.length} 字`;
     }
 
-    // 渲染运营活动配置
     function renderCampaign() {
       const d = currentTopicData;
       document.getElementById('cmpIdText').innerText = `CAMP_${d.id.toUpperCase()}`;
@@ -1244,7 +1234,6 @@
       document.getElementById('jsonPreviewBox').innerText = JSON.stringify(configObj, null, 2);
     }
 
-    // 渲染移动端落地页模拟器
     function renderMobileSimulator() {
       const d = currentTopicData;
       document.getElementById('simCampTitle').innerText = d.title;
@@ -1261,7 +1250,6 @@
       document.getElementById('simSideBVotes').innerText = `${d.side_b.votes.toLocaleString()} 票 (${rateB}%)`;
     }
 
-    // 用户交互：为阵营投票
     function voteSide(side) {
       if (hasVoted) {
         showToast('⚠️ 您今日已投过票啦，做任务可获得更多助威券！', 'warning');
@@ -1280,17 +1268,15 @@
       renderMobileSimulator();
     }
 
-    // 用户交互：完成模拟任务
     function completeSimTask(btn, pts) {
       if (btn.innerText === '已完成') return;
       btn.innerText = '已完成';
-      btn.className = "px-2.5 py-1 rounded-lg bg-emerald-600/60 text-[10px] text-white font-bold cursor-default";
+      btn.className = "px-2.5 py-1 rounded-lg bg-emerald-100 text-[10px] text-emerald-800 font-bold cursor-default border border-emerald-300";
       userPoints += pts;
       document.getElementById('simUserPoints').innerText = `金币: ${userPoints} 🪙`;
       showToast(`✨ 任务达成！获得 +${pts} 积分金币 🪙`, 'success');
     }
 
-    // 用户交互：抽奖
     function drawSimLottery() {
       if (userPoints < 30) {
         showToast('🪙 金币不足，请先完成上方打卡任务赚取积分！', 'warning');
@@ -1307,7 +1293,6 @@
       showToast(win, 'success');
     }
 
-    // 快速生成主流程：支持用户输入任意标题
     function generateContent() {
       const input = document.getElementById('titleInput').value.trim();
       if (!input) {
@@ -1315,7 +1300,6 @@
         return;
       }
 
-      // 按钮进入 Loading
       const btn = document.getElementById('btnGenerate');
       const btnText = document.getElementById('genBtnText');
       const btnIcon = document.getElementById('genBtnIcon');
@@ -1323,11 +1307,9 @@
       btnIcon.innerText = '⏳';
       btnText.innerText = '正在调度专家矩阵与三大 Skill 精算中...';
 
-      // 查找是否匹配预设
       setTimeout(() => {
         let match = PRESET_TOPICS.find(t => input.includes(t.title) || t.title.includes(input));
         if (!match) {
-          // 智能为新标题组装一套内容
           match = createCustomTopicData(input);
         }
 
@@ -1339,11 +1321,10 @@
         btn.disabled = false;
         btnIcon.innerText = '⚡';
         btnText.innerText = '快速生成对应内容与图片';
-        showToast('🎉 全套 6 张 3:4 卡片、文案与活动配置已快速生成！', 'success');
+        showToast('🎉 全套 6 张 3:4 纯白卡片、文案与活动配置已快速生成！', 'success');
       }, 600);
     }
 
-    // 为任意自定义标题动态生成全套模型
     function createCustomTopicData(title) {
       return {
         id: "custom_" + Date.now(),
@@ -1389,9 +1370,9 @@
             h2: "最容易陷入纠结？",
             summary: "既害怕错失财富机会，又担心踏空踩坑。账本算不清楚，每一步都在承担隐形摩擦成本！",
             metrics: [
-              { label: "预期收益率", val: "+8% ~ 15%", color: "text-emerald-400" },
-              { label: "最大下行回撤", val: "-12.5%", color: "text-rose-400" },
-              { label: "流动性损耗", val: "中度", color: "text-amber-400" }
+              { label: "预期收益率", val: "+8% ~ 15%", color: "text-emerald-600" },
+              { label: "最大下行回撤", val: "-12.5%", color: "text-rose-600" },
+              { label: "流动性损耗", val: "中度", color: "text-amber-600" }
             ]
           },
           {
@@ -1401,9 +1382,9 @@
             h2: "背后是风险偏好！",
             summary: "宏观学者神级隐喻：不要在靶场中央当活靶子，看清底层资产的确定性与周期律！",
             metrics: [
-              { label: "胜率测算", val: "68.4%", color: "text-blue-400" },
-              { label: "安全边际", val: "充足", color: "text-emerald-400" },
-              { label: "专家评级", val: "五星", color: "text-purple-400" }
+              { label: "胜率测算", val: "68.4%", color: "text-blue-600" },
+              { label: "安全边际", val: "充足", color: "text-emerald-600" },
+              { label: "专家评级", val: "五星", color: "text-purple-600" }
             ]
           },
           {
@@ -1439,7 +1420,6 @@
       };
     }
 
-    // 灵感选题快速填入
     function applyPresetTopic(index) {
       const t = PRESET_TOPICS[index];
       document.getElementById('titleInput').value = t.title;
@@ -1451,7 +1431,6 @@
       document.getElementById('titleInput').focus();
     }
 
-    // 卡片翻页与选择
     function selectCardPage(pnum) {
       currentCardIndex = pnum;
       renderCards();
@@ -1471,7 +1450,6 @@
       }
     }
 
-    // 切换卡片单图/平铺视图
     function toggleCardViewMode() {
       const single = document.getElementById('singleCardContainer');
       const grid = document.getElementById('gridCardContainer');
@@ -1490,7 +1468,6 @@
       }
     }
 
-    // 切换产出选项卡 (卡片 / 文案 / 运营活动)
     function switchOutputTab(tab) {
       currentTab = tab;
       const pCards = document.getElementById('panelCards');
@@ -1502,14 +1479,13 @@
       const bCamp = document.getElementById('tabBtnCampaign');
       const cToolbar = document.getElementById('cardsToolbar');
 
-      // 隐藏全部
       pCards.classList.add('hidden');
       pCopy.classList.add('hidden');
       pCamp.classList.add('hidden');
 
-      bCards.className = "px-4 py-2 rounded-lg text-xs font-bold transition flex items-center gap-1.5 bg-slate-800 text-slate-300 hover:text-white";
-      bCopy.className = "px-4 py-2 rounded-lg text-xs font-bold transition flex items-center gap-1.5 bg-slate-800 text-slate-300 hover:text-white";
-      bCamp.className = "px-4 py-2 rounded-lg text-xs font-bold transition flex items-center gap-1.5 bg-slate-800 text-slate-300 hover:text-white";
+      bCards.className = "px-4 py-2 rounded-lg text-xs font-bold transition flex items-center gap-1.5 bg-white border border-slate-200 text-slate-700 hover:bg-slate-100";
+      bCopy.className = "px-4 py-2 rounded-lg text-xs font-bold transition flex items-center gap-1.5 bg-white border border-slate-200 text-slate-700 hover:bg-slate-100";
+      bCamp.className = "px-4 py-2 rounded-lg text-xs font-bold transition flex items-center gap-1.5 bg-white border border-slate-200 text-slate-700 hover:bg-slate-100";
 
       if (tab === 'cards') {
         pCards.classList.remove('hidden');
@@ -1526,7 +1502,6 @@
       }
     }
 
-    // 复制文案与功能
     function copyFullPostCopy() {
       const title = document.getElementById('postCopyTitle').innerText;
       const body = document.getElementById('postCopyBody').innerText;
@@ -1554,7 +1529,6 @@
       });
     }
 
-    // 下载运营活动配置 JSON 文件
     function exportCampaignJSON() {
       const jsonStr = document.getElementById('jsonPreviewBox').innerText;
       const blob = new Blob([jsonStr], { type: 'application/json' });
@@ -1567,7 +1541,6 @@
       showToast(`💾 campaign_config_${currentTopicData.id}.json 下载成功！`, 'success');
     }
 
-    // 在新标签打开高清卡片 (可直接另存为图片)
     function openCardInNewTab() {
       const p = currentTopicData.pages[currentCardIndex - 1];
       const htmlContent = `<!DOCTYPE html>
@@ -1577,13 +1550,13 @@
   <title>P${currentCardIndex} - ${currentTopicData.title}</title>
   <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"><\/script>
   <style>
-    body { margin: 0; background: #020617; display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 20px; }
-    .card-box { width: 480px; aspect-ratio: 3 / 4; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.8); border-radius: 16px; overflow: hidden; }
+    body { margin: 0; background: #f8fafc; display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 20px; }
+    .card-box { width: 480px; aspect-ratio: 3 / 4; box-shadow: 0 25px 50px -12px rgba(15,23,42,0.15); border-radius: 16px; overflow: hidden; background: #ffffff; }
   </style>
 </head>
 <body>
   <div class="card-box">
-    ${getCardHTML(p, currentCardIndex)}
+    ${getWhiteCardHTML(p, currentCardIndex)}
   </div>
 </body>
 </html>`;
@@ -1593,7 +1566,6 @@
       window.open(url, '_blank');
     }
 
-    // 下载当前单张卡片 HTML
     function downloadActiveCardHTML() {
       const p = currentTopicData.pages[currentCardIndex - 1];
       const htmlContent = `<!DOCTYPE html>
@@ -1603,13 +1575,13 @@
   <title>P${currentCardIndex} - ${currentTopicData.title}</title>
   <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"><\/script>
   <style>
-    body { margin: 0; background: #020617; display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 20px; }
-    .card-box { width: 480px; aspect-ratio: 3 / 4; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.8); border-radius: 16px; overflow: hidden; }
+    body { margin: 0; background: #f8fafc; display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 20px; }
+    .card-box { width: 480px; aspect-ratio: 3 / 4; box-shadow: 0 25px 50px -12px rgba(15,23,42,0.15); border-radius: 16px; overflow: hidden; background: #ffffff; }
   </style>
 </head>
 <body>
   <div class="card-box">
-    ${getCardHTML(p, currentCardIndex)}
+    ${getWhiteCardHTML(p, currentCardIndex)}
   </div>
 </body>
 </html>`;
@@ -1624,7 +1596,6 @@
       showToast(`📥 card_P${currentCardIndex}.html 下载成功！`, 'success');
     }
 
-    // Toast 提示条工具函数
     function showToast(msg, type = 'success') {
       const toast = document.getElementById('toast');
       const toastMsg = document.getElementById('toastMsg');
