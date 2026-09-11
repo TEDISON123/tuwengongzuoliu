@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700;900&family=Noto+Serif+SC:wght@600;900&family=ZCOOL+KuaiLe&display=swap');
+    body { font-family: 'Noto Sans SC', sans-serif; -webkit-font-smoothing: antialiased; }
+    .font-serif-title { font-family: 'Noto Serif SC', serif; }
+    .font-handwriting { font-family: 'ZCOOL KuaiLe', cursive, sans-serif; }
+    
+    .card-canvas {
+      width: 540px;
+      height: 720px;
+      position: relative;
+      overflow: hidden;
+      box-sizing: border-box;
+    }
+    
+    /* 暖调微噪点纸张底纹 */
+    .bg-paper-warm {
+      background-color: #FAF8F5;
+      background-image: radial-gradient(#E5E0D8 0.85px, transparent 0.85px);
+      background-size: 15px 15px;
+    }
+
+    /* 真实横线备忘录纸 */
+    .bg-memo-ruled {
+      background-color: #FCFBF9;
+      background-image: repeating-linear-gradient(#FCFBF9, #FCFBF9 29px, #E7E3DC 30px);
+    }
+
+    /* 荧光记号笔划线 */
+    .marker-yellow {
+      background: linear-gradient(180deg, transparent 52%, #FDE047 52%);
+      padding: 0 4px;
+    }
+    .marker-red {
+      background: linear-gradient(180deg, transparent 58%, #FECACA 58%);
+      padding: 0 4px;
+    }
+    .marker-cyan {
+      background: linear-gradient(180deg, transparent 55%, #BAE6FD 55%);
+      padding: 0 4px;
+    }
+
+    /* 倾斜复古红色印章 */
+    .stamp-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: 2px solid #DC2626;
+      color: #DC2626;
+      font-weight: 900;
+      letter-spacing: 0.08em;
+      transform: rotate(-3.5deg);
+      border-radius: 6px;
+      padding: 2px 10px;
+      box-shadow: 0 1px 2px rgba(220, 38, 38, 0.15);
+    }
+
+    /* 和纸胶带贴角效果 */
+    .washi-tape-top {
+      position: relative;
+    }
+    .washi-tape-top::before {
+      content: "";
+      position: absolute;
+      top: -12px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 90px;
+      height: 22px;
+      background: rgba(254, 240, 138, 0.75);
+      backdrop-filter: blur(1px);
+      border-left: 3px dashed rgba(202, 138, 4, 0.5);
+      border-right: 3px dashed rgba(202, 138, 4, 0.5);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+      z-index: 10;
+    }
+  </style>
+</head>
+<body class="bg-stone-200 m-0 p-0 flex items-center justify-center min-h-screen">
+  <div class="card-canvas bg-paper-warm flex flex-col justify-between p-6 text-stone-900 border border-stone-300/80 shadow-2xl">
+    
+    <!-- 顶部极简刊头 -->
+    <div class="flex items-center justify-between pb-2.5 border-b border-stone-300/70">
+      <div class="flex items-center gap-2">
+        <span class="px-2 py-0.5 rounded bg-stone-900 text-amber-300 text-[10px] font-black tracking-widest uppercase">
+          理性讨论 · 财经认知
+        </span>
+        <span class="text-[10px] font-bold text-stone-400">真实账本调研</span>
+      </div>
+      <span class="text-xs font-black font-mono text-stone-400 tracking-wider">
+        02 / 06
+      </span>
+    </div>
+
+    <div class="flex-1 flex flex-col justify-between py-2.5 space-y-3">
+      <div class="space-y-1">
+        <div class="flex items-center justify-between">
+          <span class="text-[11px] font-black text-rose-600 tracking-wider uppercase">02 · 现实利差痛点账本</span>
+          <span class="text-[10px] font-bold text-stone-400 font-mono">FINANCIAL SPREAD</span>
+        </div>
+        <h2 class="text-2xl font-black text-stone-950 leading-snug">
+          昨夜数据暴雷，<br>资产狂风骤雨
+        </h2>
+      </div>
+
+      <div class="p-2.5 rounded-lg bg-stone-100/80 border border-stone-200 text-xs text-stone-700 leading-relaxed font-medium">
+        📝 很多中产满仓满融坐等降息分红，昨晚公布的8月PPI数据瞬间引爆全场：
+      </div>
+      
+      <!-- 模拟银行明细流水账本 -->
+      <div class="space-y-2 bg-stone-100/50 p-2.5 rounded-xl border border-dashed border-stone-300">
+        <div class="flex justify-between text-[10px] font-bold text-stone-400 px-1">
+          <span>资产/负债对比标的</span>
+          <span>账面真实利息收益</span>
+        </div>
+        <div class="flex items-center justify-between p-3 rounded-lg bg-white/95 border border-stone-200/90 shadow-sm">
+              <div class="space-y-0.5 text-left">
+                <span class="font-black text-xs text-stone-900">美国8月最终需求PPI</span>
+                <span class="text-[10px] text-stone-500 block font-mono">同比预期 5.3%</span>
+              </div>
+              <span class="font-mono font-black text-sm text-rose-600">实际公布 5.4% (大幅反弹)</span>
+            </div><div class="flex items-center justify-between p-3 rounded-lg bg-white/95 border border-stone-200/90 shadow-sm">
+              <div class="space-y-0.5 text-left">
+                <span class="font-black text-xs text-stone-900">CME 9月加息预期概率</span>
+                <span class="text-[10px] text-stone-500 block font-mono">数据公布前 15%</span>
+              </div>
+              <span class="font-mono font-black text-sm text-rose-600">数据公布后 狂飙超 70%</span>
+            </div><div class="flex items-center justify-between p-3 rounded-lg bg-white/95 border border-stone-200/90 shadow-sm">
+              <div class="space-y-0.5 text-left">
+                <span class="font-black text-xs text-stone-900">全球大类资产单夜波动</span>
+                <span class="text-[10px] text-stone-500 block font-mono">10年期美债触及4.96%</span>
+              </div>
+              <span class="font-mono font-black text-sm text-rose-600">现货金银跳水 / 原油大涨4.2%</span>
+            </div>
+      </div>
+
+      <!-- 真实红笔手写批注感 -->
+      <div class="p-3 rounded-xl bg-stone-950 text-stone-100 text-xs leading-relaxed space-y-1 shadow-md">
+        <div class="text-amber-400 font-black text-xs flex items-center gap-1">
+          <span>💡</span> <span>老手视角：</span>
+        </div>
+        <p class="text-stone-300 text-[11px] leading-relaxed">
+          表面看提前还贷白捡了一辆特斯拉，为什么金融老炮却劝你'别急着把防弹衣当废品卖了'？
+        </p>
+      </div>
+    </div>
+    <div class="pt-2.5 border-t border-stone-300/70 flex justify-between items-center text-[10px] text-stone-400">
+      <span class="font-handwriting text-stone-600 text-xs">（真实数据精算，看清表象背后的隐性摩擦）</span>
+      <span class="font-mono">P2 / 痛点账本</span>
+    </div>
+
+  </div>
+</body>
+</html>

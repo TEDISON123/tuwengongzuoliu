@@ -4,55 +4,146 @@
   <meta charset="utf-8">
   <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700;900&display=swap');
-    body { font-family: 'Noto Sans SC', sans-serif; }
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700;900&family=Noto+Serif+SC:wght@600;900&family=ZCOOL+KuaiLe&display=swap');
+    body { font-family: 'Noto Sans SC', sans-serif; -webkit-font-smoothing: antialiased; }
+    .font-serif-title { font-family: 'Noto Serif SC', serif; }
+    .font-handwriting { font-family: 'ZCOOL KuaiLe', cursive, sans-serif; }
+    
     .card-canvas {
       width: 540px;
       height: 720px;
       position: relative;
       overflow: hidden;
+      box-sizing: border-box;
+    }
+    
+    /* 暖调微噪点纸张底纹 */
+    .bg-paper-warm {
+      background-color: #FAF8F5;
+      background-image: radial-gradient(#E5E0D8 0.85px, transparent 0.85px);
+      background-size: 15px 15px;
+    }
+
+    /* 真实横线备忘录纸 */
+    .bg-memo-ruled {
+      background-color: #FCFBF9;
+      background-image: repeating-linear-gradient(#FCFBF9, #FCFBF9 29px, #E7E3DC 30px);
+    }
+
+    /* 荧光记号笔划线 */
+    .marker-yellow {
+      background: linear-gradient(180deg, transparent 52%, #FDE047 52%);
+      padding: 0 4px;
+    }
+    .marker-red {
+      background: linear-gradient(180deg, transparent 58%, #FECACA 58%);
+      padding: 0 4px;
+    }
+    .marker-cyan {
+      background: linear-gradient(180deg, transparent 55%, #BAE6FD 55%);
+      padding: 0 4px;
+    }
+
+    /* 倾斜复古红色印章 */
+    .stamp-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: 2px solid #DC2626;
+      color: #DC2626;
+      font-weight: 900;
+      letter-spacing: 0.08em;
+      transform: rotate(-3.5deg);
+      border-radius: 6px;
+      padding: 2px 10px;
+      box-shadow: 0 1px 2px rgba(220, 38, 38, 0.15);
+    }
+
+    /* 和纸胶带贴角效果 */
+    .washi-tape-top {
+      position: relative;
+    }
+    .washi-tape-top::before {
+      content: "";
+      position: absolute;
+      top: -12px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 90px;
+      height: 22px;
+      background: rgba(254, 240, 138, 0.75);
+      backdrop-filter: blur(1px);
+      border-left: 3px dashed rgba(202, 138, 4, 0.5);
+      border-right: 3px dashed rgba(202, 138, 4, 0.5);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+      z-index: 10;
     }
   </style>
 </head>
-<body class="bg-slate-100 flex items-center justify-center min-h-screen p-4">
-  <div class="card-canvas bg-white shadow-xl rounded-2xl flex flex-col justify-between p-8 border border-slate-200">
+<body class="bg-stone-200 m-0 p-0 flex items-center justify-center min-h-screen">
+  <div class="card-canvas bg-paper-warm flex flex-col justify-between p-6 text-stone-900 border border-stone-300/80 shadow-2xl">
     
-    <!-- Top Header Bar -->
-    <div class="flex items-center justify-between pb-3 border-b border-slate-100">
-      <span class="text-xs font-bold px-2.5 py-1 rounded-full bg-blue-50 text-blue-600 tracking-wider">
-        #理性讨论 · 黄金真相
-      </span>
-      <span class="text-xs font-semibold text-slate-400 font-mono">
-        1 / 6
+    <!-- 顶部极简刊头 -->
+    <div class="flex items-center justify-between pb-2.5 border-b border-stone-300/70">
+      <div class="flex items-center gap-2">
+        <span class="px-2 py-0.5 rounded bg-stone-900 text-amber-300 text-[10px] font-black tracking-widest uppercase">
+          理性讨论 · 黄金真相
+        </span>
+        <span class="text-[10px] font-bold text-stone-400">真实账本调研</span>
+      </div>
+      <span class="text-xs font-black font-mono text-stone-400 tracking-wider">
+        01 / 06
       </span>
     </div>
 
-    <!-- Cover Poster Content -->
-    <div class="my-auto space-y-5 text-center">
-      <div class="inline-block px-3 py-1 rounded bg-amber-50 border border-amber-200 text-amber-700 text-xs font-bold tracking-wide">
-        💰 真实账本对决 · 争议辩题
+    <!-- 封面满幅大字报主体 -->
+    <div class="flex-1 flex flex-col justify-between py-3 space-y-3">
+      <div class="flex items-center justify-between pt-1">
+        <div class="stamp-badge text-[11px]">
+          ★ 真实账本对决 · 避坑必看
+        </div>
+        <div class="text-[10px] text-stone-400 font-mono tracking-tight">
+          ISSUE #2026-XHS
+        </div>
       </div>
-      <h1 class="text-3xl font-black text-slate-900 leading-tight tracking-tight px-2">
-        <span class="block">年轻人每月攒金豆</span><span class="block">是低门槛强制储蓄？</span><span class="block">还是为高溢价买单？</span>
-      </h1>
-      <div class="mx-auto max-w-sm p-3 rounded-xl bg-red-50 border-2 border-red-500/30 text-red-600 font-bold text-sm leading-snug">
-        抗通胀资产压舱石 VS 回购变现被砍两刀？ 建微型诺亚方舟 VS 给金店老板众筹年终奖？
+
+      <div class="space-y-2 text-center py-1">
+        <span class="block text-[34px] font-black tracking-tight text-stone-900 leading-tight">年轻人每月攒金豆</span><span class="inline-block my-1 bg-stone-950 text-white px-3 py-1 font-black text-[30px] rounded-sm tracking-tight transform -rotate-1 shadow-md">是低门槛强制储蓄？</span><span class="block text-[32px] font-black tracking-tight text-stone-900 leading-tight"><span class="marker-yellow">还是为高溢价买单？</span></span>
       </div>
+
+      <div class="washi-tape-top p-3.5 rounded-xl bg-amber-50 border border-amber-200/90 text-stone-900 text-xs font-bold leading-relaxed shadow-sm">
+        <span class="text-rose-600 font-black">【核心冲突】</span> 抗通胀资产压舱石 VS 回购变现被砍两刀？ 建微型诺亚方舟 VS 给金店老板众筹年终奖？
+      </div>
+
       
-      <!-- 专家视角交锋对决 Badge -->
-      <div class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-900 text-white text-[11px] font-bold shadow-md">
-        <span class="text-slate-400">⚖️ 专家对决:</span>
-        <span class="text-amber-300">宏观经济学者</span>
-        <span class="text-slate-500 font-mono text-[10px]">VS</span>
-        <span class="text-blue-300">平民反收割官</span>
+      <!-- 红蓝专家交锋阵营 -->
+      <div class="grid grid-cols-2 gap-2.5 pt-1 text-left">
+        <div class="p-2.5 rounded-xl bg-rose-50/90 border border-rose-200/90 shadow-sm">
+          <div class="flex items-center gap-1 text-[10px] font-black text-rose-700 mb-0.5">
+            <span class="w-2 h-2 rounded-full bg-rose-500"></span>
+            <span>选 A 阵营代言</span>
+          </div>
+          <p class="text-[11px] font-bold text-stone-900 leading-snug">宏观经济学者</p>
+        </div>
+        <div class="p-2.5 rounded-xl bg-sky-50/90 border border-sky-200/90 shadow-sm">
+          <div class="flex items-center gap-1 text-[10px] font-black text-sky-700 mb-0.5">
+            <span class="w-2 h-2 rounded-full bg-sky-500"></span>
+            <span>选 B 阵营代言</span>
+          </div>
+          <p class="text-[11px] font-bold text-stone-900 leading-snug">平民反收割官</p>
+        </div>
       </div>
 
     </div>
     
-    <!-- Footer CTA -->
-    <div class="pt-4 border-t border-slate-100 flex items-center justify-between text-xs text-slate-400 font-medium">
-      <span>内附克重回收真实损耗对比 · 滑动阅读 ➔</span>
-      <span class="text-blue-500 font-bold">滑动阅读 ➔</span>
+    <!-- 底部手绘感引导 -->
+    <div class="pt-3 border-t border-stone-300/70 flex items-center justify-between text-xs text-stone-500 font-medium">
+      <span class="font-handwriting text-sm text-stone-700 tracking-wider">
+        内附克重回收真实损耗对比 · 滑动阅读 ➔
+      </span>
+      <span class="text-rose-600 font-black tracking-tight flex items-center gap-0.5">
+        翻页阅读 ➔
+      </span>
     </div>
 
   </div>

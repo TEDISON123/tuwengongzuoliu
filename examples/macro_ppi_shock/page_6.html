@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700;900&family=Noto+Serif+SC:wght@600;900&family=ZCOOL+KuaiLe&display=swap');
+    body { font-family: 'Noto Sans SC', sans-serif; -webkit-font-smoothing: antialiased; }
+    .font-serif-title { font-family: 'Noto Serif SC', serif; }
+    .font-handwriting { font-family: 'ZCOOL KuaiLe', cursive, sans-serif; }
+    
+    .card-canvas {
+      width: 540px;
+      height: 720px;
+      position: relative;
+      overflow: hidden;
+      box-sizing: border-box;
+    }
+    
+    /* 暖调微噪点纸张底纹 */
+    .bg-paper-warm {
+      background-color: #FAF8F5;
+      background-image: radial-gradient(#E5E0D8 0.85px, transparent 0.85px);
+      background-size: 15px 15px;
+    }
+
+    /* 真实横线备忘录纸 */
+    .bg-memo-ruled {
+      background-color: #FCFBF9;
+      background-image: repeating-linear-gradient(#FCFBF9, #FCFBF9 29px, #E7E3DC 30px);
+    }
+
+    /* 荧光记号笔划线 */
+    .marker-yellow {
+      background: linear-gradient(180deg, transparent 52%, #FDE047 52%);
+      padding: 0 4px;
+    }
+    .marker-red {
+      background: linear-gradient(180deg, transparent 58%, #FECACA 58%);
+      padding: 0 4px;
+    }
+    .marker-cyan {
+      background: linear-gradient(180deg, transparent 55%, #BAE6FD 55%);
+      padding: 0 4px;
+    }
+
+    /* 倾斜复古红色印章 */
+    .stamp-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: 2px solid #DC2626;
+      color: #DC2626;
+      font-weight: 900;
+      letter-spacing: 0.08em;
+      transform: rotate(-3.5deg);
+      border-radius: 6px;
+      padding: 2px 10px;
+      box-shadow: 0 1px 2px rgba(220, 38, 38, 0.15);
+    }
+
+    /* 和纸胶带贴角效果 */
+    .washi-tape-top {
+      position: relative;
+    }
+    .washi-tape-top::before {
+      content: "";
+      position: absolute;
+      top: -12px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 90px;
+      height: 22px;
+      background: rgba(254, 240, 138, 0.75);
+      backdrop-filter: blur(1px);
+      border-left: 3px dashed rgba(202, 138, 4, 0.5);
+      border-right: 3px dashed rgba(202, 138, 4, 0.5);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+      z-index: 10;
+    }
+  </style>
+</head>
+<body class="bg-stone-200 m-0 p-0 flex items-center justify-center min-h-screen">
+  <div class="card-canvas bg-paper-warm flex flex-col justify-between p-6 text-stone-900 border border-stone-300/80 shadow-2xl">
+    
+    <!-- 顶部极简刊头 -->
+    <div class="flex items-center justify-between pb-2.5 border-b border-stone-300/70">
+      <div class="flex items-center gap-2">
+        <span class="px-2 py-0.5 rounded bg-stone-900 text-amber-300 text-[10px] font-black tracking-widest uppercase">
+          理性讨论 · 财经认知
+        </span>
+        <span class="text-[10px] font-bold text-stone-400">真实账本调研</span>
+      </div>
+      <span class="text-xs font-black font-mono text-stone-400 tracking-wider">
+        06 / 06
+      </span>
+    </div>
+
+    <div class="flex-1 flex flex-col justify-between py-3 space-y-4 text-center">
+      <div class="space-y-1 pt-1">
+        <span class="text-[11px] font-black text-purple-600 uppercase tracking-wider">06 · 终极站队 · 灵魂拷问</span>
+        <h2 class="text-2xl font-black text-stone-950 leading-tight">
+          通胀加息与资产博弈，<br><span class="marker-yellow">换作是你怎么选？</span>
+        </h2>
+      </div>
+
+      <!-- 逼真投票箱选票设计 -->
+      <div class="space-y-3 text-left">
+        <div class="p-3.5 rounded-xl border-2 border-rose-500 bg-rose-50/90 shadow-sm relative">
+          <div class="flex items-center justify-between mb-1">
+            <span class="text-xs font-black text-rose-700">🔴 选票 A【无债神仙派】</span>
+            <span class="text-[10px] font-bold text-rose-600 bg-white px-1.5 py-0.5 rounded border border-rose-200">站队 A</span>
+          </div>
+          <p class="text-xs font-bold text-stone-800 leading-snug">宁愿喝粥也要无债一身轻！睡眠质量无价，坚决不给银行多打一天工！</p>
+        </div>
+
+        <div class="p-3.5 rounded-xl border-2 border-sky-500 bg-sky-50/90 shadow-sm relative">
+          <div class="flex items-center justify-between mb-1">
+            <span class="text-xs font-black text-sky-700">🔵 选票 B【现金硬汉派】</span>
+            <span class="text-[10px] font-bold text-sky-600 bg-white px-1.5 py-0.5 rounded border border-sky-200">站队 B</span>
+          </div>
+          <p class="text-xs font-bold text-stone-800 leading-snug">水泥不能当下酒菜！手握子弹才有安全感，现金才是中年家庭的呼吸机！</p>
+        </div>
+      </div>
+
+      <div class="p-3.5 rounded-xl bg-stone-950 text-white space-y-1.5 shadow-lg">
+        <p class="text-xs font-black text-amber-400">💬 两位专家神仙打架，换作是你站哪边？</p>
+        <p class="text-[11px] text-stone-300 leading-relaxed font-medium">面对昨晚突如其来的PPI暴涨，你手里的黄金和理财回撤了吗？你会选择清仓避险还是逢低加仓？评论区留下你的真实账本！</p>
+      </div>
+    </div>
+    <div class="pt-3 border-t border-stone-300/70 text-center text-xs text-rose-600 font-black tracking-wide">
+      👉 评论区留下你的真实账本，看看多少人与你同频！
+    </div>
+
+  </div>
+</body>
+</html>

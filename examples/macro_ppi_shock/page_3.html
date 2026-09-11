@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700;900&family=Noto+Serif+SC:wght@600;900&family=ZCOOL+KuaiLe&display=swap');
+    body { font-family: 'Noto Sans SC', sans-serif; -webkit-font-smoothing: antialiased; }
+    .font-serif-title { font-family: 'Noto Serif SC', serif; }
+    .font-handwriting { font-family: 'ZCOOL KuaiLe', cursive, sans-serif; }
+    
+    .card-canvas {
+      width: 540px;
+      height: 720px;
+      position: relative;
+      overflow: hidden;
+      box-sizing: border-box;
+    }
+    
+    /* 暖调微噪点纸张底纹 */
+    .bg-paper-warm {
+      background-color: #FAF8F5;
+      background-image: radial-gradient(#E5E0D8 0.85px, transparent 0.85px);
+      background-size: 15px 15px;
+    }
+
+    /* 真实横线备忘录纸 */
+    .bg-memo-ruled {
+      background-color: #FCFBF9;
+      background-image: repeating-linear-gradient(#FCFBF9, #FCFBF9 29px, #E7E3DC 30px);
+    }
+
+    /* 荧光记号笔划线 */
+    .marker-yellow {
+      background: linear-gradient(180deg, transparent 52%, #FDE047 52%);
+      padding: 0 4px;
+    }
+    .marker-red {
+      background: linear-gradient(180deg, transparent 58%, #FECACA 58%);
+      padding: 0 4px;
+    }
+    .marker-cyan {
+      background: linear-gradient(180deg, transparent 55%, #BAE6FD 55%);
+      padding: 0 4px;
+    }
+
+    /* 倾斜复古红色印章 */
+    .stamp-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: 2px solid #DC2626;
+      color: #DC2626;
+      font-weight: 900;
+      letter-spacing: 0.08em;
+      transform: rotate(-3.5deg);
+      border-radius: 6px;
+      padding: 2px 10px;
+      box-shadow: 0 1px 2px rgba(220, 38, 38, 0.15);
+    }
+
+    /* 和纸胶带贴角效果 */
+    .washi-tape-top {
+      position: relative;
+    }
+    .washi-tape-top::before {
+      content: "";
+      position: absolute;
+      top: -12px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 90px;
+      height: 22px;
+      background: rgba(254, 240, 138, 0.75);
+      backdrop-filter: blur(1px);
+      border-left: 3px dashed rgba(202, 138, 4, 0.5);
+      border-right: 3px dashed rgba(202, 138, 4, 0.5);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+      z-index: 10;
+    }
+  </style>
+</head>
+<body class="bg-stone-200 m-0 p-0 flex items-center justify-center min-h-screen">
+  <div class="card-canvas bg-paper-warm flex flex-col justify-between p-6 text-stone-900 border border-stone-300/80 shadow-2xl">
+    
+    <!-- 顶部极简刊头 -->
+    <div class="flex items-center justify-between pb-2.5 border-b border-stone-300/70">
+      <div class="flex items-center gap-2">
+        <span class="px-2 py-0.5 rounded bg-stone-900 text-amber-300 text-[10px] font-black tracking-widest uppercase">
+          理性讨论 · 财经认知
+        </span>
+        <span class="text-[10px] font-bold text-stone-400">真实账本调研</span>
+      </div>
+      <span class="text-xs font-black font-mono text-stone-400 tracking-wider">
+        03 / 06
+      </span>
+    </div>
+
+    <div class="flex-1 flex flex-col justify-between py-2 space-y-2.5">
+      <div class="space-y-1">
+        <div class="flex items-center justify-between">
+          <span class="text-[11px] font-black text-rose-600 tracking-wider uppercase">03 · 认知剪刀差</span>
+          
+          <span class="px-2 py-0.5 rounded bg-purple-100 text-purple-800 text-[10px] font-bold border border-purple-200">
+            🔬 穿透视角：平民现实派与反收割官
+          </span>
+
+        </div>
+        <h2 class="text-2xl font-black text-stone-950 leading-snug">
+          盯紧单月数据，容易输掉整个人生
+        </h2>
+      </div>
+
+      
+        <div class="p-2.5 rounded-lg bg-stone-100 border-l-4 border-purple-600 text-[11px] text-stone-800 italic font-medium leading-relaxed">
+          “普通人别被宏大词汇忽悠，先算算这笔买卖你变现时要被砍几刀。”
+        </div>
+
+      
+
+      <!-- 显隐双账面对决卡片 -->
+      <div class="space-y-2">
+        <div class="p-3 rounded-xl bg-emerald-50/90 border border-emerald-300/80 shadow-sm">
+          <div class="text-xs font-black text-emerald-800 mb-1 flex items-center gap-1">
+            <span>👀 看得见的算计（显性账）：</span>
+          </div>
+          <p class="text-xs text-stone-800 leading-relaxed font-medium">顺着每次新闻高频调仓追涨杀跌，自以为把握住了每一次全球宏观脉搏。</p>
+        </div>
+
+        <div class="p-3 rounded-xl bg-rose-50/90 border border-rose-300/80 shadow-sm">
+          <div class="text-xs font-black text-rose-800 mb-1 flex items-center gap-1">
+            <span>⚠️ 看不见的代价（隐性账）：</span>
+          </div>
+          <p class="text-xs text-stone-800 leading-relaxed font-medium">频繁交易的双向汇率损耗、买卖手续费与踏错节奏，足以在单季度磨损掉15%以上本金！</p>
+        </div>
+      </div>
+
+      
+        <div class="p-3 rounded-xl bg-amber-100/80 border border-amber-300 text-amber-950 text-xs font-bold leading-relaxed shadow-sm">
+          🎭 <span class="marker-yellow">神级隐喻</span>：“把现金全还进水泥里，就像给大门装了三道指纹锁，结果把自己的钥匙反锁在门里！”
+        </div>
+
+    </div>
+    <div class="pt-2 border-t border-stone-300/70 flex justify-between items-center text-[10px] text-stone-400">
+      <span class="font-handwriting text-stone-600 text-xs">（算账不仅要看赚多少，更要看交出了什么）</span>
+      <span class="font-mono">P3 / 冲突本质</span>
+    </div>
+
+  </div>
+</body>
+</html>

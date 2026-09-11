@@ -92,6 +92,13 @@
       "side_b_persona": "consumer_advocate",
       "contrast_persona": "macro_economist",
       "tag": "衍生品/风险对冲"
+    },
+    "macro_ppi_shock": {
+      "topic": "昨晚PPI超预期大反弹：通胀死灰复燃，普通人该抛售黄金还是抄底美债",
+      "side_a_persona": "macro_economist",
+      "side_b_persona": "value_investor",
+      "contrast_persona": "consumer_advocate",
+      "tag": "宏观周期/通胀加息与资产配置"
     }
   }
 }

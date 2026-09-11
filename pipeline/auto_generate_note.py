@@ -9,6 +9,15 @@ import os
 import sys
 import json
 import argparse
+import re
+
+# 确保在 Windows 控制台中支持 UTF-8 打印
+if hasattr(sys.stdout, "reconfigure"):
+    try:
+        sys.stdout.reconfigure(encoding='utf-8')
+        sys.stderr.reconfigure(encoding='utf-8')
+    except Exception:
+        pass
 
 # 动态导入同仓库审核工具与三大增强 Skills
 CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -45,6 +54,11 @@ try:
 except ImportError:
     def polish_humor_for_deck(deck): return deck
 
+try:
+    from export_to_png import export_deck_to_png
+except ImportError:
+    def export_deck_to_png(deck_dir, scale=2): return []
+
 def load_expert_personas() -> dict:
     """加载专家视角配置库"""
     personas_file = os.path.join(CURRENT_DIR, "expert_personas.json")
@@ -54,242 +68,372 @@ def load_expert_personas() -> dict:
     return {"personas": {}, "topic_routes": {}}
 
 def render_html_card(page_data: dict, page_num: int, total_pages: int = 6) -> str:
-    """基于 Tailwind CSS 渲染 3:4 比例卡片 HTML (全面融入专家视角)"""
+    """基于小红书爆款美学 (大字报冲击流 + 备忘录真实手账流) 渲染 3:4 比例卡片 HTML，彻底去除 AI 味"""
     ptype = page_data.get("type", "")
     
+    # 基础设计系统与视觉 Token
     html = f"""<!DOCTYPE html>
 <html>
 <head>
   <meta charset="utf-8">
   <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700;900&display=swap');
-    body {{ font-family: 'Noto Sans SC', sans-serif; }}
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700;900&family=Noto+Serif+SC:wght@600;900&family=ZCOOL+KuaiLe&display=swap');
+    body {{ font-family: 'Noto Sans SC', sans-serif; -webkit-font-smoothing: antialiased; }}
+    .font-serif-title {{ font-family: 'Noto Serif SC', serif; }}
+    .font-handwriting {{ font-family: 'ZCOOL KuaiLe', cursive, sans-serif; }}
+    
     .card-canvas {{
       width: 540px;
       height: 720px;
       position: relative;
       overflow: hidden;
+      box-sizing: border-box;
+    }}
+    
+    /* 暖调微噪点纸张底纹 */
+    .bg-paper-warm {{
+      background-color: #FAF8F5;
+      background-image: radial-gradient(#E5E0D8 0.85px, transparent 0.85px);
+      background-size: 15px 15px;
+    }}
+
+    /* 真实横线备忘录纸 */
+    .bg-memo-ruled {{
+      background-color: #FCFBF9;
+      background-image: repeating-linear-gradient(#FCFBF9, #FCFBF9 29px, #E7E3DC 30px);
+    }}
+
+    /* 荧光记号笔划线 */
+    .marker-yellow {{
+      background: linear-gradient(180deg, transparent 52%, #FDE047 52%);
+      padding: 0 4px;
+    }}
+    .marker-red {{
+      background: linear-gradient(180deg, transparent 58%, #FECACA 58%);
+      padding: 0 4px;
+    }}
+    .marker-cyan {{
+      background: linear-gradient(180deg, transparent 55%, #BAE6FD 55%);
+      padding: 0 4px;
+    }}
+
+    /* 倾斜复古红色印章 */
+    .stamp-badge {{
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: 2px solid #DC2626;
+      color: #DC2626;
+      font-weight: 900;
+      letter-spacing: 0.08em;
+      transform: rotate(-3.5deg);
+      border-radius: 6px;
+      padding: 2px 10px;
+      box-shadow: 0 1px 2px rgba(220, 38, 38, 0.15);
+    }}
+
+    /* 和纸胶带贴角效果 */
+    .washi-tape-top {{
+      position: relative;
+    }}
+    .washi-tape-top::before {{
+      content: "";
+      position: absolute;
+      top: -12px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 90px;
+      height: 22px;
+      background: rgba(254, 240, 138, 0.75);
+      backdrop-filter: blur(1px);
+      border-left: 3px dashed rgba(202, 138, 4, 0.5);
+      border-right: 3px dashed rgba(202, 138, 4, 0.5);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+      z-index: 10;
     }}
   </style>
 </head>
-<body class="bg-slate-100 flex items-center justify-center min-h-screen p-4">
-  <div class="card-canvas bg-white shadow-xl rounded-2xl flex flex-col justify-between p-8 border border-slate-200">
+<body class="bg-stone-200 m-0 p-0 flex items-center justify-center min-h-screen">
+  <div class="card-canvas bg-paper-warm flex flex-col justify-between p-6 text-stone-900 border border-stone-300/80 shadow-2xl">
     
-    <!-- Top Header Bar -->
-    <div class="flex items-center justify-between pb-3 border-b border-slate-100">
-      <span class="text-xs font-bold px-2.5 py-1 rounded-full bg-blue-50 text-blue-600 tracking-wider">
-        {page_data.get("badge", "#理性讨论 · 财经认知")}
-      </span>
-      <span class="text-xs font-semibold text-slate-400 font-mono">
-        {page_num} / {total_pages}
+    <!-- 顶部极简刊头 -->
+    <div class="flex items-center justify-between pb-2.5 border-b border-stone-300/70">
+      <div class="flex items-center gap-2">
+        <span class="px-2 py-0.5 rounded bg-stone-900 text-amber-300 text-[10px] font-black tracking-widest uppercase">
+          {page_data.get("badge", "#理性讨论 · 财经认知").replace("#", "")}
+        </span>
+        <span class="text-[10px] font-bold text-stone-400">真实账本调研</span>
+      </div>
+      <span class="text-xs font-black font-mono text-stone-400 tracking-wider">
+        0{page_num} / 0{total_pages}
       </span>
     </div>
 """
 
     if ptype == "cover_poster":
         title_lines = page_data.get("title_main", "").split("\n")
-        title_html = "".join([f'<span class="block">{line}</span>' for line in title_lines])
-        
+        title_rendered_parts = []
+        if len(title_lines) >= 1:
+            title_rendered_parts.append(f'<span class="block text-[34px] font-black tracking-tight text-stone-900 leading-tight">{title_lines[0]}</span>')
+        if len(title_lines) >= 2:
+            title_rendered_parts.append(f'<span class="inline-block my-1 bg-stone-950 text-white px-3 py-1 font-black text-[30px] rounded-sm tracking-tight transform -rotate-1 shadow-md">{title_lines[1]}</span>')
+        if len(title_lines) >= 3:
+            title_rendered_parts.append(f'<span class="block text-[32px] font-black tracking-tight text-stone-900 leading-tight"><span class="marker-yellow">{title_lines[2]}</span></span>')
+        for extra in title_lines[3:]:
+            title_rendered_parts.append(f'<span class="block text-2xl font-black text-stone-800 leading-tight">{extra}</span>')
+        title_html = "".join(title_rendered_parts)
+
         matchup_html = ""
         if "expert_matchup" in page_data:
             em = page_data["expert_matchup"]
             matchup_html = f"""
-      <!-- 专家视角交锋对决 Badge -->
-      <div class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-900 text-white text-[11px] font-bold shadow-md">
-        <span class="text-slate-400">⚖️ 专家对决:</span>
-        <span class="text-amber-300">{em.get('side_a', '')}</span>
-        <span class="text-slate-500 font-mono text-[10px]">VS</span>
-        <span class="text-blue-300">{em.get('side_b', '')}</span>
+      <!-- 红蓝专家交锋阵营 -->
+      <div class="grid grid-cols-2 gap-2.5 pt-1 text-left">
+        <div class="p-2.5 rounded-xl bg-rose-50/90 border border-rose-200/90 shadow-sm">
+          <div class="flex items-center gap-1 text-[10px] font-black text-rose-700 mb-0.5">
+            <span class="w-2 h-2 rounded-full bg-rose-500"></span>
+            <span>选 A 阵营代言</span>
+          </div>
+          <p class="text-[11px] font-bold text-stone-900 leading-snug">{em.get('side_a', '正方立场')}</p>
+        </div>
+        <div class="p-2.5 rounded-xl bg-sky-50/90 border border-sky-200/90 shadow-sm">
+          <div class="flex items-center gap-1 text-[10px] font-black text-sky-700 mb-0.5">
+            <span class="w-2 h-2 rounded-full bg-sky-500"></span>
+            <span>选 B 阵营代言</span>
+          </div>
+          <p class="text-[11px] font-bold text-stone-900 leading-snug">{em.get('side_b', '反方立场')}</p>
+        </div>
       </div>
 """
 
         html += f"""
-    <!-- Cover Poster Content -->
-    <div class="my-auto space-y-5 text-center">
-      <div class="inline-block px-3 py-1 rounded bg-amber-50 border border-amber-200 text-amber-700 text-xs font-bold tracking-wide">
-        💰 真实账本对决 · 争议辩题
+    <!-- 封面满幅大字报主体 -->
+    <div class="flex-1 flex flex-col justify-between py-3 space-y-3">
+      <div class="flex items-center justify-between pt-1">
+        <div class="stamp-badge text-[11px]">
+          ★ 真实账本对决 · 避坑必看
+        </div>
+        <div class="text-[10px] text-stone-400 font-mono tracking-tight">
+          ISSUE #2026-XHS
+        </div>
       </div>
-      <h1 class="text-3xl font-black text-slate-900 leading-tight tracking-tight px-2">
+
+      <div class="space-y-2 text-center py-1">
         {title_html}
-      </h1>
-      <div class="mx-auto max-w-sm p-3 rounded-xl bg-red-50 border-2 border-red-500/30 text-red-600 font-bold text-sm leading-snug">
-        {page_data.get("subtitle", "")}
       </div>
+
+      <div class="washi-tape-top p-3.5 rounded-xl bg-amber-50 border border-amber-200/90 text-stone-900 text-xs font-bold leading-relaxed shadow-sm">
+        <span class="text-rose-600 font-black">【核心冲突】</span> {page_data.get("subtitle", "")}
+      </div>
+
       {matchup_html}
     </div>
     
-    <!-- Footer CTA -->
-    <div class="pt-4 border-t border-slate-100 flex items-center justify-between text-xs text-slate-400 font-medium">
-      <span>{page_data.get("footer_tip", "内附两派专家真实账本 · 换你你怎么选？ ➔")}</span>
-      <span class="text-blue-500 font-bold">滑动阅读 ➔</span>
+    <!-- 底部手绘感引导 -->
+    <div class="pt-3 border-t border-stone-300/70 flex items-center justify-between text-xs text-stone-500 font-medium">
+      <span class="font-handwriting text-sm text-stone-700 tracking-wider">
+        {page_data.get("footer_tip", "内附真实利差算账明细 · 滑动阅读 ➔")}
+      </span>
+      <span class="text-rose-600 font-black tracking-tight flex items-center gap-0.5">
+        翻页阅读 ➔
+      </span>
     </div>
 """
 
     elif ptype == "pain_point":
         table_rows = "".join([
-            f"""<div class="flex items-center justify-between p-3 rounded-lg bg-slate-50 border border-slate-100">
-              <span class="font-bold text-xs text-slate-700">{row['item']}</span>
-              <span class="text-xs font-semibold text-slate-500">{row['rate']}</span>
-              <span class="font-mono font-bold text-xs text-red-500">{row['yield']}</span>
+            f"""<div class="flex items-center justify-between p-3 rounded-lg bg-white/95 border border-stone-200/90 shadow-sm">
+              <div class="space-y-0.5 text-left">
+                <span class="font-black text-xs text-stone-900">{row['item']}</span>
+                <span class="text-[10px] text-stone-500 block font-mono">{row['rate']}</span>
+              </div>
+              <span class="font-mono font-black text-sm text-rose-600">{row['yield']}</span>
             </div>""" for row in page_data.get("table_data", [])
         ])
+        p2_footer_note = page_data.get("footer_note", "（真实数据精算，看清表象背后的隐性摩擦）")
         html += f"""
-    <div class="my-auto space-y-4">
+    <div class="flex-1 flex flex-col justify-between py-2.5 space-y-3">
       <div class="space-y-1">
-        <span class="text-xs font-bold text-blue-600 uppercase tracking-wider">现实痛点拆解 · 真实利差</span>
-        <h2 class="text-2xl font-black text-slate-900 leading-tight">{page_data.get("heading", "")}</h2>
+        <div class="flex items-center justify-between">
+          <span class="text-[11px] font-black text-rose-600 tracking-wider uppercase">02 · 现实利差痛点账本</span>
+          <span class="text-[10px] font-bold text-stone-400 font-mono">FINANCIAL SPREAD</span>
+        </div>
+        <h2 class="text-2xl font-black text-stone-950 leading-snug">
+          {page_data.get("heading", "").replace("，", "，<br>")}
+        </h2>
       </div>
-      <p class="text-xs text-slate-600 leading-relaxed">{page_data.get("scene_desc", "")}</p>
+
+      <div class="p-2.5 rounded-lg bg-stone-100/80 border border-stone-200 text-xs text-stone-700 leading-relaxed font-medium">
+        📝 {page_data.get("scene_desc", "")}
+      </div>
       
-      <div class="space-y-2">
+      <!-- 模拟银行明细流水账本 -->
+      <div class="space-y-2 bg-stone-100/50 p-2.5 rounded-xl border border-dashed border-stone-300">
+        <div class="flex justify-between text-[10px] font-bold text-stone-400 px-1">
+          <span>资产/负债对比标的</span>
+          <span>账面真实利息收益</span>
+        </div>
         {table_rows}
       </div>
 
-      <div class="p-3 rounded-xl bg-amber-500/10 border-l-4 border-amber-500 text-xs text-amber-900 font-medium leading-relaxed">
-        💡 {page_data.get("hook_question", "")}
+      <!-- 真实红笔手写批注感 -->
+      <div class="p-3 rounded-xl bg-stone-950 text-stone-100 text-xs leading-relaxed space-y-1 shadow-md">
+        <div class="text-amber-400 font-black text-xs flex items-center gap-1">
+          <span>💡</span> <span>老手视角：</span>
+        </div>
+        <p class="text-stone-300 text-[11px] leading-relaxed">
+          {page_data.get("hook_question", "")}
+        </p>
       </div>
     </div>
-    <div class="pt-3 border-t border-slate-100 text-right text-xs text-slate-400">P2 / 痛点账本</div>
+    <div class="pt-2.5 border-t border-stone-300/70 flex justify-between items-center text-[10px] text-stone-400">
+      <span class="font-handwriting text-stone-600 text-xs">{p2_footer_note}</span>
+      <span class="font-mono">P2 / 痛点账本</span>
+    </div>
 """
 
     elif ptype == "contrast_gap":
         expert_tag = ""
         if page_data.get("expert_name"):
             expert_tag = f"""
-        <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-purple-50 border border-purple-200 text-purple-700 text-[11px] font-bold">
-          <span>🔬 穿透视角：{page_data.get("expert_name")}</span>
-        </div>
+          <span class="px-2 py-0.5 rounded bg-purple-100 text-purple-800 text-[10px] font-bold border border-purple-200">
+            🔬 穿透视角：{page_data.get("expert_name")}
+          </span>
 """
         expert_quote = ""
         if page_data.get("expert_quote"):
             expert_quote = f"""
-        <div class="p-2 rounded-lg bg-purple-50/60 border-l-2 border-purple-400 text-[10px] text-purple-900 italic font-medium">
+        <div class="p-2.5 rounded-lg bg-stone-100 border-l-4 border-purple-600 text-[11px] text-stone-800 italic font-medium leading-relaxed">
           “{page_data.get("expert_quote")}”
         </div>
 """
-
         quant_box = ""
         if "quant_summary" in page_data:
             qs = page_data["quant_summary"]
             quant_box = f"""
-      <!-- Data Enhancer 精算看板 -->
-      <div class="grid grid-cols-3 gap-2 p-2 rounded-xl bg-slate-900 text-white text-center">
-        <div class="border-r border-slate-800 pr-1">
-          <span class="text-[9px] text-slate-400 block font-mono">利息差额</span>
-          <span class="text-[11px] font-black text-emerald-400">{qs.get('left_stat', '')}</span>
+        <!-- Data Enhancer 精算看板 -->
+        <div class="grid grid-cols-3 gap-2 p-2.5 rounded-xl bg-stone-900 text-white text-center shadow-sm">
+          <div class="border-r border-stone-700 pr-1">
+            <span class="text-[9px] text-stone-400 block font-mono">利息差额</span>
+            <span class="text-xs font-black text-emerald-400">{qs.get('left_stat', '')}</span>
+          </div>
+          <div class="border-r border-stone-700 pr-1">
+            <span class="text-[9px] text-stone-400 block font-mono">流动性缓冲</span>
+            <span class="text-xs font-black text-amber-300">{qs.get('right_stat', '')}</span>
+          </div>
+          <div>
+            <span class="text-[9px] text-stone-400 block font-mono">关键门槛</span>
+            <span class="text-xs font-black text-blue-300">{qs.get('spread_metric', '')}</span>
+          </div>
         </div>
-        <div class="border-r border-slate-800 pr-1">
-          <span class="text-[9px] text-slate-400 block font-mono">流动性缓冲</span>
-          <span class="text-[11px] font-black text-amber-300">{qs.get('right_stat', '')}</span>
-        </div>
-        <div>
-          <span class="text-[9px] text-slate-400 block font-mono">关键门槛</span>
-          <span class="text-[11px] font-black text-blue-300">{qs.get('spread_metric', '')}</span>
-        </div>
-      </div>
 """
-
         metaphor_box = ""
         if page_data.get("humor_metaphor"):
             metaphor_box = f"""
-      <div class="p-2.5 rounded-lg bg-amber-500/10 border-l-3 border-amber-500 text-amber-900 text-[10px] font-bold leading-relaxed">
-        🎭 神级隐喻：“{page_data.get('humor_metaphor')}”
-      </div>
+        <div class="p-3 rounded-xl bg-amber-100/80 border border-amber-300 text-amber-950 text-xs font-bold leading-relaxed shadow-sm">
+          🎭 <span class="marker-yellow">神级隐喻</span>：“{page_data.get('humor_metaphor')}”
+        </div>
 """
-
         html += f"""
-    <div class="my-auto space-y-3.5">
+    <div class="flex-1 flex flex-col justify-between py-2 space-y-2.5">
       <div class="space-y-1">
         <div class="flex items-center justify-between">
-          <span class="text-xs font-bold text-red-600 uppercase tracking-wider">认知剪刀差</span>
+          <span class="text-[11px] font-black text-rose-600 tracking-wider uppercase">03 · 认知剪刀差</span>
           {expert_tag}
         </div>
-        <h2 class="text-2xl font-black text-slate-900 leading-tight">{page_data.get("heading", "")}</h2>
+        <h2 class="text-2xl font-black text-stone-950 leading-snug">
+          {page_data.get("heading", "")}
+        </h2>
       </div>
 
       {expert_quote}
       {quant_box}
 
+      <!-- 显隐双账面对决卡片 -->
       <div class="space-y-2">
-        <div class="p-2.5 rounded-xl bg-emerald-50 border border-emerald-200">
-          <div class="text-[11px] font-bold text-emerald-700 mb-0.5 flex items-center gap-1">
+        <div class="p-3 rounded-xl bg-emerald-50/90 border border-emerald-300/80 shadow-sm">
+          <div class="text-xs font-black text-emerald-800 mb-1 flex items-center gap-1">
             <span>👀 看得见的算计（显性账）：</span>
           </div>
-          <p class="text-[11px] text-emerald-900 leading-relaxed font-medium">{page_data.get("visible_gain", "")}</p>
+          <p class="text-xs text-stone-800 leading-relaxed font-medium">{page_data.get("visible_gain", "")}</p>
         </div>
 
-        <div class="p-2.5 rounded-xl bg-red-50 border border-red-200">
-          <div class="text-[11px] font-bold text-red-700 mb-0.5 flex items-center gap-1">
+        <div class="p-3 rounded-xl bg-rose-50/90 border border-rose-300/80 shadow-sm">
+          <div class="text-xs font-black text-rose-800 mb-1 flex items-center gap-1">
             <span>⚠️ 看不见的代价（隐性账）：</span>
           </div>
-          <p class="text-[11px] text-red-900 leading-relaxed font-medium">{page_data.get("hidden_cost", "")}</p>
+          <p class="text-xs text-stone-800 leading-relaxed font-medium">{page_data.get("hidden_cost", "")}</p>
         </div>
       </div>
 
       {metaphor_box}
     </div>
-    <div class="pt-3 border-t border-slate-100 text-right text-xs text-slate-400">P3 / 冲突本质</div>
+    <div class="pt-2 border-t border-stone-300/70 flex justify-between items-center text-[10px] text-stone-400">
+      <span class="font-handwriting text-stone-600 text-xs">（算账不仅要看赚多少，更要看交出了什么）</span>
+      <span class="font-mono">P3 / 冲突本质</span>
+    </div>
 """
 
     elif ptype in ["side_a", "side_b"]:
         is_a = ptype == "side_a"
-        color = "blue" if is_a else "amber"
+        color = "rose" if is_a else "sky"
+        theme_border = "border-rose-500" if is_a else "border-sky-500"
+        theme_bg = "bg-rose-50/80" if is_a else "bg-sky-50/80"
+        theme_badge = "bg-rose-600" if is_a else "bg-sky-600"
+        theme_text = "text-rose-950" if is_a else "text-sky-950"
         expert_name = page_data.get("expert_name", "正方专家" if is_a else "反方专家")
         expert_title = page_data.get("expert_title", "")
         expert_quote = page_data.get("expert_quote", "")
 
         args_html = "".join([
-            f"""<li class="flex items-start gap-2 text-xs text-slate-700 leading-relaxed">
-              <span class="flex-shrink-0 w-4 h-4 rounded-full bg-{color}-100 text-{color}-700 font-bold text-[10px] flex items-center justify-center mt-0.5">{idx+1}</span>
-              <span>{arg}</span>
+            f"""<li class="flex items-start gap-2 text-xs text-stone-800 leading-relaxed bg-white/80 p-2 rounded-lg border border-stone-200">
+              <span class="flex-shrink-0 w-4 h-4 rounded-full {theme_badge} text-white font-black text-[10px] flex items-center justify-center mt-0.5">{idx+1}</span>
+              <span class="font-medium">{arg}</span>
             </li>""" for idx, arg in enumerate(page_data.get("arguments", []))
         ])
 
         quote_html = ""
         if expert_quote:
             quote_html = f"""
-      <div class="p-2 rounded-lg bg-{color}-50/70 border-l-3 border-{color}-500 text-[10px] text-{color}-900 italic font-medium">
-        💬 核心观点：“{expert_quote}”
-      </div>
+        <div class="p-2.5 rounded-lg {theme_bg} border-l-4 {theme_border} text-xs {theme_text} font-bold leading-relaxed">
+          💬 “{expert_quote}”
+        </div>
 """
-
         case_box = ""
         if "case_slice" in page_data:
             c = page_data["case_slice"]
             case_box = f"""
-      <!-- Fact Case Injector 切片 -->
-      <div class="p-2 rounded-lg bg-{color}-100/60 border border-{color}-200 space-y-0.5">
-        <div class="flex items-center justify-between">
-          <span class="text-[10px] font-black text-{color}-900">📌 {c.get('tag')}: {c.get('title')}</span>
-          <span class="text-[9px] font-bold text-{color}-700 bg-white/90 px-1 rounded">{c.get('key_metric')}</span>
+        <!-- Fact Case 真实案例报刊剪影 -->
+        <div class="p-2.5 rounded-xl bg-stone-100 border border-stone-300/80 space-y-1 shadow-sm">
+          <div class="flex items-center justify-between">
+            <span class="text-[11px] font-black text-stone-900">📌 {c.get('tag')}: {c.get('title')}</span>
+            <span class="text-[9px] font-black text-stone-600 bg-white px-1.5 py-0.5 rounded border border-stone-200">{c.get('key_metric')}</span>
+          </div>
+          <p class="text-[10px] text-stone-700 leading-relaxed">{c.get('story')}</p>
         </div>
-        <p class="text-[10px] text-slate-700 leading-tight">{c.get('story')}</p>
-      </div>
 """
-
         humor_os = ""
         if page_data.get("humor_os"):
             humor_os = f"""
-      <div class="text-[10px] text-slate-400 italic text-right font-mono">
-        {page_data.get('humor_os')}
-      </div>
+        <div class="font-handwriting text-xs text-stone-600 text-right tracking-wide">
+          {page_data.get('humor_os')}
+        </div>
 """
-
         html += f"""
-    <div class="my-auto space-y-3">
-      <!-- 专家立论看板 -->
-      <div class="p-2.5 rounded-xl bg-{color}-50 border-l-4 border-{color}-600 space-y-0.5">
+    <div class="flex-1 flex flex-col justify-between py-2 space-y-2.5">
+      <!-- 专家立论卡片头 -->
+      <div class="p-3 rounded-xl {theme_bg} border-l-4 {theme_border} space-y-1 shadow-sm">
         <div class="flex items-center justify-between">
-          <span class="text-[10px] font-bold uppercase tracking-wider text-{color}-600">
-            {"【正方立场】" if is_a else "【反方立场】"}
+          <span class="text-[10px] font-black uppercase tracking-wider text-stone-500">
+            {"【立场 A · 正方深度立论】" if is_a else "【立场 B · 反方现实视角】"}
           </span>
-          <span class="text-[10px] px-2 py-0.5 rounded bg-white/80 font-bold text-{color}-800 border border-{color}-200">
+          <span class="text-[10px] px-2 py-0.5 rounded-full {theme_badge} text-white font-black">
             {expert_name}
           </span>
         </div>
-        <h2 class="text-sm font-black text-{color}-950 leading-snug">{page_data.get("stance", "")}</h2>
-        {f'<p class="text-[9px] text-{color}-700/80 font-medium">{expert_title}</p>' if expert_title else ''}
+        <h2 class="text-base font-black text-stone-950 leading-snug">{page_data.get("stance", "")}</h2>
+        {f'<p class="text-[10px] text-stone-500 font-medium">{expert_title}</p>' if expert_title else ''}
       </div>
 
       {quote_html}
@@ -301,32 +445,67 @@ def render_html_card(page_data: dict, page_num: int, total_pages: int = 6) -> st
       {case_box}
       {humor_os}
     </div>
-    <div class="pt-3 border-t border-slate-100 text-right text-xs text-slate-400">{"P4 / 正方立论" if is_a else "P5 / 反方立论"}</div>
+    <div class="pt-2 border-t border-stone-300/70 flex justify-between items-center text-[10px] text-stone-400">
+      <span class="font-handwriting text-stone-600 text-xs">（立论经真实中产生活切片验证）</span>
+      <span class="font-mono">{"P4 / 正方立论" if is_a else "P5 / 反方立论"}</span>
+    </div>
 """
 
     elif ptype == "ending_hook":
+        opt_a_raw = page_data.get("option_a", "")
+        opt_b_raw = page_data.get("option_b", "")
+
+        match_a = re.search(r"【(.*?)】", opt_a_raw)
+        label_a = match_a.group(1) if match_a else "正方立场"
+        desc_a = re.sub(r"^.*?[:：]\s*", "", opt_a_raw).strip() or opt_a_raw
+
+        match_b = re.search(r"【(.*?)】", opt_b_raw)
+        label_b = match_b.group(1) if match_b else "反方立场"
+        desc_b = re.sub(r"^.*?[:：]\s*", "", opt_b_raw).strip() or opt_b_raw
+
+        heading = page_data.get("heading", "这不是数学题，而是人生的取舍题")
+        if "，" in heading:
+            parts = heading.split("，", 1)
+            heading_html = f'{parts[0]}，<br><span class="marker-yellow">{parts[1]}</span>'
+        else:
+            heading_html = f'<span class="marker-yellow">{heading}</span>'
+
         html += f"""
-    <div class="my-auto space-y-5 text-center">
-      <div class="space-y-1">
-        <span class="text-xs font-bold text-purple-600 uppercase tracking-wider">天平抉择 · 终极站队</span>
-        <h2 class="text-2xl font-black text-slate-900 leading-tight">{page_data.get("heading", "")}</h2>
+    <div class="flex-1 flex flex-col justify-between py-3 space-y-4 text-center">
+      <div class="space-y-1 pt-1">
+        <span class="text-[11px] font-black text-purple-600 uppercase tracking-wider">06 · 终极站队 · 灵魂拷问</span>
+        <h2 class="text-2xl font-black text-stone-950 leading-tight">
+          {heading_html}
+        </h2>
       </div>
 
-      <div class="space-y-2.5 text-left">
-        <div class="p-3 rounded-xl border-2 border-blue-500 bg-blue-50/50">
-          <p class="text-xs font-bold text-blue-800">{page_data.get("option_a", "")}</p>
+      <!-- 逼真投票箱选票设计 -->
+      <div class="space-y-3 text-left">
+        <div class="p-3.5 rounded-xl border-2 border-rose-500 bg-rose-50/90 shadow-sm relative">
+          <div class="flex items-center justify-between mb-1">
+            <span class="text-xs font-black text-rose-700">🔴 选票 A【{label_a}】</span>
+            <span class="text-[10px] font-bold text-rose-600 bg-white px-1.5 py-0.5 rounded border border-rose-200">站队 A</span>
+          </div>
+          <p class="text-xs font-bold text-stone-800 leading-snug">{desc_a}</p>
         </div>
-        <div class="p-3 rounded-xl border-2 border-amber-500 bg-amber-50/50">
-          <p class="text-xs font-bold text-amber-800">{page_data.get("option_b", "")}</p>
+
+        <div class="p-3.5 rounded-xl border-2 border-sky-500 bg-sky-50/90 shadow-sm relative">
+          <div class="flex items-center justify-between mb-1">
+            <span class="text-xs font-black text-sky-700">🔵 选票 B【{label_b}】</span>
+            <span class="text-[10px] font-bold text-sky-600 bg-white px-1.5 py-0.5 rounded border border-sky-200">站队 B</span>
+          </div>
+          <p class="text-xs font-bold text-stone-800 leading-snug">{desc_b}</p>
         </div>
       </div>
 
-      <div class="p-4 rounded-xl bg-slate-900 text-white space-y-1.5">
-        <p class="text-xs font-bold text-amber-300">💬 两位专家神仙打架，换作是你站哪边？</p>
-        <p class="text-[11px] text-slate-300 leading-relaxed">{page_data.get("debate_invitation", "")}</p>
+      <div class="p-3.5 rounded-xl bg-stone-950 text-white space-y-1.5 shadow-lg">
+        <p class="text-xs font-black text-amber-400">💬 两位专家神仙打架，换作是你站哪边？</p>
+        <p class="text-[11px] text-stone-300 leading-relaxed font-medium">{page_data.get("debate_invitation", "")}</p>
       </div>
     </div>
-    <div class="pt-3 border-t border-slate-100 text-center text-xs text-slate-400">👉 评论区留下你的账本与观点</div>
+    <div class="pt-3 border-t border-stone-300/70 text-center text-xs text-rose-600 font-black tracking-wide">
+      👉 评论区留下你的真实账本，看看多少人与你同频！
+    </div>
 """
 
     html += """
@@ -618,6 +797,123 @@ def get_topic_data_bundle(topic_id: str, personas_cfg: dict) -> dict:
             "debate_invitation": "换作是你，你会拿一小笔闲钱博弈期权的高倍杠杆，还是坚决不碰衍生品？评论区亮出你的战绩！"
           }
         ]
+      },
+      "macro_ppi_shock": {
+        "meta": {
+          "topic_id": "macro_ppi_shock",
+          "topic": "昨晚PPI突发超预期大反弹：通胀死灰复燃，普通人该抛售黄金还是抄底美债？",
+          "category": "财经/宏观经济",
+          "side_a_expert": "macro_economist",
+          "side_b_expert": "value_investor",
+          "contrast_expert": "consumer_advocate"
+        },
+        "post_copy": {
+          "title": "昨晚PPI突发超预期大反弹：通胀死灰复燃，普通人该抛售黄金还是抄底美债？",
+          "body": """昨晚美国8月PPI突发暴涨5.4%，原本狂欢的“9月大幅降息”预期一夜被彻底击碎！
+交易员对美联储不仅不敢奢望降息，反而押注9月继续加息的概率狂飙到70%以上！
+
+消息一出，全球市场瞬间“股债汇金大洗牌”：
+现货黄金急挫跳水，美债收益率冲上4.96%，唯独原油暴涨4.2%火上浇油……
+无数刚刚满仓抄底黄金、跟风买入美债ETF的普通人，今天一觉醒来直接被迎头痛击！
+
+面对突如其来的宏观变局，今天我们连线【宏观经济与周期学者】与【硬核价值投资人】正面交锋：
+
+───────────────
+⚖️ 正方【宏观学者】：通胀黏性远超想象，保命现金与短债为王！
+1️⃣ 二次通胀警钟长鸣：地缘局势推动原油重回高位，上游工业成本暴涨，滞胀阴云根本没有散去！
+2️⃣ 高利率钝刀慢割：加息概率飙升70%，高利率维持越久，资产估值越要挤水分，切忌盲目在半山腰接飞刀！
+3️⃣ 现金流动性才是真爹：在美联储货币转向尚无定论前，高息短债与现金流才是普通家庭最硬的盾牌。
+📌【真实切片】：某外企中产看降息博主推荐全仓冲入长端美债ETF，遭遇单日回撤逾4%，浮亏加剧现金流枯竭！
+💬 宏观学者寄语：“顺周期加杠杆是赌博，看懂央行资产负债表才是真正的降维生存。”
+
+───────────────
+⚠️ 反方【价值投资人】：单月数据噪音踩踏，恰是罕见的黄金建仓期！
+1️⃣ 强弩之末的恐慌过激：制造业PMI与中小企业负债已到极限，单月油价脉冲改变不了经济周期放缓的终极事实！
+2️⃣ 非对称极佳赔率：美债收益率逼近5%的历史极值区，锁死无风险高息，向下空间极小，向上弹性巨大！
+3️⃣ 优质资产大打折：黄金与优质核心资产在通胀预期下的急跌，正是长线资本以低成本收集筹码的狂欢季。
+📌【历史对照】：2022年高通胀加息周期每次单月PPI脉冲暴跌，事后看都是长线优质现金流资产的完美定投坑！
+💬 投资人内心戏：“别人恐惧我贪婪，市场因为一个月的能源数据恐慌踩踏，正好把便宜筹码双手奉上！”
+
+───────────────
+🔬 穿透专家【平民反收割官】：
+💡 神级通俗比喻：
+“看单月PPI数据炒资产，就像在暴风雨的独木舟上跟着每一次浪花猛打方向盘；美联储现在像站在跷跷板中间的胖子，左边是通胀冒烟，右边是银行暴雷，普通人千万别去给他当垫脚石！”
+
+───────────────
+💬 换作是你，你会怎么站队？
+🔴 站队学者【现金防御派】：通胀不退风险不止！手握现金短债，绝不在高位飞刀下伸手！
+🔵 站队投资人【逆向抄底派】：恐慌就是打折季！长期周期大势已定，越跌越买锁定历史性高赔率！
+
+昨晚你的持仓回撤了吗？大家目前是准备抛售避险还是逢低加仓？
+欢迎在评论区晒出你的账本与真实操作！👇
+
+#理性讨论 #PPI数据 #宏观经济 #美联储加息 #黄金走势 #美债 #投资理财 #通胀""",
+          "pinned_comment": "提醒大家：单月PPI数据波动极容易引发情绪踩踏！切忌根据一两天的新闻满仓频繁倒腾。大家目前手里的黄金和美债是打算止盈止损，还是逢跌继续定投？"
+        },
+        "pages": [
+          {
+            "type": "cover_poster",
+            "badge": "#理性讨论 · 宏观风向",
+            "title_main": "昨晚PPI突发反弹\n通胀死灰复燃？\n抛黄金还是抄底美债？",
+            "subtitle": "加息预期飙升至70% VS 恐慌砸出黄金坑？",
+            "expert_matchup": {
+              "side_a": "宏观经济与周期学者",
+              "side_b": "硬核价值投资人"
+            },
+            "footer_tip": "内附股债金真实波动账本 · 滑动阅读 ➔"
+          },
+          {
+            "type": "pain_point",
+            "heading": "昨夜数据暴雷，资产狂风骤雨",
+            "scene_desc": "很多中产满仓满融坐等降息分红，昨晚公布的8月PPI数据瞬间引爆全场：",
+            "table_data": [
+              {"item": "美国8月最终需求PPI", "rate": "同比预期 5.3%", "yield": "实际公布 5.4% (大幅反弹)"},
+              {"item": "CME 9月加息预期概率", "rate": "数据公布前 15%", "yield": "数据公布后 狂飙超 70%"},
+              {"item": "全球大类资产单夜波动", "rate": "10年期美债触及4.96%", "yield": "现货金银跳水 / 原油大涨4.2%"}
+            ],
+            "hook_question": "刚买入黄金准备享受降息红利，一觉醒来被加息预期砸蒙，普通人到底该割肉保命还是死扛加仓？"
+          },
+          {
+            "type": "contrast_gap",
+            "heading": "盯紧单月数据，容易输掉整个人生",
+            "expert_name": "平民现实派与反收割官",
+            "expert_quote": personas.get("consumer_advocate", {}).get("catchphrase", "普通人别被宏大词汇忽悠，先算算这笔买卖你变现时要被砍几刀。"),
+            "visible_gain": "顺着每次新闻高频调仓追涨杀跌，自以为把握住了每一次全球宏观脉搏。",
+            "hidden_cost": "频繁交易的双向汇率损耗、买卖手续费与踏错节奏，足以在单季度磨损掉15%以上本金！",
+            "core_friction": "你到底是在做'基于大周期的资产配置'，还是在给做市商'交情绪过路费'？"
+          },
+          {
+            "type": "side_a",
+            "stance": "二次通胀警钟长鸣，保命现金与短债为王",
+            "expert_name": "宏观经济与周期学者",
+            "expert_title": "宏观策略首席分析师",
+            "expert_quote": personas.get("macro_economist", {}).get("catchphrase", "顺周期加杠杆是赌博，看懂央行资产负债表才是真正的降维生存。"),
+            "arguments": [
+              "能源通胀黏性极强：国际油价突破百元关口，工业端成本暴涨必然向消费端CPI强力渗透，降息彻底没戏！",
+              "高利率挤泡沫漫长：美联储被逼到墙角不得不把利率维持更高更久，高估值风险资产将面临持续的估值绞杀。",
+              "现金短债最高溢价：在不确定性最高的宏观剧震期，手握保本现金与超短久期资产，拥有最高的生存溢价。"
+            ]
+          },
+          {
+            "type": "side_b",
+            "stance": "单月噪音过度恐慌，逆向加仓黄金坑",
+            "expert_name": "硬核价值投资人",
+            "expert_title": "私募基金合伙人",
+            "expert_quote": personas.get("value_investor", {}).get("catchphrase", "当防守资产被买成了香饽饽，最大的安全就变成了最大的风险。"),
+            "arguments": [
+              "实体脆弱难承其重：制造业PMI萎缩与中小商业银行坏账已现裂痕，单月能源脉冲改变不了长期周期顶部的事实。",
+              "极值赔率千载难逢：美债收益率逼近5.0%历史高位，锁定极高确定性收益，恐慌下杀恰是极佳的非对称入场点。",
+              "黄金抗通胀真实底色：如果真如预期二次通胀失控，法币信用受损，大跌之后的黄金才是穿越周期的终极压舱石。"
+            ]
+          },
+          {
+            "type": "ending_hook",
+            "heading": "通胀加息与资产博弈，换作是你怎么选？",
+            "option_a": "🔴 站队学者【现金防御派】：通胀不灭加息不止！现金为王，绝不在半山腰接飞刀！",
+            "option_b": "🔵 站队投资人【逆向抄底派】：恐慌砸出黄金坑！大周期见顶已定，越跌越买锁定历史性高赔率！",
+            "debate_invitation": "面对昨晚突如其来的PPI暴涨，你手里的黄金和理财回撤了吗？你会选择清仓避险还是逢低加仓？评论区留下你的真实账本！"
+          }
+        ]
       }
     }
     
@@ -643,27 +939,37 @@ def print_expert_personas(personas_cfg: dict):
         print(f"   正方视角: {r['side_a_persona']} | 反方视角: {r['side_b_persona']} | 穿透视角: {r['contrast_persona']}")
 
 def run_pipeline(topic: str = "", category: str = "财经/理财", output_dir: str = "./output", topic_id: str = "",
-                 use_data: bool = True, use_cases: bool = True, use_humor: bool = True):
+                 use_data: bool = True, use_cases: bool = True, use_humor: bool = True, export_png: bool = True,
+                 input_json: str = ""):
     os.makedirs(output_dir, exist_ok=True)
     personas_cfg = load_expert_personas()
 
-    # 1. 智能匹配或指定 topic_id
-    if not topic_id:
-        if topic:
-            if "期权" in topic or "options" in topic:
-                topic_id = "options_rich_or_ruin"
-            elif "金豆" in topic or "黄金" in topic:
-                topic_id = "gold_beans"
+    # 1. 优先从外部传入的 JSON 文件中读取完整 6 页图文定义 (外部自动化/LLM直接对接)
+    if input_json and os.path.exists(input_json):
+        print(f"📄 [Pipeline] 从外部 JSON 文件加载图文数据包: {input_json}")
+        with open(input_json, "r", encoding="utf-8") as f:
+            mock_data = json.load(f)
+        topic_id = mock_data.get("meta", {}).get("topic_id", "custom_auto_topic")
+    else:
+        # 智能匹配或指定 topic_id
+        if not topic_id:
+            if topic:
+                if "期权" in topic or "options" in topic:
+                    topic_id = "options_rich_or_ruin"
+                elif "金豆" in topic or "黄金" in topic:
+                    topic_id = "gold_beans"
+                elif "PPI" in topic or "ppi" in topic or "通胀" in topic or "加息" in topic:
+                    topic_id = "macro_ppi_shock"
+                else:
+                    topic_id = "mortgage_vs_invest"
             else:
                 topic_id = "mortgage_vs_invest"
-        else:
-            topic_id = "mortgage_vs_invest"
+
+        mock_data = get_topic_data_bundle(topic_id, personas_cfg)
 
     print(f"🚀 [Pipeline] 开始全自动生产金融图文笔记...")
     print(f"🎯 [议题路由ID] {topic_id}")
 
-    # 2. 结构化装配融入专家视角的图文基础数据
-    mock_data = get_topic_data_bundle(topic_id, personas_cfg)
     if topic and topic != mock_data["post_copy"]["title"]:
         mock_data["post_copy"]["title"] = topic
         mock_data["meta"]["topic"] = topic
@@ -883,9 +1189,12 @@ https://doc.weixin.qq.com/forms/ANAAyQcbAAgAbEAGAb_AKoCNPRTWz2o5f
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       {"".join([f'''
       <div class="bg-slate-800 rounded-xl overflow-hidden border border-slate-700 shadow-xl">
-        <div class="p-2 bg-slate-950 text-xs text-slate-400 flex justify-between font-mono">
-          <span>P{idx+1} / 6</span>
-          <a href="page_{idx+1}.html" target="_blank" class="text-blue-400 hover:underline">独立全屏打开 ↗</a>
+        <div class="p-2 bg-slate-950 text-xs text-slate-400 flex justify-between font-mono items-center">
+          <span class="font-bold text-stone-300">P{idx+1} / 6</span>
+          <div class="flex items-center gap-3">
+            <a href="page_{idx+1}.png" target="_blank" class="text-emerald-400 hover:text-emerald-300 font-bold hover:underline">📸 高清PNG</a>
+            <a href="page_{idx+1}.html" target="_blank" class="text-sky-400 hover:text-sky-300 hover:underline">HTML ↗</a>
+          </div>
         </div>
         <iframe src="page_{idx+1}.html" class="w-full h-[520px] border-0"></iframe>
       </div>
@@ -912,6 +1221,11 @@ https://doc.weixin.qq.com/forms/ANAAyQcbAAgAbEAGAb_AKoCNPRTWz2o5f
     print(f"📁 [输出目录] {output_dir}")
     print(f"🌐 [全景看板] {os.path.join(output_dir, 'all_pages_viewer.html')}")
 
+    # 8. 自动化无头浏览器高清图片导出 (免去人工截图)
+    if export_png:
+        print(f"\n📸 [Export] 正在自动导出 1080×1440 高清图片 (免截图直接交付)...")
+        export_deck_to_png(output_dir, scale=2)
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="小红书全自动化图文生产引擎 (融入多专家视角与三维增强)")
     parser.add_argument("--topic-id", type=str, default="", help="预设议题ID (如 mortgage_vs_invest, gold_beans)")
@@ -921,6 +1235,8 @@ if __name__ == "__main__":
     parser.add_argument("--no-data", action="store_true", help="关闭数据增强 Skill")
     parser.add_argument("--no-cases", action="store_true", help="关闭事实案例 Skill")
     parser.add_argument("--no-humor", action="store_true", help="关闭幽默改造 Skill")
+    parser.add_argument("--no-png", action="store_true", help="关闭自动导出 PNG 图片")
+    parser.add_argument("--input-json", type=str, default="", help="外部完整的 6 页图文 JSON 数据包路径 (用于直接驱动流水线)")
     DEFAULT_OUTPUT = os.path.join(REPO_ROOT, "examples", "mortgage_vs_invest")
     parser.add_argument("--output", type=str, default=DEFAULT_OUTPUT, help="输出文件夹")
     args = parser.parse_args()
@@ -935,6 +1251,8 @@ if __name__ == "__main__":
             topic_id=args.topic_id,
             use_data=not args.no_data,
             use_cases=not args.no_cases,
-            use_humor=not args.no_humor
+            use_humor=not args.no_humor,
+            export_png=not args.no_png,
+            input_json=args.input_json
         )
 

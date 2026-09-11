@@ -4,3 +4,6 @@ __pycache__/
 *.log
 chrome_user_data/
 
+# 本地临时排错截图与测试生成目录
+error/
+examples/*test*/

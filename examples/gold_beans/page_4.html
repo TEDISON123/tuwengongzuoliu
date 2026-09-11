@@ -4,80 +4,152 @@
   <meta charset="utf-8">
   <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700;900&display=swap');
-    body { font-family: 'Noto Sans SC', sans-serif; }
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700;900&family=Noto+Serif+SC:wght@600;900&family=ZCOOL+KuaiLe&display=swap');
+    body { font-family: 'Noto Sans SC', sans-serif; -webkit-font-smoothing: antialiased; }
+    .font-serif-title { font-family: 'Noto Serif SC', serif; }
+    .font-handwriting { font-family: 'ZCOOL KuaiLe', cursive, sans-serif; }
+    
     .card-canvas {
       width: 540px;
       height: 720px;
       position: relative;
       overflow: hidden;
+      box-sizing: border-box;
+    }
+    
+    /* 暖调微噪点纸张底纹 */
+    .bg-paper-warm {
+      background-color: #FAF8F5;
+      background-image: radial-gradient(#E5E0D8 0.85px, transparent 0.85px);
+      background-size: 15px 15px;
+    }
+
+    /* 真实横线备忘录纸 */
+    .bg-memo-ruled {
+      background-color: #FCFBF9;
+      background-image: repeating-linear-gradient(#FCFBF9, #FCFBF9 29px, #E7E3DC 30px);
+    }
+
+    /* 荧光记号笔划线 */
+    .marker-yellow {
+      background: linear-gradient(180deg, transparent 52%, #FDE047 52%);
+      padding: 0 4px;
+    }
+    .marker-red {
+      background: linear-gradient(180deg, transparent 58%, #FECACA 58%);
+      padding: 0 4px;
+    }
+    .marker-cyan {
+      background: linear-gradient(180deg, transparent 55%, #BAE6FD 55%);
+      padding: 0 4px;
+    }
+
+    /* 倾斜复古红色印章 */
+    .stamp-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: 2px solid #DC2626;
+      color: #DC2626;
+      font-weight: 900;
+      letter-spacing: 0.08em;
+      transform: rotate(-3.5deg);
+      border-radius: 6px;
+      padding: 2px 10px;
+      box-shadow: 0 1px 2px rgba(220, 38, 38, 0.15);
+    }
+
+    /* 和纸胶带贴角效果 */
+    .washi-tape-top {
+      position: relative;
+    }
+    .washi-tape-top::before {
+      content: "";
+      position: absolute;
+      top: -12px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 90px;
+      height: 22px;
+      background: rgba(254, 240, 138, 0.75);
+      backdrop-filter: blur(1px);
+      border-left: 3px dashed rgba(202, 138, 4, 0.5);
+      border-right: 3px dashed rgba(202, 138, 4, 0.5);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+      z-index: 10;
     }
   </style>
 </head>
-<body class="bg-slate-100 flex items-center justify-center min-h-screen p-4">
-  <div class="card-canvas bg-white shadow-xl rounded-2xl flex flex-col justify-between p-8 border border-slate-200">
+<body class="bg-stone-200 m-0 p-0 flex items-center justify-center min-h-screen">
+  <div class="card-canvas bg-paper-warm flex flex-col justify-between p-6 text-stone-900 border border-stone-300/80 shadow-2xl">
     
-    <!-- Top Header Bar -->
-    <div class="flex items-center justify-between pb-3 border-b border-slate-100">
-      <span class="text-xs font-bold px-2.5 py-1 rounded-full bg-blue-50 text-blue-600 tracking-wider">
-        #理性讨论 · 财经认知
-      </span>
-      <span class="text-xs font-semibold text-slate-400 font-mono">
-        4 / 6
+    <!-- 顶部极简刊头 -->
+    <div class="flex items-center justify-between pb-2.5 border-b border-stone-300/70">
+      <div class="flex items-center gap-2">
+        <span class="px-2 py-0.5 rounded bg-stone-900 text-amber-300 text-[10px] font-black tracking-widest uppercase">
+          理性讨论 · 财经认知
+        </span>
+        <span class="text-[10px] font-bold text-stone-400">真实账本调研</span>
+      </div>
+      <span class="text-xs font-black font-mono text-stone-400 tracking-wider">
+        04 / 06
       </span>
     </div>
 
-    <div class="my-auto space-y-3">
-      <!-- 专家立论看板 -->
-      <div class="p-2.5 rounded-xl bg-blue-50 border-l-4 border-blue-600 space-y-0.5">
+    <div class="flex-1 flex flex-col justify-between py-2 space-y-2.5">
+      <!-- 专家立论卡片头 -->
+      <div class="p-3 rounded-xl bg-rose-50/80 border-l-4 border-rose-500 space-y-1 shadow-sm">
         <div class="flex items-center justify-between">
-          <span class="text-[10px] font-bold uppercase tracking-wider text-blue-600">
-            【正方立场】
+          <span class="text-[10px] font-black uppercase tracking-wider text-stone-500">
+            【立场 A · 正方深度立论】
           </span>
-          <span class="text-[10px] px-2 py-0.5 rounded bg-white/80 font-bold text-blue-800 border border-blue-200">
+          <span class="text-[10px] px-2 py-0.5 rounded-full bg-rose-600 text-white font-black">
             宏观经济与周期学者
           </span>
         </div>
-        <h2 class="text-sm font-black text-blue-950 leading-snug">微型法币对冲，极佳的强制储蓄手段</h2>
-        <p class="text-[9px] text-blue-700/80 font-medium">宏观策略首席分析师</p>
+        <h2 class="text-base font-black text-stone-950 leading-snug">微型法币对冲，极佳的强制储蓄手段</h2>
+        <p class="text-[10px] text-stone-500 font-medium">宏观策略首席分析师</p>
       </div>
 
       
-      <div class="p-2 rounded-lg bg-blue-50/70 border-l-3 border-blue-500 text-[10px] text-blue-900 italic font-medium">
-        💬 核心观点：“顺周期加杠杆是赌博，看懂央行资产负债表才是真正的降维生存。”
-      </div>
+        <div class="p-2.5 rounded-lg bg-rose-50/80 border-l-4 border-rose-500 text-xs text-rose-950 font-bold leading-relaxed">
+          💬 “顺周期加杠杆是赌博，看懂央行资产负债表才是真正的降维生存。”
+        </div>
 
 
       <ul class="space-y-1.5">
-        <li class="flex items-start gap-2 text-xs text-slate-700 leading-relaxed">
-              <span class="flex-shrink-0 w-4 h-4 rounded-full bg-blue-100 text-blue-700 font-bold text-[10px] flex items-center justify-center mt-0.5">1</span>
-              <span>无痛强制储蓄：相比买包买奶茶，买金豆把浮躁消费转化为了实物硬通货。</span>
-            </li><li class="flex items-start gap-2 text-xs text-slate-700 leading-relaxed">
-              <span class="flex-shrink-0 w-4 h-4 rounded-full bg-blue-100 text-blue-700 font-bold text-[10px] flex items-center justify-center mt-0.5">2</span>
-              <span>长周期购买力抵御：法币持续超发大背景下，黄金穿越数千年依然具备终极兑现力。</span>
-            </li><li class="flex items-start gap-2 text-xs text-slate-700 leading-relaxed">
-              <span class="flex-shrink-0 w-4 h-4 rounded-full bg-blue-100 text-blue-700 font-bold text-[10px] flex items-center justify-center mt-0.5">3</span>
-              <span>心理锚定效应：沉甸甸的黄金能带来储蓄正反馈，帮助年轻人养成低频复利习惯。</span>
+        <li class="flex items-start gap-2 text-xs text-stone-800 leading-relaxed bg-white/80 p-2 rounded-lg border border-stone-200">
+              <span class="flex-shrink-0 w-4 h-4 rounded-full bg-rose-600 text-white font-black text-[10px] flex items-center justify-center mt-0.5">1</span>
+              <span class="font-medium">无痛强制储蓄：相比买包买奶茶，买金豆把浮躁消费转化为了实物硬通货。</span>
+            </li><li class="flex items-start gap-2 text-xs text-stone-800 leading-relaxed bg-white/80 p-2 rounded-lg border border-stone-200">
+              <span class="flex-shrink-0 w-4 h-4 rounded-full bg-rose-600 text-white font-black text-[10px] flex items-center justify-center mt-0.5">2</span>
+              <span class="font-medium">长周期购买力抵御：法币持续超发大背景下，黄金穿越数千年依然具备终极兑现力。</span>
+            </li><li class="flex items-start gap-2 text-xs text-stone-800 leading-relaxed bg-white/80 p-2 rounded-lg border border-stone-200">
+              <span class="flex-shrink-0 w-4 h-4 rounded-full bg-rose-600 text-white font-black text-[10px] flex items-center justify-center mt-0.5">3</span>
+              <span class="font-medium">心理锚定效应：沉甸甸的黄金能带来储蓄正反馈，帮助年轻人养成低频复利习惯。</span>
             </li>
       </ul>
 
       
-      <!-- Fact Case Injector 切片 -->
-      <div class="p-2 rounded-lg bg-blue-100/60 border border-blue-200 space-y-0.5">
-        <div class="flex items-center justify-between">
-          <span class="text-[10px] font-black text-blue-900">📌 强制储蓄样本: 上海24岁应届生每月1颗小金豆，两年攒下首笔避险金</span>
-          <span class="text-[9px] font-bold text-blue-700 bg-white/90 px-1 rounded">累计积累 24 克 / 浮盈超 40% / 告别月光</span>
+        <!-- Fact Case 真实案例报刊剪影 -->
+        <div class="p-2.5 rounded-xl bg-stone-100 border border-stone-300/80 space-y-1 shadow-sm">
+          <div class="flex items-center justify-between">
+            <span class="text-[11px] font-black text-stone-900">📌 强制储蓄样本: 上海24岁应届生每月1颗小金豆，两年攒下首笔避险金</span>
+            <span class="text-[9px] font-black text-stone-600 bg-white px-1.5 py-0.5 rounded border border-stone-200">累计积累 24 克 / 浮盈超 40% / 告别月光</span>
+          </div>
+          <p class="text-[10px] text-stone-700 leading-relaxed">上海某互联网运营入职起每月克制奶茶和冲动网购，在金价480~550元区间每月定投1克金豆。两年积累24克实物黄金，不仅成功戒掉月光恶习，更在金价大涨至750元时获得可观纸面增值，养成了正向财富积累惯性。</p>
         </div>
-        <p class="text-[10px] text-slate-700 leading-tight">上海某互联网运营入职起每月克制奶茶和冲动网购，在金价480~550元区间每月定投1克金豆。两年积累24克实物黄金，不仅成功戒掉月光恶习，更在金价大涨至750元时获得可观纸面增值，养成了正向财富积累惯性。</p>
-      </div>
 
       
-      <div class="text-[10px] text-slate-400 italic text-right font-mono">
-        （年轻人自嘲：少喝几杯奶茶攒颗豆，就算亏了工艺费，起码抽屉里还剩个真金硬茬！）
-      </div>
+        <div class="font-handwriting text-xs text-stone-600 text-right tracking-wide">
+          （年轻人自嘲：少喝几杯奶茶攒颗豆，就算亏了工艺费，起码抽屉里还剩个真金硬茬！）
+        </div>
 
     </div>
-    <div class="pt-3 border-t border-slate-100 text-right text-xs text-slate-400">P4 / 正方立论</div>
+    <div class="pt-2 border-t border-stone-300/70 flex justify-between items-center text-[10px] text-stone-400">
+      <span class="font-handwriting text-stone-600 text-xs">（立论经真实中产生活切片验证）</span>
+      <span class="font-mono">P4 / 正方立论</span>
+    </div>
 
   </div>
 </body>
