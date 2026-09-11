@@ -83,6 +83,29 @@
   <!-- ================= 主体内容区 (纯白底色与卡片) ================= -->
   <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
 
+    <!-- 4套已交付全景高清作品直通条 (宏观PPI突发、末日轮期权、提前还贷、攒金豆) -->
+    <div class="bg-gradient-to-r from-slate-900 via-blue-950 to-slate-900 rounded-2xl p-4 text-white shadow-lg border border-slate-800 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4">
+      <div class="space-y-1">
+        <div class="flex items-center gap-2">
+          <span class="px-2 py-0.5 rounded-full bg-emerald-500 text-slate-950 font-black text-[10px] tracking-wide uppercase">NEW DEPLOYED</span>
+          <h2 class="text-base sm:text-lg font-black tracking-tight text-white flex items-center gap-1.5">
+            <span>🔥</span> 最新交付：昨晚PPI突发超预期大反弹（全套6张1080×1440极清图文）
+          </h2>
+        </div>
+        <p class="text-xs text-slate-300">
+          包含宏观学者 vs 价值投资人双向交锋 · 现实利差痛点账本 · 扎心隐喻 · 终极理性站队全套产物已就绪
+        </p>
+      </div>
+      <div class="flex flex-wrap items-center gap-2 shrink-0">
+        <a href="examples/macro_ppi_shock/all_pages_viewer.html" target="_blank" class="px-3.5 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs shadow-md transition flex items-center gap-1.5">
+          <span>🖼️</span> 打开 PPI 全景阅览器 ↗
+        </a>
+        <button onclick="applyPresetTopic(0)" class="px-3.5 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-white font-bold text-xs border border-white/20 transition flex items-center gap-1.5">
+          <span>⚡</span> 工作台即刻载入
+        </button>
+      </div>
+    </div>
+
     <!-- 1. 核心输入区：标题快速生成引擎 (清新白卡片) -->
     <section class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm relative overflow-hidden">
       <div class="absolute -right-16 -top-16 w-64 h-64 bg-blue-100/50 rounded-full blur-3xl pointer-events-none"></div>
@@ -110,7 +133,7 @@
             <input 
               id="titleInput"
               type="text"
-              value="期权会让人暴富还是导致人破产？"
+              value="昨晚PPI突发超预期大反弹：通胀死灰复燃，普通人该抛售黄金还是抄底美债？"
               placeholder="请输入具有争议性或强认知的金融标题，例如：提前还房贷还是留钱理财？"
               class="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-3.5 text-sm sm:text-base text-slate-900 placeholder-slate-400 focus:bg-white focus:outline-none focus:border-blue-600 focus:ring-4 focus:ring-blue-500/10 font-medium transition"
               onkeydown="if(event.key === 'Enter') generateContent()"
@@ -135,19 +158,23 @@
             <span>🔥 热门金融争议题库（点击即填）：</span>
           </div>
           <div class="flex flex-wrap gap-2 text-xs">
-            <button onclick="applyPresetTopic(0)" class="px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 border border-slate-200 text-slate-700 font-medium transition flex items-center gap-1.5">
+            <button onclick="applyPresetTopic(0)" class="px-3 py-1.5 rounded-lg bg-blue-50 hover:bg-blue-100 border border-blue-200 text-blue-800 font-bold transition flex items-center gap-1.5 shadow-xs">
+              <span class="text-rose-500">🔥</span> 昨晚PPI突发超预期大反弹：普通人该抛售黄金还是抄底美债？
+              <span class="px-1.5 py-0.2 bg-rose-100 text-rose-700 rounded text-[10px]">宏观突发 · 最新</span>
+            </button>
+            <button onclick="applyPresetTopic(1)" class="px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 border border-slate-200 text-slate-700 font-medium transition flex items-center gap-1.5">
               <span>⚖️</span> 期权会让人暴富还是导致人破产？
               <span class="px-1.5 py-0.2 bg-blue-100 text-blue-700 rounded text-[10px]">衍生品</span>
             </button>
-            <button onclick="applyPresetTopic(1)" class="px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 border border-slate-200 text-slate-700 font-medium transition flex items-center gap-1.5">
+            <button onclick="applyPresetTopic(2)" class="px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 border border-slate-200 text-slate-700 font-medium transition flex items-center gap-1.5">
               <span>🏠</span> 手头有50万闲钱：提前还4.0%房贷，还是留着买理财？
               <span class="px-1.5 py-0.2 bg-emerald-100 text-emerald-700 rounded text-[10px]">中产现金流</span>
             </button>
-            <button onclick="applyPresetTopic(2)" class="px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 border border-slate-200 text-slate-700 font-medium transition flex items-center gap-1.5">
+            <button onclick="applyPresetTopic(3)" class="px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 border border-slate-200 text-slate-700 font-medium transition flex items-center gap-1.5">
               <span>🪙</span> 年轻人疯狂攒金豆，到底是明智理财还是被割智商税？
               <span class="px-1.5 py-0.2 bg-amber-100 text-amber-700 rounded text-[10px]">黄金实物</span>
             </button>
-            <button onclick="applyPresetTopic(3)" class="px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 border border-slate-200 text-slate-700 font-medium transition flex items-center gap-1.5">
+            <button onclick="applyPresetTopic(4)" class="px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 border border-slate-200 text-slate-700 font-medium transition flex items-center gap-1.5">
               <span>📉</span> 大盘3000点震荡，该一次性重仓抄底还是死磕定投？
               <span class="px-1.5 py-0.2 bg-purple-100 text-purple-700 rounded text-[10px]">权益策略</span>
             </button>
@@ -191,7 +218,16 @@
           </div>
 
           <!-- 模式切换/辅助功能 -->
-          <div id="cardsToolbar" class="flex items-center gap-2">
+          <div id="cardsToolbar" class="flex flex-wrap items-center gap-2">
+            <!-- 渲染模式切换: 高清PNG / 动态设计卡片 -->
+            <div class="inline-flex rounded-lg border border-slate-200 p-0.5 bg-slate-100 text-xs">
+              <button onclick="setCardRenderType('png')" id="btnRenderTypePng" class="px-2.5 py-1 rounded-md font-bold transition bg-white text-blue-600 shadow-xs">
+                📸 预渲染高清大图
+              </button>
+              <button onclick="setCardRenderType('html')" id="btnRenderTypeHtml" class="px-2.5 py-1 rounded-md font-bold transition text-slate-600 hover:text-slate-900">
+                ⚡ 动态设计卡片
+              </button>
+            </div>
             <button onclick="downloadAllCardsPNG()" id="btnDownloadAllTop" class="px-3.5 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-sm transition flex items-center gap-1.5">
               <span>🖼️</span> 一键下载至桌面【小红书图文】(PNG)
             </button>
@@ -760,6 +796,103 @@
   <script>
     const PRESET_TOPICS = [
       {
+        id: "macro_ppi_shock",
+        title: "昨晚PPI突发超预期大反弹：通胀死灰复燃，普通人该抛售黄金还是抄底美债？",
+        category: "宏观突发",
+        side_a: {
+          name: "宏观经济与周期学者",
+          title: "宏观策略首席分析师 / 经济学研究员",
+          faction_name: "现金防御派",
+          subtitle: "通胀黏性远超想象，保命现金与短债为王",
+          quote: "顺周期加杠杆是赌博，看懂央行资产负债表才是真正的降维生存。",
+          case: "某外企中产看降息博主推荐全仓冲入长端美债ETF，遭遇单日回撤逾4%，浮亏加剧现金流枯竭！",
+          votes: 41200
+        },
+        side_b: {
+          name: "硬核价值投资人",
+          title: "私募基金合伙人 / 资深权益投资经理",
+          faction_name: "逆向抄底派",
+          subtitle: "单月数据噪音踩踏，恰是罕见的黄金建仓期",
+          quote: "当防守资产被买成了香饽饽，最大的安全就变成了最大的风险。",
+          case: "2022年高通胀加息周期每次单月PPI脉冲暴跌，事后看都是长线优质现金流资产的完美定投坑！",
+          votes: 38600
+        },
+        contrast: {
+          name: "平民现实派与反收割官",
+          metaphor: "看单月PPI数据炒资产，就像在暴风雨的独木舟上跟着每一次浪花猛打方向盘；美联储现在像站在跷跷板中间的胖子，普通人千万别去给他当垫脚石！",
+          stat: "实际公布5.4%大幅反弹，9月加息预期概率狂飙超70%，10年期美债触及4.96%。"
+        },
+        social_post: {
+          title: "昨晚PPI突发超预期大反弹：通胀死灰复燃，普通人该抛售黄金还是抄底美债？",
+          body: `昨晚美国8月PPI突发暴涨5.4%，原本狂欢的“9月大幅降息”预期一夜被彻底击碎！\n交易员对美联储不仅不敢奢望降息，反而押注9月继续加息的概率狂飙到70%以上！\n\n消息一出，全球市场瞬间“股债汇金大洗牌”：\n现货黄金急挫跳水，美债收益率冲上4.96%，唯独原油暴涨4.2%火上浇油……\n无数刚刚满仓抄底黄金、跟风买入美债ETF的普通人，今天一觉醒来直接被迎头痛击！\n\n面对突如其来的宏观变局，今天我们连线【宏观经济与周期学者】与【硬核价值投资人】正面交锋：\n\n───────────────\n⚖️ 正方【宏观学者】：通胀黏性远超想象，保命现金与短债为王！\n1️⃣ 二次通胀警钟长鸣：地缘局势推动原油重回高位，上游工业成本暴涨，滞胀阴云根本没有散去！\n2️⃣ 高利率钝刀慢割：加息概率飙升70%，高利率维持越久，资产估值越要挤水分，切忌盲目在半山腰接飞刀！\n3️⃣ 现金流动性才是真爹：在美联储货币转向尚无定论前，高息短债与现金流才是普通家庭最硬的盾牌。\n📌【真实切片】：某外企中产看降息博主推荐全仓冲入长端美债ETF，遭遇单日回撤逾4%，浮亏加剧现金流枯竭！\n💬 宏观学者寄语：“顺周期加杠杆是赌博，看懂央行资产负债表才是真正的降维生存。”\n\n───────────────\n⚠️ 反方【价值投资人】：单月数据噪音踩踏，恰是罕见的黄金建仓期！\n1️⃣ 强弩之末的恐慌过激：制造业PMI与中小企业负债已到极限，单月油价脉冲改变不了经济周期放缓的终极事实！\n2️⃣ 非对称极佳赔率：美债收益率逼近5%的历史极值区，锁死无风险高息，向下空间极小，向上弹性巨大！\n3️⃣ 优质资产大打折：黄金与优质核心资产在通胀预期下的急跌，正是长线资本以低成本收集筹码的狂欢季。\n📌【历史对照】：2022年高通胀加息周期每次单月PPI脉冲暴跌，事后看都是长线优质现金流资产的完美定投坑！\n💬 投资人内心戏：“别人恐惧我贪婪，市场因为一个月的能源数据恐慌踩踏，正好把便宜筹码双手奉上！”\n\n───────────────\n🔬 穿透专家【平民反收割官】：\n💡 神级通俗比喻：\n“看单月PPI数据炒资产，就像在暴风雨的独木舟上跟着每一次浪花猛打方向盘；美联储现在像站在跷跷板中间的胖子，左边是通胀冒烟，右边是银行暴雷，普通人千万别去给他当垫脚石！”\n\n───────────────\n💬 换作是你，你会怎么站队？\n🔴 站队学者【现金防御派】：通胀不退风险不止！手握现金短债，绝不在高位飞刀下伸手！\n🔵 站队投资人【逆向抄底派】：恐慌就是打折季！长期周期大势已定，越跌越买锁定历史性高赔率！\n\n昨晚你的持仓回撤了吗？大家目前是准备抛售避险还是逢低加仓？\n欢迎在评论区晒出你的账本与真实操作！👇\n\n#理性讨论 #PPI数据 #宏观经济 #美联储加息 #黄金走势 #美债 #投资理财 #通胀`,
+          pinned_comment: "提醒大家：单月PPI数据波动极容易引发情绪踩踏！切忌根据一两天的新闻满仓频繁倒腾。大家目前手里的黄金和美债是打算止盈止损，还是逢跌继续定投？"
+        },
+        pages: [
+          {
+            page: 1,
+            tag: "宏观突发 · 资产洗牌",
+            h1: "昨晚PPI突发大反弹：",
+            h2: "通胀死灰复燃，抛黄金还是抄美债？",
+            summary: "美国8月PPI暴涨5.4%，降息预期破灭、加息概率狂飙70%！全球股债汇金大洗牌，普通人该如何避险与破局？",
+            badgeA: "🔴 防御派：通胀黏性超预期，现金短债为王",
+            badgeB: "🔵 抄底派：单月噪音踩踏，逆向建仓打折季"
+          },
+          {
+            page: 2,
+            tag: "现实利差 · 痛点账本",
+            h1: "昨夜数据暴雷，",
+            h2: "全球大类资产狂风骤雨",
+            summary: "满仓满融坐等降息分红的中产一夜梦碎，真实指标全线亮红灯：",
+            metrics: [
+              { label: "8月最终需求PPI", val: "5.4% (超预期反弹)", color: "text-rose-600" },
+              { label: "CME 9月加息概率", val: "狂飙超 70%", color: "text-amber-600" },
+              { label: "10年期美债收益率", val: "冲上 4.96%", color: "text-blue-600" }
+            ]
+          },
+          {
+            page: 3,
+            tag: "底层逻辑 · 认知穿透",
+            h1: "看懂美联储跷跷板：",
+            h2: "普通人别当周期垫脚石",
+            summary: "神级通俗隐喻：看单月PPI炒资产像在暴风雨独木舟上乱打方向盘；左边通胀冒烟，右边银行暴雷，千万别去当垫脚石！",
+            metrics: [
+              { label: "现货黄金急挫", val: "跳水超 1.8%", color: "text-rose-600" },
+              { label: "WTI原油单日", val: "+4.2% 火上浇油", color: "text-amber-600" },
+              { label: "资产安全边际", val: "高息短债更优", color: "text-emerald-600" }
+            ]
+          },
+          {
+            page: 4,
+            tag: "正方立论 · 宏观学者",
+            h1: "“通胀黏性远超想象：",
+            h2: "保命现金与短债才是真爹！”",
+            summary: "地缘油价推动工业成本飙升，滞胀阴云未散。高利率维持越久，资产估值越挤水分，盲目接飞刀必被深套。",
+            caseTitle: "【真实切片】",
+            caseText: "某外企中产跟风全仓冲入长端美债ETF博弈降息，单日遭遇暴跌回撤，浮亏放大面临流动性危机。",
+            quote: "“顺周期加杠杆是赌博，看懂央行资产负债表才是真正的降维生存。”"
+          },
+          {
+            page: 5,
+            tag: "反方立论 · 价值投资人",
+            h1: "“单月噪音引发恐慌：",
+            h2: "恰是核心资产历史性建仓坑！”",
+            summary: "制造业PMI已达极限，单月油价脉冲无法逆转经济放缓大势。收益率逼近5%的历史极值区，向下极小向上弹性极大。",
+            caseTitle: "【历史对照】",
+            caseText: "2022年加息周期每次PPI脉冲暴跌，事后看都是长线优质现金流资产的绝佳定投买点！",
+            quote: "“当防守资产被买成了香饽饽，最大的安全就变成了最大的风险；别人恐慌我贪婪！”"
+          },
+          {
+            page: 6,
+            tag: "互动投票 · 理性站队",
+            h1: "换作是你，",
+            h2: "昨夜剧变后你会怎么操作？",
+            summary: "昨晚你的持仓回撤了吗？你是准备止损避险，还是逢低坚决加仓？点击站队！",
+            actionA: "🔴 站队防御派：通胀不退风险不止，手握现金绝不接飞刀",
+            actionB: "🔵 站队抄底派：恐慌就是打折季，逆向逢跌买入锁定高赔率"
+          }
+        ]
+      },
+      {
         id: "options_rich_or_ruin",
         title: "期权会让人暴富还是导致人破产？",
         category: "衍生品",
@@ -1132,6 +1265,7 @@
     let currentTopicData = PRESET_TOPICS[0];
     let currentCardIndex = 1;
     let cardViewMode = 'single';
+    let cardRenderType = 'png';
     let currentTab = 'cards';
     let userPoints = 120;
     let hasVoted = false;
@@ -1141,6 +1275,21 @@
       updateClock();
       setInterval(updateClock, 1000);
     });
+
+    function setCardRenderType(type) {
+      cardRenderType = type;
+      const btnPng = document.getElementById('btnRenderTypePng');
+      const btnHtml = document.getElementById('btnRenderTypeHtml');
+      if (type === 'png') {
+        if (btnPng) btnPng.className = "px-2.5 py-1 rounded-md font-bold transition bg-white text-blue-600 shadow-xs";
+        if (btnHtml) btnHtml.className = "px-2.5 py-1 rounded-md font-bold transition text-slate-600 hover:text-slate-900";
+      } else {
+        if (btnPng) btnPng.className = "px-2.5 py-1 rounded-md font-bold transition text-slate-600 hover:text-slate-900";
+        if (btnHtml) btnHtml.className = "px-2.5 py-1 rounded-md font-bold transition bg-white text-blue-600 shadow-xs";
+      }
+      renderCards();
+      renderMobileSimulator();
+    }
 
     function updateClock() {
       const now = new Date();
@@ -1184,21 +1333,52 @@
       }
 
       const container = document.getElementById('activeCardRender');
-      container.innerHTML = getWhiteCardHTML(pageData, currentCardIndex);
+      if (cardRenderType === 'png' && currentTopicData.id && !currentTopicData.id.startsWith('custom_')) {
+        container.innerHTML = `
+          <div class="relative w-full h-full bg-slate-100 flex items-center justify-center overflow-hidden rounded-2xl group">
+            <img src="examples/${currentTopicData.id}/page_${currentCardIndex}.png" alt="P${currentCardIndex} 预渲染大图" class="w-full h-full object-cover" onerror="this.style.display='none'; document.getElementById('pngFallbackNotice').classList.remove('hidden');" />
+            <div id="pngFallbackNotice" class="hidden absolute inset-0 flex flex-col items-center justify-center p-6 text-center bg-white">
+              <span class="text-3xl mb-2">🎨</span>
+              <p class="text-xs text-slate-600 font-bold">该页以动态 Canvas/HTML 呈现</p>
+              <div class="mt-4 w-full h-[80%]">${getWhiteCardHTML(pageData, currentCardIndex)}</div>
+            </div>
+            <div class="absolute top-3 left-3 bg-black/75 backdrop-blur text-white px-2.5 py-1 rounded-full text-[10px] font-mono shadow-md flex items-center gap-1.5 pointer-events-none">
+              <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+              P${currentCardIndex} · 1080×1440 极清直出
+            </div>
+            <a href="examples/${currentTopicData.id}/page_${currentCardIndex}.png" target="_blank" class="absolute bottom-3 right-3 bg-white/90 hover:bg-white text-slate-900 font-bold px-2.5 py-1 rounded-lg text-[10px] shadow transition flex items-center gap-1">
+              查看原图 ↗
+            </a>
+          </div>
+        `;
+      } else {
+        container.innerHTML = getWhiteCardHTML(pageData, currentCardIndex);
+      }
 
       const gridContainer = document.getElementById('gridCardContainer');
-      gridContainer.innerHTML = pages.map((p, idx) => `
-        <div onclick="selectCardPage(${idx+1}); toggleCardViewMode();" class="ratio-3-4 bg-white rounded-xl p-3 border ${idx+1 === currentCardIndex ? 'border-blue-500 ring-2 ring-blue-500/20 shadow-md' : 'border-slate-200'} hover:border-slate-400 cursor-pointer transition flex flex-col justify-between overflow-hidden shadow-sm">
-          <div class="flex items-center justify-between text-[9px] text-slate-500">
-            <span class="font-bold text-blue-600">P${idx+1}</span>
-            <span class="truncate max-w-[80px]">${p.tag}</span>
+      if (cardRenderType === 'png' && currentTopicData.id && !currentTopicData.id.startsWith('custom_')) {
+        gridContainer.innerHTML = pages.map((p, idx) => `
+          <div onclick="selectCardPage(${idx+1}); toggleCardViewMode();" class="ratio-3-4 bg-slate-100 rounded-xl border ${idx+1 === currentCardIndex ? 'border-blue-500 ring-2 ring-blue-500/20 shadow-md' : 'border-slate-200'} hover:border-slate-400 cursor-pointer transition relative overflow-hidden group shadow-sm">
+            <img src="examples/${currentTopicData.id}/page_${idx+1}.png" class="w-full h-full object-cover" onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\\'p-3 text-xs\\'>P${idx+1}</div>';" />
+            <div class="absolute top-1.5 left-1.5 bg-black/60 text-white text-[9px] px-1.5 py-0.5 rounded font-bold font-mono">
+              P${idx+1}
+            </div>
           </div>
-          <div class="my-auto py-1">
-            <div class="text-[11px] font-black text-slate-900 line-clamp-2 leading-snug">${p.h1} ${p.h2}</div>
+        `).join('');
+      } else {
+        gridContainer.innerHTML = pages.map((p, idx) => `
+          <div onclick="selectCardPage(${idx+1}); toggleCardViewMode();" class="ratio-3-4 bg-white rounded-xl p-3 border ${idx+1 === currentCardIndex ? 'border-blue-500 ring-2 ring-blue-500/20 shadow-md' : 'border-slate-200'} hover:border-slate-400 cursor-pointer transition flex flex-col justify-between overflow-hidden shadow-sm">
+            <div class="flex items-center justify-between text-[9px] text-slate-500">
+              <span class="font-bold text-blue-600">P${idx+1}</span>
+              <span class="truncate max-w-[80px]">${p.tag}</span>
+            </div>
+            <div class="my-auto py-1">
+              <div class="text-[11px] font-black text-slate-900 line-clamp-2 leading-snug">${p.h1} ${p.h2}</div>
+            </div>
+            <div class="text-[9px] text-slate-500 line-clamp-2">${p.summary}</div>
           </div>
-          <div class="text-[9px] text-slate-500 line-clamp-2">${p.summary}</div>
-        </div>
-      `).join('');
+        `).join('');
+      }
     }
 
     // 生成纯白底色杂志风 3:4 卡片 HTML
@@ -1354,6 +1534,10 @@
 
     // 动态生成符合小红书1000字规范的爆款文案（硬顶限制 ≤ 1000 字，留足安全边际）
     function generateCompliantCopy(d) {
+      if (d.social_post && d.social_post.body) {
+        return d.social_post.body;
+      }
+
       const sideA = d.side_a || {};
       const sideB = d.side_b || {};
       const contrast = d.contrast || {};
@@ -1419,7 +1603,11 @@
 
       const pinnedEl = document.getElementById('postPinnedComment');
       if (pinnedEl) {
-        pinnedEl.innerText = `【作者置顶】大家先别急着下结论，做个诚实的选择：面对这个话题，如果手里有闲钱：1️⃣ 选A【${d.side_a?.faction_name || '正方'}】：${d.side_a?.subtitle || ''}；2️⃣ 选B【${d.side_b?.faction_name || '反方'}】：${d.side_b?.subtitle || ''}。你站哪一边？在评论区扣 1 或 2，说说你的真实账本与理由！`;
+        if (d.social_post && d.social_post.pinned_comment) {
+          pinnedEl.innerText = d.social_post.pinned_comment;
+        } else {
+          pinnedEl.innerText = `【作者置顶】大家先别急着下结论，做个诚实的选择：面对这个话题，如果手里有闲钱：1️⃣ 选A【${d.side_a?.faction_name || '正方'}】：${d.side_a?.subtitle || ''}；2️⃣ 选B【${d.side_b?.faction_name || '反方'}】：${d.side_b?.subtitle || ''}。你站哪一边？在评论区扣 1 或 2，说说你的真实账本与理由！`;
+        }
       }
 
       updateCopyCounter();
@@ -1605,21 +1793,33 @@
       // 微缩卡片渲染
       const miniContainer = document.getElementById('simCardMiniContainer');
       if (miniContainer) {
-        miniContainer.innerHTML = `
-          <div class="flex items-center justify-between text-[8px] text-slate-400 border-b border-slate-100 pb-1">
-            <span class="font-bold text-blue-600">P${currentCardIndex} · ${p.tag}</span>
-            <span class="text-rose-500 font-semibold">小红书有奖征稿</span>
-          </div>
-          <div class="my-auto py-1.5 space-y-1">
-            <div class="text-[11px] font-black text-slate-900 leading-snug">${p.h1}</div>
-            <div class="text-[10px] font-bold text-blue-600 leading-snug">${p.h2}</div>
-            <div class="text-[8px] text-slate-500 line-clamp-3 leading-normal pt-1">${p.summary}</div>
-          </div>
-          <div class="pt-1 border-t border-slate-100 flex items-center justify-between text-[7px] text-slate-400">
-            <span>双边辩论 · 深度剖析</span>
-            <span>打工人理财思考</span>
-          </div>
-        `;
+        if (cardRenderType === 'png' && d.id && !d.id.startsWith('custom_')) {
+          miniContainer.innerHTML = `
+            <div class="w-full h-full relative overflow-hidden rounded-xl bg-slate-100 flex items-center justify-center">
+              <img src="examples/${d.id}/page_${currentCardIndex}.png" class="w-full h-full object-cover" onerror="this.style.display='none'; this.nextElementSibling.classList.remove('hidden');" />
+              <div class="hidden p-2 text-[10px] text-slate-600 font-bold">${p.h1}</div>
+              <div class="absolute bottom-1 right-1 bg-black/70 text-white text-[8px] px-1 py-0.5 rounded font-mono">
+                ${currentCardIndex}/6
+              </div>
+            </div>
+          `;
+        } else {
+          miniContainer.innerHTML = `
+            <div class="flex items-center justify-between text-[8px] text-slate-400 border-b border-slate-100 pb-1">
+              <span class="font-bold text-blue-600">P${currentCardIndex} · ${p.tag}</span>
+              <span class="text-rose-500 font-semibold">小红书有奖征稿</span>
+            </div>
+            <div class="my-auto py-1.5 space-y-1">
+              <div class="text-[11px] font-black text-slate-900 leading-snug">${p.h1}</div>
+              <div class="text-[10px] font-bold text-blue-600 leading-snug">${p.h2}</div>
+              <div class="text-[8px] text-slate-500 line-clamp-3 leading-normal pt-1">${p.summary}</div>
+            </div>
+            <div class="pt-1 border-t border-slate-100 flex items-center justify-between text-[7px] text-slate-400">
+              <span>双边辩论 · 深度剖析</span>
+              <span>打工人理财思考</span>
+            </div>
+          `;
+        }
       }
 
       // 默认神评文案与热评文案
