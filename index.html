@@ -99,754 +99,342 @@
 </head>
 <body class="bg-slate-50 text-slate-800 min-h-screen font-sans antialiased flex flex-col selection:bg-blue-600 selection:text-white">
 
-  <!-- ================= 纯白顶部导航栏 ================= -->
-  <header class="border-b border-slate-200 bg-white/90 backdrop-blur sticky top-0 z-50 shadow-sm">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-      <div class="flex items-center gap-3">
-        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-600 flex items-center justify-center shadow-md shadow-blue-500/20 text-white font-bold text-xl">
+  <!-- ================= 精简专业顶部导航栏 ================= -->
+  <header class="border-b border-slate-200 bg-white/95 backdrop-blur sticky top-0 z-50 shadow-xs">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
+      <div class="flex items-center gap-2.5">
+        <div class="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center text-white font-black text-base shadow-sm">
           ⚡
         </div>
-        <div>
-          <div class="flex items-center gap-2">
-            <h1 class="font-black text-base sm:text-lg tracking-tight text-slate-900 flex items-center gap-1.5">
-              金融图文工坊 <span class="text-xs px-2 py-0.5 rounded-full bg-blue-50 text-blue-600 border border-blue-200 font-semibold">制作者 Studio · 纯白版</span>
-            </h1>
-          </div>
-          <p class="text-xs text-slate-500 hidden sm:block">输入一个标题 ➔ 秒级生成 6 张 3:4 高清图文卡片 + 小红书文案 + 评论区促活神评与交稿打卡</p>
+        <div class="flex items-center gap-2">
+          <h1 class="font-black text-base tracking-tight text-slate-900">
+            小红书图文工坊
+          </h1>
+          <span id="pipelineStatusBadge" class="hidden sm:inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 text-[11px] font-medium">
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+            已就绪
+          </span>
         </div>
       </div>
 
-      <!-- 右侧动作按钮 -->
+      <!-- 视觉风格切换与核心动作 -->
       <div class="flex items-center gap-2">
-        <span id="pipelineStatusBadge" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 text-xs font-medium hidden sm:inline-flex">
-          <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-          合规自检 100分
-        </span>
-        <button onclick="downloadAllCardsPNG()" class="px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold shadow-sm transition flex items-center gap-1.5" title="一键将6张卡片转为高清PNG图片并保存至桌面【小红书图文】">
-          <span>🖼️</span> 一键下载至桌面【小红书图文】
-        </button>
-        <button onclick="openInNewWindow()" class="px-2.5 py-1.5 rounded-lg bg-white hover:bg-slate-50 text-slate-700 text-xs font-semibold border border-slate-300 shadow-sm transition flex items-center gap-1" title="在 Chrome 独立标签页中打开，解除所有下载限制">
-          <span>↗</span> 独立窗口打开
-        </button>
-        <button onclick="openOfficialForm()" class="px-3 py-1.5 rounded-lg bg-white hover:bg-slate-50 text-slate-700 text-xs font-semibold border border-slate-300 shadow-sm transition flex items-center gap-1.5" title="打开官方腾讯文档交稿收集表">
-          <span>🚀</span> 官方交稿表 ↗
-        </button>
-        <button onclick="copyFullPostCopy()" class="px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold shadow-sm transition flex items-center gap-1.5">
+        <!-- 风格切换单选 -->
+        <div class="inline-flex rounded-lg border border-slate-200 p-0.5 bg-slate-100 text-xs">
+          <button onclick="setVisualTheme('white')" id="btnThemeWhite" class="px-2.5 py-1 rounded-md font-bold transition bg-white text-blue-600 shadow-xs cursor-pointer" title="纯白现代杂志风">
+            🏢 纯白现代
+          </button>
+          <button onclick="setVisualTheme('retro')" id="btnThemeRetro" class="px-2.5 py-1 rounded-md font-bold transition text-slate-600 hover:text-slate-900 cursor-pointer" title="暖调复古手账风">
+            📜 暖调手账
+          </button>
+        </div>
+        <button onclick="copyFullPostCopy()" class="px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition flex items-center gap-1 cursor-pointer">
           <span>📋</span> 复制文案
+        </button>
+        <button onclick="downloadAllCardsPNG()" class="px-3.5 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold shadow-xs transition flex items-center gap-1.5 cursor-pointer" title="一键保存全套6张1080×1440高清卡片">
+          <span>📥</span> 一键下载 6 张图 (PNG)
         </button>
       </div>
     </div>
   </header>
 
-  <!-- ================= 主体内容区 (纯白底色与卡片) ================= -->
-  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+  <!-- ================= 主体内容区 (左右平衡双栏工作台) ================= -->
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 py-4 space-y-4">
 
-    <!-- 4套已交付全景高清作品直通条 (宏观PPI突发、末日轮期权、提前还贷、攒金豆) -->
-    <div class="bg-gradient-to-r from-slate-900 via-blue-950 to-slate-900 rounded-2xl p-4 text-white shadow-lg border border-slate-800 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4">
-      <div class="space-y-1">
-        <div class="flex items-center gap-2">
-          <span class="px-2 py-0.5 rounded-full bg-emerald-500 text-slate-950 font-black text-[10px] tracking-wide uppercase">NEW DEPLOYED</span>
-          <h2 class="text-base sm:text-lg font-black tracking-tight text-white flex items-center gap-1.5">
-            <span>🔥</span> 最新交付：昨晚PPI突发超预期大反弹（全套6张1080×1440极清图文）
-          </h2>
+    <!-- 1. 紧凑型选题输入与推荐题库 -->
+    <div class="bg-white rounded-xl border border-slate-200 p-3.5 shadow-xs space-y-2.5">
+      <div class="flex items-center gap-2">
+        <div class="relative flex-1">
+          <input 
+            id="titleInput"
+            type="text"
+            value="昨晚PPI突发超预期大反弹：通胀死灰复燃，普通人该抛售黄金还是抄底美债？"
+            placeholder="输入争议性金融/理财选题，例如：提前还房贷还是留钱理财？"
+            class="w-full bg-slate-50 border border-slate-300 rounded-lg px-3.5 py-2 text-xs sm:text-sm text-slate-900 placeholder-slate-400 focus:bg-white focus:outline-none focus:border-blue-600 font-medium transition"
+            onkeydown="if(event.key === 'Enter') generateContent()"
+          />
+          <button onclick="clearTitleInput()" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 text-xs cursor-pointer">✕</button>
         </div>
-        <p class="text-xs text-slate-300">
-          包含宏观学者 vs 价值投资人双向交锋 · 现实利差痛点账本 · 扎心隐喻 · 终极理性站队全套产物已就绪
-        </p>
-      </div>
-      <div class="flex flex-wrap items-center gap-2 shrink-0">
-        <a href="examples/macro_ppi_shock/all_pages_viewer.html" target="_blank" class="px-3.5 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs shadow-md transition flex items-center gap-1.5">
-          <span>🖼️</span> 打开 PPI 全景阅览器 ↗
-        </a>
-        <button onclick="applyPresetTopic(0)" class="px-3.5 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-white font-bold text-xs border border-white/20 transition flex items-center gap-1.5">
-          <span>⚡</span> 工作台即刻载入
+        <button 
+          id="btnGenerate"
+          onclick="generateContent()"
+          class="px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs sm:text-sm rounded-lg shadow-xs transition flex items-center justify-center gap-1.5 shrink-0 cursor-pointer"
+        >
+          <span id="genBtnIcon">⚡</span>
+          <span id="genBtnText">生成图文</span>
         </button>
+      </div>
+
+      <!-- 快速推荐题库 Pills -->
+      <div class="flex items-center gap-2 text-xs overflow-x-auto pb-0.5" id="presetPillsList">
+        <span class="text-slate-400 shrink-0 font-medium text-[11px]">🔥 热门选题:</span>
+        <button onclick="applyPresetTopic(0)" class="px-2.5 py-1 rounded-md bg-blue-50 border border-blue-200 text-blue-800 font-medium hover:bg-blue-100 transition shrink-0 cursor-pointer text-xs">PPI超预期大反弹</button>
+        <button onclick="applyPresetTopic(1)" class="px-2.5 py-1 rounded-md bg-slate-100 border border-slate-200 text-slate-700 font-medium hover:bg-slate-200 transition shrink-0 cursor-pointer text-xs">期权暴富还是破产</button>
+        <button onclick="applyPresetTopic(2)" class="px-2.5 py-1 rounded-md bg-slate-100 border border-slate-200 text-slate-700 font-medium hover:bg-slate-200 transition shrink-0 cursor-pointer text-xs">50万提前还贷vs理财</button>
+        <button onclick="applyPresetTopic(3)" class="px-2.5 py-1 rounded-md bg-slate-100 border border-slate-200 text-slate-700 font-medium hover:bg-slate-200 transition shrink-0 cursor-pointer text-xs">年轻人疯狂攒金豆</button>
+        <button onclick="applyPresetTopic(4)" class="px-2.5 py-1 rounded-md bg-slate-100 border border-slate-200 text-slate-700 font-medium hover:bg-slate-200 transition shrink-0 cursor-pointer text-xs">3000点抄底vs定投</button>
+      </div>
+
+      <!-- 专家对决指示栏 (紧凑折叠单行) -->
+      <div class="pt-1 border-t border-slate-100 flex flex-wrap items-center justify-between text-[11px] text-slate-500 gap-2">
+        <div class="flex items-center gap-2">
+          <span>对决矩阵：</span>
+          <span id="sideABadge" class="px-1.5 py-0.5 rounded bg-blue-50 text-blue-700 font-semibold border border-blue-200">正方: 价值投资人</span>
+          <span class="text-slate-400">vs</span>
+          <span id="sideBBadge" class="px-1.5 py-0.5 rounded bg-amber-50 text-amber-700 font-semibold border border-amber-200">反方: 反收割官</span>
+        </div>
+        <div class="flex items-center gap-1.5">
+          <span>穿透视角:</span>
+          <span id="contrastBadge" class="text-purple-700 font-semibold">宏观经济学者</span>
+        </div>
       </div>
     </div>
 
-    <!-- 1. 核心输入区：标题快速生成引擎 (清新白卡片) -->
-    <section class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm relative overflow-hidden">
-      <div class="absolute -right-16 -top-16 w-64 h-64 bg-blue-100/50 rounded-full blur-3xl pointer-events-none"></div>
-      <div class="absolute -left-16 -bottom-16 w-64 h-64 bg-indigo-100/40 rounded-full blur-3xl pointer-events-none"></div>
+    <!-- 2. 双栏极简创作工作台 (左: 3:4 视觉卡片工坊 · 右: 原生文案与促活工坊) -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
 
-      <div class="relative z-10 space-y-4">
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-          <div>
-            <span class="text-xs font-bold text-blue-600 tracking-wider uppercase">Content Studio</span>
-            <h2 class="text-lg sm:text-xl font-black text-slate-900 flex items-center gap-2">
-              <span>🎯</span> 金融选题一键极速生成
-            </h2>
+      <!-- ================= 左栏：3:4 视觉卡片工坊 (7 列) ================= -->
+      <div class="lg:col-span-7 space-y-3">
+        <!-- 卡片导航条 (P1..P6 + 切换全景) -->
+        <div class="flex items-center justify-between bg-white p-2 rounded-xl border border-slate-200 shadow-xs text-xs">
+          <div class="flex items-center gap-1 overflow-x-auto" id="cardNavPills">
+            <button onclick="selectCardPage(1)" id="pill1" class="px-2.5 py-1 rounded bg-blue-600 text-white font-bold cursor-pointer">P1 封面</button>
+            <button onclick="selectCardPage(2)" id="pill2" class="px-2.5 py-1 rounded bg-slate-100 text-slate-600 hover:bg-slate-200 cursor-pointer">P2 痛点</button>
+            <button onclick="selectCardPage(3)" id="pill3" class="px-2.5 py-1 rounded bg-slate-100 text-slate-600 hover:bg-slate-200 cursor-pointer">P3 剪刀差</button>
+            <button onclick="selectCardPage(4)" id="pill4" class="px-2.5 py-1 rounded bg-slate-100 text-slate-600 hover:bg-slate-200 cursor-pointer">P4 正方</button>
+            <button onclick="selectCardPage(5)" id="pill5" class="px-2.5 py-1 rounded bg-slate-100 text-slate-600 hover:bg-slate-200 cursor-pointer">P5 反方</button>
+            <button onclick="selectCardPage(6)" id="pill6" class="px-2.5 py-1 rounded bg-slate-100 text-slate-600 hover:bg-slate-200 cursor-pointer">P6 互动</button>
           </div>
-          <div class="flex items-center gap-2 text-xs text-slate-500">
-            <span>工业级 Skill:</span>
-            <span class="text-slate-700 font-medium">📊 数据精算</span> · 
-            <span class="text-slate-700 font-medium">📜 事实切片</span> · 
-            <span class="text-slate-700 font-medium">🎭 幽默隐喻</span>
-          </div>
-        </div>
-
-        <!-- 标题输入框与一键生成主按钮 -->
-        <div class="flex flex-col sm:flex-row gap-3">
-          <div class="relative flex-1">
-            <input 
-              id="titleInput"
-              type="text"
-              value="昨晚PPI突发超预期大反弹：通胀死灰复燃，普通人该抛售黄金还是抄底美债？"
-              placeholder="请输入具有争议性或强认知的金融标题，例如：提前还房贷还是留钱理财？"
-              class="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-3.5 text-sm sm:text-base text-slate-900 placeholder-slate-400 focus:bg-white focus:outline-none focus:border-blue-600 focus:ring-4 focus:ring-blue-500/10 font-medium transition"
-              onkeydown="if(event.key === 'Enter') generateContent()"
-            />
-            <button onclick="clearTitleInput()" class="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 text-xs">
-              ✕
-            </button>
-          </div>
-          <button 
-            id="btnGenerate"
-            onclick="generateContent()"
-            class="px-6 py-3.5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm sm:text-base rounded-xl shadow-md shadow-blue-500/20 transition transform active:scale-95 flex items-center justify-center gap-2 shrink-0 cursor-pointer"
-          >
-            <span id="genBtnIcon">⚡</span>
-            <span id="genBtnText">快速生成对应内容与图片</span>
-          </button>
-        </div>
-
-        <!-- 热门选题灵感 Pills (浅灰背景白字悬浮) -->
-        <div class="space-y-1.5 pt-1">
-          <div class="flex items-center gap-2 text-xs text-slate-500">
-            <span>🔥 热门金融争议题库（点击即填）：</span>
-          </div>
-          <div id="presetPillsList" class="flex flex-wrap gap-2 text-xs">
-            <button onclick="applyPresetTopic(0)" class="px-3 py-1.5 rounded-lg bg-blue-50 hover:bg-blue-100 border border-blue-200 text-blue-800 font-bold transition flex items-center gap-1.5 shadow-xs">
-              <span class="text-rose-500">🔥</span> 昨晚PPI突发超预期大反弹：普通人该抛售黄金还是抄底美债？
-              <span class="px-1.5 py-0.2 bg-rose-100 text-rose-700 rounded text-[10px]">宏观突发 · 最新</span>
-            </button>
-            <button onclick="applyPresetTopic(1)" class="px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 border border-slate-200 text-slate-700 font-medium transition flex items-center gap-1.5">
-              <span>⚖️</span> 期权会让人暴富还是导致人破产？
-              <span class="px-1.5 py-0.2 bg-blue-100 text-blue-700 rounded text-[10px]">衍生品</span>
-            </button>
-            <button onclick="applyPresetTopic(2)" class="px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 border border-slate-200 text-slate-700 font-medium transition flex items-center gap-1.5">
-              <span>🏠</span> 手头有50万闲钱：提前还4.0%房贷，还是留着买理财？
-              <span class="px-1.5 py-0.2 bg-emerald-100 text-emerald-700 rounded text-[10px]">中产现金流</span>
-            </button>
-            <button onclick="applyPresetTopic(3)" class="px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 border border-slate-200 text-slate-700 font-medium transition flex items-center gap-1.5">
-              <span>🪙</span> 年轻人疯狂攒金豆，到底是明智理财还是被割智商税？
-              <span class="px-1.5 py-0.2 bg-amber-100 text-amber-700 rounded text-[10px]">黄金实物</span>
-            </button>
-            <button onclick="applyPresetTopic(4)" class="px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 border border-slate-200 text-slate-700 font-medium transition flex items-center gap-1.5">
-              <span>📉</span> 大盘3000点震荡，该一次性重仓抄底还是死磕定投？
-              <span class="px-1.5 py-0.2 bg-purple-100 text-purple-700 rounded text-[10px]">权益策略</span>
+          <div class="flex items-center gap-1.5 shrink-0">
+            <button onclick="prevCard()" class="px-2 py-1 rounded bg-slate-100 hover:bg-slate-200 text-slate-700 cursor-pointer text-xs" title="上一张">◀</button>
+            <span id="currentCardIndexText" class="text-slate-600 font-mono text-xs font-bold px-1">1 / 6</span>
+            <button onclick="nextCard()" class="px-2 py-1 rounded bg-slate-100 hover:bg-slate-200 text-slate-700 cursor-pointer text-xs" title="下一张">▶</button>
+            <button onclick="toggleCardViewMode()" id="btnCardViewMode" class="ml-1 text-[11px] text-slate-500 hover:text-slate-800 px-2 py-1 rounded bg-slate-50 border border-slate-200 cursor-pointer">
+              平铺全景
             </button>
           </div>
         </div>
 
-        <!-- 专家对决与配置指示条 (浅白底灰边) -->
-        <div id="expertMatchBar" class="p-3 bg-slate-50 rounded-xl border border-slate-200 flex flex-wrap items-center justify-between gap-3 text-xs">
-          <div class="flex items-center gap-2">
-            <span class="text-slate-500">当前议题专家对决：</span>
-            <span id="sideABadge" class="px-2 py-0.5 rounded bg-blue-100 text-blue-800 border border-blue-200 font-semibold">正方: 硬核价值投资人</span>
-            <span class="text-slate-400">VS</span>
-            <span id="sideBBadge" class="px-2 py-0.5 rounded bg-amber-100 text-amber-800 border border-amber-200 font-semibold">反方: 平民现实派反收割官</span>
+        <!-- 焦点 3:4 卡片画布大底容器 -->
+        <div id="singleCardContainer" class="flex justify-center bg-slate-100/70 p-4 sm:p-6 rounded-2xl border border-slate-200 shadow-xs relative">
+          <div class="w-full max-w-[420px] ratio-3-4 bg-white rounded-2xl overflow-hidden border border-slate-200 shadow-xl relative flex flex-col justify-between" id="activeCardRender">
+            <!-- 由 JavaScript 动态渲染卡片内容 -->
           </div>
-          <div class="flex items-center gap-2">
-            <span class="text-slate-500">穿透视角:</span>
-            <span id="contrastBadge" class="text-purple-700 font-medium">宏观经济与周期学者</span>
+        </div>
+
+        <!-- 全景平铺模式容器 (默认隐藏) -->
+        <div id="gridCardContainer" class="hidden grid grid-cols-2 sm:grid-cols-3 gap-3 bg-white p-4 rounded-2xl border border-slate-200 shadow-xs">
+          <!-- 动态渲染 6 张卡片缩略图 -->
+        </div>
+
+        <!-- 卡片导出与快捷操作工具栏 -->
+        <div class="flex flex-wrap items-center justify-between gap-2 p-3 bg-white rounded-xl border border-slate-200 text-xs shadow-xs">
+          <span class="text-slate-500 flex items-center gap-1 text-[11px]">
+            <span>💡</span> <b>1080×1440</b> 高清画质 · 小红书官方标准 3:4 比例
+          </span>
+          <div class="flex flex-wrap items-center gap-2">
+            <button onclick="downloadCurrentCardPNG()" class="px-3 py-1.5 rounded-lg bg-blue-50 hover:bg-blue-100 text-blue-700 border border-blue-200 font-bold text-xs shadow-2xs transition flex items-center gap-1 cursor-pointer">
+              <span>💾</span> 下载本张 (PNG)
+            </button>
+            <button onclick="downloadAllCardsPNG()" id="btnDownloadAllBottom" class="px-3.5 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-xs transition flex items-center gap-1.5 cursor-pointer">
+              <span>📦</span> 一键保存全部 6 张 (PNG)
+            </button>
+            <button onclick="openCardInNewTab()" class="px-2.5 py-1.5 rounded-lg bg-white hover:bg-slate-50 text-slate-700 border border-slate-300 font-medium text-xs shadow-2xs transition cursor-pointer">
+              新标签打开 ↗
+            </button>
+            <button onclick="downloadActiveCardHTML()" class="px-2.5 py-1.5 rounded-lg bg-white hover:bg-slate-50 text-slate-600 border border-slate-200 font-medium text-xs shadow-2xs transition cursor-pointer">
+              HTML
+            </button>
           </div>
         </div>
       </div>
-    </section>
 
-    <!-- 2. 工作台主区域：左侧产出中心 (文案/卡片/活动配置) + 右侧纯白手机端落地页模拟器 -->
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-
-      <!-- 左侧产出区 (7 列) -->
-      <div class="lg:col-span-7 space-y-4">
-
-        <!-- 产出类型 Tab 切换栏 (纯白清爽设计) -->
-        <div class="flex items-center justify-between border-b border-slate-200 pb-2">
-          <div class="flex items-center gap-2">
-            <button id="tabBtnCards" onclick="switchOutputTab('cards')" class="px-4 py-2 rounded-lg text-xs font-bold transition flex items-center gap-1.5 bg-blue-600 text-white shadow-sm">
-              <span>🖼️</span> 6 张 3:4 图文卡片
-            </button>
-            <button id="tabBtnCopy" onclick="switchOutputTab('copy')" class="px-4 py-2 rounded-lg text-xs font-bold transition flex items-center gap-1.5 bg-white border border-slate-200 text-slate-700 hover:bg-slate-100">
-              <span>📝</span> 小红书发布文案
-            </button>
-            <button id="tabBtnCampaign" onclick="switchOutputTab('campaign')" class="px-4 py-2 rounded-lg text-xs font-bold transition flex items-center gap-1.5 bg-white border border-slate-200 text-slate-700 hover:bg-slate-100">
-              <span>💬</span> 评论促活 & 履约打卡器
-            </button>
-          </div>
-
-          <!-- 模式切换/辅助功能 -->
-          <div id="cardsToolbar" class="flex flex-wrap items-center gap-2">
-            <!-- 视觉模板风格切换: 纯白现代风 / 暖调手账风 -->
-            <div class="inline-flex rounded-lg border border-slate-200 p-0.5 bg-slate-100 text-xs">
-              <button onclick="setVisualTheme('white')" id="btnThemeWhite" class="px-2.5 py-1 rounded-md font-bold transition bg-white text-blue-600 shadow-xs" title="纯白现代杂志风 · 适合中产硬核理财">
-                🏢 纯白现代
-              </button>
-              <button onclick="setVisualTheme('retro')" id="btnThemeRetro" class="px-2.5 py-1 rounded-md font-bold transition text-slate-600 hover:text-slate-900" title="暖调复古手账风 · 适合大众扎心共鸣">
-                📜 暖调手账
-              </button>
+      <!-- ================= 右栏：小红书原生文案 & 互动工坊 (5 列) ================= -->
+      <div class="lg:col-span-5 space-y-3">
+        <div class="bg-white rounded-2xl border border-slate-200 p-4 sm:p-5 space-y-3.5 shadow-xs">
+          
+          <!-- 文案头部：标题、1000字监控与一键复制 -->
+          <div class="flex items-center justify-between border-b border-slate-100 pb-3 gap-2 flex-wrap">
+            <div class="flex items-center gap-1.5">
+              <span class="text-sm font-bold text-slate-900">📝 小红书发布文案</span>
             </div>
-            <!-- 渲染模式切换: 高清PNG / 动态设计卡片 -->
-            <div class="inline-flex rounded-lg border border-slate-200 p-0.5 bg-slate-100 text-xs">
-              <button onclick="setCardRenderType('png')" id="btnRenderTypePng" class="px-2.5 py-1 rounded-md font-bold transition bg-white text-blue-600 shadow-xs">
-                📸 预渲染高清大图
+            <div class="flex items-center gap-1.5">
+              <!-- 实时字数合规监控徽章 -->
+              <span id="copyWordCountBadge" class="px-2 py-0.5 rounded-full text-[11px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200 shadow-xs flex items-center gap-1 transition-all">
+                <span id="copyWordStatusIcon">✅</span>
+                <span id="copyWordCount">850</span> / 1000 字
+                <span id="copyWordStatusText" class="text-[10px] text-emerald-600">（合规）</span>
+              </span>
+              <button id="btnAutoTrimCopy" onclick="autoTrimCopy()" class="hidden px-2 py-0.5 rounded-lg bg-amber-500 hover:bg-amber-600 text-white font-bold text-[11px] shadow transition items-center gap-1 cursor-pointer">
+                <span>✂️</span> 精简
               </button>
-              <button onclick="setCardRenderType('html')" id="btnRenderTypeHtml" class="px-2.5 py-1 rounded-md font-bold transition text-slate-600 hover:text-slate-900">
-                ⚡ 动态设计卡片
-              </button>
-            </div>
-            <button onclick="downloadAllCardsPNG()" id="btnDownloadAllTop" class="px-3.5 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-sm transition flex items-center gap-1.5">
-              <span>🖼️</span> 一键下载至桌面【小红书图文】(PNG)
-            </button>
-            <button onclick="showFolderGuideModal()" class="text-xs text-blue-600 hover:text-blue-800 px-2.5 py-1.5 rounded-lg bg-blue-50 hover:bg-blue-100 border border-blue-200 shadow-sm flex items-center gap-1">
-              <span>📁</span> 桌面路径说明
-            </button>
-            <button onclick="toggleCardViewMode()" id="btnCardViewMode" class="text-xs text-slate-600 hover:text-slate-900 px-2.5 py-1.5 rounded-lg bg-white border border-slate-200 shadow-sm">
-              切换平铺全景
-            </button>
-          </div>
-        </div>
-
-        <!-- ================= PANEL 1: 6 张 3:4 图文卡片展示 (纯白雅致版) ================= -->
-        <div id="panelCards" class="space-y-4">
-          <!-- 卡片指示器导航条 -->
-          <div class="flex items-center justify-between bg-white p-2.5 rounded-xl border border-slate-200 shadow-sm text-xs">
-            <div class="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0" id="cardNavPills">
-              <button onclick="selectCardPage(1)" id="pill1" class="px-2.5 py-1 rounded bg-blue-600 text-white font-bold">P1 封面</button>
-              <button onclick="selectCardPage(2)" id="pill2" class="px-2.5 py-1 rounded bg-slate-100 text-slate-600 hover:text-slate-900">P2 痛点</button>
-              <button onclick="selectCardPage(3)" id="pill3" class="px-2.5 py-1 rounded bg-slate-100 text-slate-600 hover:text-slate-900">P3 剪刀差</button>
-              <button onclick="selectCardPage(4)" id="pill4" class="px-2.5 py-1 rounded bg-slate-100 text-slate-600 hover:text-slate-900">P4 正方</button>
-              <button onclick="selectCardPage(5)" id="pill5" class="px-2.5 py-1 rounded bg-slate-100 text-slate-600 hover:text-slate-900">P5 反方</button>
-              <button onclick="selectCardPage(6)" id="pill6" class="px-2.5 py-1 rounded bg-slate-100 text-slate-600 hover:text-slate-900">P6 互动</button>
-            </div>
-            <div class="flex items-center gap-2 shrink-0">
-              <button onclick="prevCard()" class="px-2 py-1 rounded bg-slate-100 hover:bg-slate-200 text-slate-700">◀</button>
-              <span id="currentCardIndexText" class="text-slate-600 font-mono text-xs">1 / 6</span>
-              <button onclick="nextCard()" class="px-2 py-1 rounded bg-slate-100 hover:bg-slate-200 text-slate-700">▶</button>
-            </div>
-          </div>
-
-          <!-- 焦点单卡片容器 (3:4 标准比例 · 纯白质感大底) -->
-          <div id="singleCardContainer" class="flex justify-center bg-white p-6 rounded-2xl border border-slate-200 shadow-sm relative">
-            <div class="w-full max-w-[420px] ratio-3-4 bg-white rounded-2xl overflow-hidden border border-slate-200 shadow-2xl relative flex flex-col justify-between" id="activeCardRender">
-              <!-- 由 JavaScript 动态渲染卡片内容 -->
-            </div>
-          </div>
-
-          <!-- 全景平铺模式容器 (默认隐藏) -->
-          <div id="gridCardContainer" class="hidden grid grid-cols-2 sm:grid-cols-3 gap-3 bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
-            <!-- 由 JS 渲染 6 张微缩卡片 -->
-          </div>
-
-          <!-- 卡片导出与操作按钮 -->
-          <div class="flex flex-wrap items-center justify-between gap-2 p-3 bg-white rounded-xl border border-slate-200 text-xs shadow-sm">
-            <span class="text-slate-500 flex items-center gap-1.5">
-              <span>💡</span> 默认以 <b>PNG 格式</b> (1080×1440 极清画质) 保存至 <b>桌面【小红书图文】</b> 文件夹！
-            </span>
-            <div class="flex flex-wrap items-center gap-2">
-              <button onclick="downloadCurrentCardPNG()" class="px-3 py-1.5 rounded-lg bg-blue-50 hover:bg-blue-100 text-blue-700 border border-blue-200 font-bold text-xs shadow-xs transition flex items-center gap-1">
-                <span>💾</span> 下载当前单张 PNG
-              </button>
-              <button onclick="downloadAllCardsPNG()" id="btnDownloadAllBottom" class="px-3.5 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-sm transition flex items-center gap-1.5">
-                <span>📦</span> 一键保存 6 张至桌面【小红书图文】
-              </button>
-              <button onclick="openCardInNewTab()" class="px-3 py-1.5 rounded-lg bg-white hover:bg-slate-50 text-slate-700 border border-slate-300 font-medium text-xs shadow-xs transition">
-                在新标签打开 ↗
-              </button>
-              <button onclick="downloadActiveCardHTML()" class="px-3 py-1.5 rounded-lg bg-white hover:bg-slate-50 text-slate-700 border border-slate-300 font-medium text-xs shadow-xs transition">
-                下载 HTML
+              <button onclick="copyFullPostCopy()" class="px-3 py-1 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs shadow-xs transition flex items-center gap-1 cursor-pointer">
+                <span>📋</span> 复制文案包
               </button>
             </div>
           </div>
-        </div>
 
-        <!-- ================= PANEL 2: 小红书原生发布文案 (纯白卡片) ================= -->
-        <div id="panelCopy" class="hidden space-y-4">
-          <div class="bg-white rounded-2xl border border-slate-200 p-6 space-y-4 shadow-sm">
-            <div class="flex flex-col sm:flex-row sm:items-center justify-between border-b border-slate-200 pb-3 gap-2.5">
-              <div>
-                <h3 class="font-bold text-sm sm:text-base text-slate-900 flex items-center gap-1.5">
-                  <span>📱</span> 小红书爆款图文发布排版包
-                </h3>
-                <p class="text-xs text-slate-500">含黄金3秒Hook、正反方深度辩驳、底层本质穿透与互动标签云 · 严格限制在1000字以内</p>
-              </div>
-              <div class="flex items-center gap-2 flex-wrap">
-                <!-- 实时字数合规监控徽章 -->
-                <span id="copyWordCountBadge" class="px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200 shadow-xs flex items-center gap-1 transition-all">
-                  <span id="copyWordStatusIcon">✅</span>
-                  <span id="copyWordCount">850</span> / 1000 字
-                  <span id="copyWordStatusText" class="text-[11px] font-normal text-emerald-600">（小红书1000字合规）</span>
-                </span>
-                <button id="btnAutoTrimCopy" onclick="autoTrimCopy()" class="hidden px-2.5 py-1 rounded-lg bg-amber-500 hover:bg-amber-600 text-white font-bold text-xs shadow transition items-center gap-1 cursor-pointer">
-                  <span>✂️</span> 自动精简至1000字内
-                </button>
-                <button onclick="copyFullPostCopy()" class="px-3.5 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs shadow transition flex items-center gap-1 cursor-pointer">
-                  <span>📋</span> 一键复制正文
-                </button>
-              </div>
+          <!-- 笔记标题卡 -->
+          <div class="p-2.5 bg-slate-50 rounded-xl border border-slate-200">
+            <div class="flex items-center justify-between mb-1">
+              <span class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">小红书标题 (≤20字)</span>
+              <button onclick="copyTitleText()" class="text-[10px] text-blue-600 hover:text-blue-800 font-semibold cursor-pointer">复制标题</button>
             </div>
-
-            <!-- 笔记标题卡 -->
-            <div class="p-3 bg-slate-50 rounded-xl border border-slate-200">
-              <div class="flex items-center justify-between mb-1">
-                <span class="text-[10px] text-slate-500 uppercase font-bold tracking-wider">小红书标题</span>
-                <span class="text-[10px] text-slate-400 font-mono">建议 ≤ 20 字</span>
-              </div>
-              <div id="postCopyTitle" class="font-bold text-sm sm:text-base text-slate-900 select-all">
-                期权交易：会让人一夜暴富，还是让人倾家荡产？
-              </div>
-            </div>
-
-            <!-- 正文预览与在线编辑区 (纯白舒适阅读底色) -->
-            <div class="space-y-1.5">
-              <div class="flex items-center justify-between text-[11px] text-slate-500 px-1">
-                <span class="font-medium text-slate-700">正文内容（支持在线微调编辑，字数实时联动校验）：</span>
-                <span class="text-slate-400">小红书单篇图文笔记字符限制：≤ 1000 字</span>
-              </div>
-              <div class="p-4 bg-slate-50 rounded-xl border border-slate-200 font-sans text-xs sm:text-sm text-slate-800 leading-relaxed whitespace-pre-wrap select-all max-h-[500px] overflow-y-auto focus:outline-blue-500 focus:bg-white transition" id="postCopyBody" contenteditable="true" spellcheck="false" oninput="onCopyBodyInput()">
-                <!-- 正文动态填入 -->
-              </div>
-            </div>
-
-            <!-- 作者置顶神评 -->
-            <div class="p-3.5 bg-blue-50/70 rounded-xl border border-blue-200">
-              <div class="flex items-center justify-between mb-1.5">
-                <span class="text-xs font-bold text-blue-900 flex items-center gap-1">
-                  <span>📌</span> 发布后5分钟内置顶神评（引导互动）：
-                </span>
-                <button onclick="copyPinnedComment()" class="text-xs text-blue-600 hover:text-blue-800 font-medium underline cursor-pointer">
-                  单复制置顶词
-                </button>
-              </div>
-              <p id="postPinnedComment" class="text-xs text-blue-800 italic select-all font-medium">
-                温馨提示：普通散户千万别把买方期权当股票炒，更不要盲目裸卖期权！大家身边玩期权的朋友，目前总账本是赚还是亏？
-              </p>
+            <div id="postCopyTitle" class="font-bold text-xs sm:text-sm text-slate-900 select-all leading-snug">
+              期权交易：会让人一夜暴富，还是让人倾家荡产？
             </div>
           </div>
-        </div>
 
-        <!-- ================= PANEL 3: 评论区促活神评库 & 官方活动打卡器 ================= -->
-        <div id="panelCampaign" class="hidden space-y-4">
-          <div class="bg-white rounded-2xl border border-slate-200 p-6 space-y-5 shadow-sm">
-            <!-- 头部标题与直达链接 -->
-            <div class="flex flex-col sm:flex-row sm:items-center justify-between border-b border-slate-200 pb-4 gap-3">
-              <div>
-                <h3 class="font-bold text-sm sm:text-base text-slate-900 flex items-center gap-1.5">
-                  <span>💬</span> 评论区促活神评库 & 官方交稿打卡器
-                </h3>
-                <p class="text-xs text-slate-500 mt-0.5">针对小红书最新阶梯流量券规则定制 · 爆款引战神评一键复制 + 官方交稿防漏记录</p>
+          <!-- 正文编辑区 (带1000字实时监控) -->
+          <div class="space-y-1">
+            <div class="flex items-center justify-between text-[10px] text-slate-400 px-0.5">
+              <span class="font-medium text-slate-600">正文内容 (支持在线修改编辑，实时统计字数)：</span>
+            </div>
+            <div 
+              class="p-3 bg-slate-50 rounded-xl border border-slate-200 font-sans text-xs text-slate-800 leading-relaxed whitespace-pre-wrap select-all max-h-[320px] overflow-y-auto focus:outline-blue-500 focus:bg-white transition"
+              id="postCopyBody" 
+              contenteditable="true" 
+              spellcheck="false" 
+              oninput="onCopyBodyInput()"
+            >
+              <!-- 正文动态填入 -->
+            </div>
+          </div>
+
+          <!-- 作者置顶神评卡片 -->
+          <div class="p-3 bg-blue-50/70 rounded-xl border border-blue-200 space-y-1">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-bold text-blue-900 flex items-center gap-1">
+                <span>📌</span> 发布后置顶神评（引发评论对决）：
+              </span>
+              <button onclick="copyPinnedComment()" class="text-xs text-blue-600 hover:text-blue-800 font-semibold cursor-pointer">
+                复制此条
+              </button>
+            </div>
+            <p id="postPinnedComment" class="text-xs text-blue-800 italic select-all font-medium leading-relaxed">
+              温馨提示：普通散户千万别把买方期权当股票炒，更不要盲目裸卖期权！大家身边玩期权的朋友，目前总账本是赚还是亏？
+            </p>
+          </div>
+
+          <!-- 折叠区 1：4 条爆款促活神评库 (提高评论率突破阶梯奖励) -->
+          <details class="bg-slate-50 border border-slate-200 rounded-xl p-3 text-xs group" id="detailsBoostComments">
+            <summary class="font-bold text-slate-700 cursor-pointer flex items-center justify-between list-none">
+              <span class="flex items-center gap-1.5">
+                <span>🔥</span> 评论区促活神评库 (4 条对抗/站队/调查评)
+              </span>
+              <span class="text-slate-400 text-[11px] group-open:rotate-180 transition-transform">▼</span>
+            </summary>
+            
+            <div class="mt-3 space-y-2.5">
+              <!-- 神评 1 -->
+              <div class="p-2.5 bg-white rounded-lg border border-slate-200 space-y-1">
+                <div class="flex items-center justify-between">
+                  <span class="font-bold text-blue-700 text-[11px]">📌 置顶作者首评</span>
+                  <button onclick="copyCommentText('boostComment1', '置顶作者首评')" class="text-[10px] text-blue-600 hover:text-blue-800 font-bold cursor-pointer">📋 复制</button>
+                </div>
+                <p id="boostComment1" class="text-[11px] text-slate-700 select-all leading-relaxed"></p>
               </div>
-              <div class="flex items-center gap-2 shrink-0">
-                <a href="https://doc.weixin.qq.com/forms/ANAAyQcbAAgAbEAGAb_AKoCNPRTWz2o5f" target="_blank" rel="noopener noreferrer" class="px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-sm transition flex items-center gap-1">
-                  <span>🚀</span> 官方交稿表 ↗
+
+              <!-- 神评 2 -->
+              <div class="p-2.5 bg-white rounded-lg border border-rose-200 space-y-1">
+                <div class="flex items-center justify-between">
+                  <span class="font-bold text-rose-700 text-[11px]">🔴 正方煽风点火评</span>
+                  <button onclick="copyCommentText('boostComment2', '正方煽风点火评')" class="text-[10px] text-rose-600 hover:text-rose-800 font-bold cursor-pointer">📋 复制</button>
+                </div>
+                <p id="boostComment2" class="text-[11px] text-slate-700 select-all leading-relaxed"></p>
+              </div>
+
+              <!-- 神评 3 -->
+              <div class="p-2.5 bg-white rounded-lg border border-sky-200 space-y-1">
+                <div class="flex items-center justify-between">
+                  <span class="font-bold text-sky-700 text-[11px]">🔵 反方扎心质疑评</span>
+                  <button onclick="copyCommentText('boostComment3', '反方扎心质疑评')" class="text-[10px] text-sky-600 hover:text-sky-800 font-bold cursor-pointer">📋 复制</button>
+                </div>
+                <p id="boostComment3" class="text-[11px] text-slate-700 select-all leading-relaxed"></p>
+              </div>
+
+              <!-- 神评 4 -->
+              <div class="p-2.5 bg-white rounded-lg border border-purple-200 space-y-1">
+                <div class="flex items-center justify-between">
+                  <span class="font-bold text-purple-700 text-[11px]">📊 真实账本征集评</span>
+                  <button onclick="copyCommentText('boostComment4', '真实账本征集评')" class="text-[10px] text-purple-600 hover:text-purple-800 font-bold cursor-pointer">📋 复制</button>
+                </div>
+                <p id="boostComment4" class="text-[11px] text-slate-700 select-all leading-relaxed"></p>
+              </div>
+            </div>
+          </details>
+
+          <!-- 折叠区 2：官方活动交稿与防漏打卡簿 -->
+          <details class="bg-slate-50 border border-slate-200 rounded-xl p-3 text-xs group" id="detailsCampaign">
+            <summary class="font-bold text-slate-700 cursor-pointer flex items-center justify-between list-none">
+              <span class="flex items-center gap-1.5">
+                <span>🎯</span> 官方活动与打卡记录 (阶梯流量券)
+              </span>
+              <span class="text-slate-400 text-[11px] group-open:rotate-180 transition-transform">▼</span>
+            </summary>
+            
+            <div class="mt-3 space-y-2.5">
+              <div class="flex items-center gap-2">
+                <a href="https://doc.weixin.qq.com/forms/ANAAyQcbAAgAbEAGAb_AKoCNPRTWz2o5f" target="_blank" rel="noopener noreferrer" class="flex-1 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-[11px] shadow-2xs text-center transition">
+                  🚀 打开官方交稿表 ↗
                 </a>
-                <a href="https://cowork.xiaohongshu.com/f/sr-8ffe0573/" target="_blank" rel="noopener noreferrer" class="px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs border border-slate-200 shadow-sm transition flex items-center gap-1">
-                  <span>📚</span> 官方创作范式 ↗
-                </a>
-              </div>
-            </div>
-
-            <!-- 1. 评论区促活秘籍与爆款神评生成库 -->
-            <div class="space-y-3">
-              <div class="p-3 bg-amber-50/80 rounded-xl border border-amber-200 text-xs text-amber-900 flex items-start gap-2.5">
-                <span class="text-base shrink-0">💡</span>
-                <div class="leading-relaxed">
-                  <span class="font-bold">冲有效评论秘籍：</span>官方按<strong>【有效评论数】</strong>阶梯发券（≥20/50/150/500条）。发帖后 5 分钟内，务必以<strong>作者身份在评论区置顶第 1 条争论性问题</strong>，并配合正反方反驳评，快速激发看客的胜负欲与表达欲，评论区直接盖楼！
-                </div>
-              </div>
-
-              <div class="grid grid-cols-1 md:grid-cols-2 gap-3.5 text-xs">
-                <!-- 神评 1：置顶作者首评 -->
-                <div class="p-3.5 bg-slate-50 rounded-xl border border-slate-200 hover:border-blue-300 transition space-y-2 flex flex-col justify-between">
-                  <div class="space-y-1.5">
-                    <div class="flex items-center justify-between">
-                      <span class="font-bold text-blue-700 flex items-center gap-1">
-                        <span>📌</span> 置顶作者首评
-                      </span>
-                      <span class="text-[10px] px-1.5 py-0.5 rounded bg-blue-100 text-blue-700 font-semibold">二选一站队 · 强钩子</span>
-                    </div>
-                    <p id="boostComment1" class="text-xs text-slate-800 leading-relaxed font-medium bg-white p-2.5 rounded-lg border border-slate-200 select-all"></p>
-                  </div>
-                  <div class="flex items-center justify-end gap-2 pt-1 border-t border-slate-200/60">
-                    <button onclick="setSimPinnedComment('boostComment1')" class="px-2.5 py-1 rounded bg-slate-200/70 hover:bg-slate-200 text-slate-700 text-[11px] font-medium transition flex items-center gap-1">
-                      <span>📱</span> 模拟置顶
-                    </button>
-                    <button onclick="copyCommentText('boostComment1', '置顶作者首评')" class="px-3 py-1 rounded bg-blue-600 hover:bg-blue-700 text-white text-[11px] font-bold shadow-sm transition flex items-center gap-1">
-                      <span>📋</span> 一键复制
-                    </button>
-                  </div>
-                </div>
-
-                <!-- 神评 2：正方激化评 -->
-                <div class="p-3.5 bg-rose-50/50 rounded-xl border border-rose-200 hover:border-rose-300 transition space-y-2 flex flex-col justify-between">
-                  <div class="space-y-1.5">
-                    <div class="flex items-center justify-between">
-                      <span class="font-bold text-rose-700 flex items-center gap-1">
-                        <span>🔴</span> 正方煽风点火评
-                      </span>
-                      <span class="text-[10px] px-1.5 py-0.5 rounded bg-rose-100 text-rose-700 font-semibold">引铁粉跟评 · 点燃共鸣</span>
-                    </div>
-                    <p id="boostComment2" class="text-xs text-slate-800 leading-relaxed font-medium bg-white p-2.5 rounded-lg border border-rose-200 select-all"></p>
-                  </div>
-                  <div class="flex items-center justify-end gap-2 pt-1 border-t border-rose-200/60">
-                    <button onclick="setSimHotComment1('boostComment2')" class="px-2.5 py-1 rounded bg-rose-100 hover:bg-rose-200 text-rose-800 text-[11px] font-medium transition flex items-center gap-1">
-                      <span>📱</span> 设为热评1
-                    </button>
-                    <button onclick="copyCommentText('boostComment2', '正方煽风点火评')" class="px-3 py-1 rounded bg-rose-600 hover:bg-rose-700 text-white text-[11px] font-bold shadow-sm transition flex items-center gap-1">
-                      <span>📋</span> 一键复制
-                    </button>
-                  </div>
-                </div>
-
-                <!-- 神评 3：反方扎心质疑评 -->
-                <div class="p-3.5 bg-sky-50/50 rounded-xl border border-sky-200 hover:border-sky-300 transition space-y-2 flex flex-col justify-between">
-                  <div class="space-y-1.5">
-                    <div class="flex items-center justify-between">
-                      <span class="font-bold text-sky-700 flex items-center gap-1">
-                        <span>🔵</span> 反方扎心质疑评
-                      </span>
-                      <span class="text-[10px] px-1.5 py-0.5 rounded bg-sky-100 text-sky-700 font-semibold">制造对立 · 激发反驳欲</span>
-                    </div>
-                    <p id="boostComment3" class="text-xs text-slate-800 leading-relaxed font-medium bg-white p-2.5 rounded-lg border border-sky-200 select-all"></p>
-                  </div>
-                  <div class="flex items-center justify-end gap-2 pt-1 border-t border-sky-200/60">
-                    <button onclick="setSimHotComment2('boostComment3')" class="px-2.5 py-1 rounded bg-sky-100 hover:bg-sky-200 text-sky-800 text-[11px] font-medium transition flex items-center gap-1">
-                      <span>📱</span> 设为热评2
-                    </button>
-                    <button onclick="copyCommentText('boostComment3', '反方扎心质疑评')" class="px-3 py-1 rounded bg-sky-600 hover:bg-sky-700 text-white text-[11px] font-bold shadow-sm transition flex items-center gap-1">
-                      <span>📋</span> 一键复制
-                    </button>
-                  </div>
-                </div>
-
-                <!-- 神评 4：真实账本与经历征集评 -->
-                <div class="p-3.5 bg-purple-50/50 rounded-xl border border-purple-200 hover:border-purple-300 transition space-y-2 flex flex-col justify-between">
-                  <div class="space-y-1.5">
-                    <div class="flex items-center justify-between">
-                      <span class="font-bold text-purple-700 flex items-center gap-1">
-                        <span>📊</span> 真实经历/账本征集评
-                      </span>
-                      <span class="text-[10px] px-1.5 py-0.5 rounded bg-purple-100 text-purple-700 font-semibold">有效长评 · 故事收割</span>
-                    </div>
-                    <p id="boostComment4" class="text-xs text-slate-800 leading-relaxed font-medium bg-white p-2.5 rounded-lg border border-purple-200 select-all"></p>
-                  </div>
-                  <div class="flex items-center justify-end gap-2 pt-1 border-t border-purple-200/60">
-                    <button onclick="setSimPinnedComment('boostComment4')" class="px-2.5 py-1 rounded bg-purple-100 hover:bg-purple-200 text-purple-800 text-[11px] font-medium transition flex items-center gap-1">
-                      <span>📱</span> 模拟置顶
-                    </button>
-                    <button onclick="copyCommentText('boostComment4', '真实账本征集评')" class="px-3 py-1 rounded bg-purple-600 hover:bg-purple-700 text-white text-[11px] font-bold shadow-sm transition flex items-center gap-1">
-                      <span>📋</span> 一键复制
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <!-- 2. 小红书官方最新周激励阶梯速查 -->
-            <div class="p-4 bg-slate-50 rounded-2xl border border-slate-200 space-y-3 text-xs">
-              <div class="flex items-center justify-between">
-                <span class="font-bold text-slate-900 flex items-center gap-1.5">
-                  <span>🎯</span> 官方活动每周社群激励阶梯标准
-                </span>
-                <span class="text-[11px] text-slate-500 font-mono">统计周期: 每周四 00:00 ~ 次周三 24:00</span>
-              </div>
-              
-              <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
-                <div class="p-2.5 rounded-xl bg-white border border-slate-200 shadow-sm space-y-1">
-                  <div class="text-[11px] font-bold text-slate-800">创作参与奖</div>
-                  <div class="text-[10px] text-slate-500">当周 2~4 篇 + 评论≥20</div>
-                  <div class="text-xs font-black text-blue-600">🎁 1张 1000 流量券</div>
-                </div>
-                <div class="p-2.5 rounded-xl bg-white border border-slate-200 shadow-sm space-y-1">
-                  <div class="text-[11px] font-bold text-slate-800">持续创作奖</div>
-                  <div class="text-[10px] text-slate-500">当周 5~9 篇 + 评论≥50</div>
-                  <div class="text-xs font-black text-indigo-600">🎁 2张 1000 流量券</div>
-                </div>
-                <div class="p-2.5 rounded-xl bg-white border border-slate-200 shadow-sm space-y-1">
-                  <div class="text-[11px] font-bold text-slate-800">优质共创奖</div>
-                  <div class="text-[10px] text-slate-500">当周 ≥10 篇 + 评论≥150</div>
-                  <div class="text-xs font-black text-purple-600">🎁 3张 1000 流量券</div>
-                </div>
-                <div class="p-2.5 rounded-xl bg-white border border-slate-200 shadow-sm space-y-1">
-                  <div class="text-[11px] font-bold text-slate-800">高热讨论奖</div>
-                  <div class="text-[10px] text-slate-500">单篇有效评论 ≥500</div>
-                  <div class="text-xs font-black text-rose-600">🎁 5张 1000 流量券</div>
-                </div>
-              </div>
-
-              <div class="flex flex-wrap items-center gap-3 text-[11px] text-slate-600 pt-1 border-t border-slate-200/80">
-                <span>🌟 <strong>新人首发奖</strong>: 首次发符合规范原创 ➔ 奖励 1 张 1000 流量券</span>
-                <span>👕 <strong>每周榜单</strong>: 篇数 TOP3 / 评论数 TOP3 ➔ 奖活动限定 T 恤</span>
-                <span>⚡ <strong>流量扶持</strong>: 单篇符合要求 ➔ 最低 10 万曝光保底</span>
-              </div>
-            </div>
-
-            <!-- 3. 本周交稿登记簿 (LocalStorage 自动保存，防漏提报) -->
-            <div class="space-y-3">
-              <div class="p-3 bg-rose-50/70 rounded-xl border border-rose-200 text-xs text-rose-900 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                <div class="flex items-center gap-1.5 font-semibold">
-                  <span>⚠️</span>
-                  <span>参与提醒：只统计新发布原创笔记，<strong>不填表 ＝ 未参与活动！</strong></span>
-                </div>
-                <a href="https://doc.weixin.qq.com/forms/ANAAyQcbAAgAbEAGAb_AKoCNPRTWz2o5f" target="_blank" rel="noopener noreferrer" class="px-3 py-1 rounded bg-rose-600 hover:bg-rose-700 text-white font-bold text-[11px] shadow-sm transition text-center shrink-0">
-                  去腾讯文档提交 ↗
+                <a href="https://cowork.xiaohongshu.com/f/sr-8ffe0573/" target="_blank" rel="noopener noreferrer" class="flex-1 py-1.5 rounded-lg bg-white hover:bg-slate-100 text-slate-700 font-bold text-[11px] border border-slate-200 text-center transition">
+                  📚 官方范式指南 ↗
                 </a>
               </div>
 
-              <!-- 添加笔记表单 -->
-              <div class="p-3.5 bg-slate-50 rounded-xl border border-slate-200 space-y-3 text-xs">
-                <div class="font-bold text-slate-800 flex items-center justify-between">
-                  <span class="flex items-center gap-1.5"><span>📋</span> 本周发文登记与履约打卡</span>
-                  <span class="text-[11px] text-slate-500 font-normal">数据保存在本地浏览器中，换周可一键清空</span>
-                </div>
-
-                <div class="grid grid-cols-1 sm:grid-cols-12 gap-2.5">
-                  <div class="sm:col-span-4">
-                    <input type="text" id="trInputTitle" placeholder="笔记标题" class="w-full px-2.5 py-1.5 rounded-lg bg-white border border-slate-300 text-xs text-slate-800 focus:outline-none focus:border-blue-500">
-                  </div>
-                  <div class="sm:col-span-4">
-                    <input type="text" id="trInputUrl" placeholder="小红书链接 (如: http://xhslink.com/...)" class="w-full px-2.5 py-1.5 rounded-lg bg-white border border-slate-300 text-xs text-slate-800 focus:outline-none focus:border-blue-500">
-                  </div>
-                  <div class="sm:col-span-2">
-                    <input type="number" id="trInputComments" placeholder="有效评论数" value="0" min="0" class="w-full px-2.5 py-1.5 rounded-lg bg-white border border-slate-300 text-xs text-slate-800 focus:outline-none focus:border-blue-500">
-                  </div>
-                  <div class="sm:col-span-2 flex items-center gap-2">
-                    <button onclick="addNoteToTracker()" class="w-full py-1.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs shadow-sm transition">
-                      + 登记此篇
+              <!-- 登记表单 -->
+              <div class="space-y-2 pt-1 border-t border-slate-200/80">
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-1.5">
+                  <input type="text" id="trInputTitle" placeholder="笔记标题" class="px-2 py-1 rounded bg-white border border-slate-300 text-xs">
+                  <input type="text" id="trInputUrl" placeholder="小红书链接" class="px-2 py-1 rounded bg-white border border-slate-300 text-xs">
+                  <div class="flex gap-1">
+                    <input type="number" id="trInputComments" placeholder="评论数" value="0" min="0" class="w-16 px-2 py-1 rounded bg-white border border-slate-300 text-xs">
+                    <button onclick="addNoteToTracker()" class="flex-1 py-1 rounded bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs cursor-pointer">
+                      + 登记
                     </button>
                   </div>
                 </div>
 
-                <!-- 汇总概览条 -->
-                <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-[11px] pt-1">
-                  <div class="p-2 rounded-lg bg-white border border-slate-200">
-                    <span class="text-slate-500 block text-[10px]">本周已发笔记</span>
-                    <span id="trSumCount" class="font-black text-slate-900 text-xs">0 篇</span>
-                  </div>
-                  <div class="p-2 rounded-lg bg-white border border-slate-200">
-                    <span class="text-slate-500 block text-[10px]">累计有效评论</span>
-                    <span id="trSumComments" class="font-black text-indigo-600 text-xs">0 条</span>
-                  </div>
-                  <div class="p-2 rounded-lg bg-white border border-slate-200">
-                    <span class="text-slate-500 block text-[10px]">当前预测奖励</span>
-                    <span id="trSumReward" class="font-bold text-emerald-600 text-xs">尚未达标</span>
-                  </div>
-                  <div class="p-2 rounded-lg bg-white border border-slate-200">
-                    <span class="text-slate-500 block text-[10px]">填表状态</span>
-                    <span id="trSumSubmit" class="font-bold text-slate-700 text-xs">全部已提交</span>
-                  </div>
+                <!-- 汇总概览 -->
+                <div class="flex items-center justify-between text-[11px] p-2 bg-white rounded-lg border border-slate-200">
+                  <span>已发: <b id="trSumCount" class="text-slate-900">0篇</b></span>
+                  <span>评论: <b id="trSumComments" class="text-indigo-600">0条</b></span>
+                  <span>预测奖励: <b id="trSumReward" class="text-emerald-600">尚未达标</b></span>
+                  <span id="trSumSubmit" class="hidden"></span>
                 </div>
 
-                <!-- 笔记列表 -->
-                <div class="overflow-x-auto">
-                  <table class="w-full text-[11px] text-left">
-                    <thead class="text-slate-500 bg-slate-100/80 rounded">
+                <!-- 打卡表格 -->
+                <div class="overflow-x-auto max-h-36 overflow-y-auto">
+                  <table class="w-full text-[10px] text-left">
+                    <thead class="text-slate-400 bg-slate-100">
                       <tr>
-                        <th class="p-2">标题</th>
-                        <th class="p-2">链接</th>
-                        <th class="p-2 w-20">有效评论</th>
-                        <th class="p-2 w-28 text-center">腾讯文档填表</th>
-                        <th class="p-2 w-14 text-center">操作</th>
+                        <th class="p-1.5">标题</th>
+                        <th class="p-1.5 w-14">有效评论</th>
+                        <th class="p-1.5 w-16 text-center">状态</th>
+                        <th class="p-1.5 w-10 text-center">删</th>
                       </tr>
                     </thead>
-                    <tbody id="trackerTableBody" class="divide-y divide-slate-200 text-slate-800">
-                      <!-- 动态填充 -->
-                    </tbody>
+                    <tbody id="trackerTableBody" class="divide-y divide-slate-200"></tbody>
                   </table>
                 </div>
-
-                <div class="flex items-center justify-between text-[10px] text-slate-500 pt-1">
-                  <span>提示：更新评论数可直接点击表格中的数值修改</span>
-                  <div class="flex items-center gap-2">
-                    <button onclick="copySubmissionSummary()" class="text-blue-600 hover:text-blue-800 font-semibold">📋 复制交稿清单</button>
-                    <span>·</span>
-                    <button onclick="clearTrackerNotes()" class="text-rose-600 hover:text-rose-800 font-semibold">清空本周记录</button>
-                  </div>
-                </div>
               </div>
             </div>
+          </details>
 
-          </div>
         </div>
-
       </div>
 
-      <!-- 右侧：小红书真机笔记与置顶评论区实时效果模拟器 (5 列) -->
-      <div class="lg:col-span-5 sticky top-20 flex flex-col items-center">
-        <div class="w-full max-w-[340px] bg-slate-100 rounded-[44px] p-3 border-4 border-slate-300 phone-mockup-white relative shadow-2xl">
-          <!-- 手机听筒与前置镜头 (钛白银风格) -->
-          <div class="w-28 h-4 bg-slate-200 rounded-full mx-auto mb-2 flex items-center justify-center">
-            <div class="w-2.5 h-2.5 rounded-full bg-slate-400"></div>
-          </div>
+    </div>
 
-          <!-- 手机屏幕内容区 (小红书真机笔记与评论区) -->
-          <div class="bg-white rounded-[34px] overflow-hidden border border-slate-200 h-[640px] flex flex-col justify-between text-slate-800 relative select-none shadow-inner">
-
-            <!-- 手机顶部状态栏 -->
-            <div class="px-5 py-2 flex items-center justify-between text-[10px] text-slate-500 border-b border-slate-100 bg-white">
-              <span id="simTime">09:41</span>
-              <div class="flex items-center gap-1.5">
-                <span>5G</span>
-                <span>📶</span>
-                <span>🔋 100%</span>
-              </div>
-            </div>
-
-            <!-- 小红书 App 顶部作者信息栏 -->
-            <div class="px-3 py-2 flex items-center justify-between border-b border-slate-100 bg-white">
-              <div class="flex items-center gap-2">
-                <span class="text-sm font-bold text-slate-700 cursor-pointer">‹</span>
-                <div class="w-7 h-7 rounded-full bg-gradient-to-tr from-rose-500 to-amber-400 text-white flex items-center justify-center text-[10px] font-bold shadow-xs">
-                  硬核
-                </div>
-                <div>
-                  <div class="text-[11px] font-bold text-slate-900 leading-none">硬核理财笔记</div>
-                  <div class="text-[9px] text-slate-400 scale-90 -ml-1">优质财经创作者</div>
-                </div>
-              </div>
-              <div class="flex items-center gap-2">
-                <button class="px-2.5 py-0.5 rounded-full bg-rose-500 text-white font-bold text-[10px] shadow-xs hover:bg-rose-600 transition">
-                  + 关注
-                </button>
-                <span class="text-slate-400 text-xs">↗</span>
-              </div>
-            </div>
-
-            <!-- 手机可滑动区域：笔记内容 + 评论区盖楼 -->
-            <div class="flex-1 overflow-y-auto p-3 space-y-3 text-xs text-slate-800">
-
-              <!-- 笔记 3:4 迷你卡片预览 -->
-              <div class="rounded-xl overflow-hidden border border-slate-200 shadow-sm bg-slate-50 relative">
-                <div id="simCardMiniContainer" class="p-3 aspect-[3/4] flex flex-col justify-between bg-white">
-                  <!-- 动态微缩渲染 -->
-                </div>
-                <div class="absolute top-2 right-2 px-1.5 py-0.5 rounded-full bg-slate-900/60 text-white text-[9px] font-mono backdrop-blur">
-                  <span id="simPageBadge">1/6</span>
-                </div>
-              </div>
-
-              <!-- 笔记正文标题与文案 -->
-              <div class="space-y-1">
-                <h4 id="simNoteTitle" class="font-bold text-xs text-slate-900 leading-snug">
-                  <!-- 动态填充 -->
-                </h4>
-                <p id="simNoteExcerpt" class="text-[10px] text-slate-600 line-clamp-2 leading-relaxed">
-                  <!-- 动态填充 -->
-                </p>
-                <div id="simNoteTags" class="text-[9px] text-blue-600 flex flex-wrap gap-1 font-medium">
-                  <span>#小红书创作活动</span> <span>#理性讨论</span> <span>#财经垂类</span>
-                </div>
-                <div class="text-[9px] text-slate-400 pt-0.5">今天 11:28 · 真实经验记录</div>
-              </div>
-
-              <!-- 小红书点赞/收藏/评论数据统计条 -->
-              <div class="flex items-center justify-between py-1.5 px-2 bg-slate-50 rounded-xl border border-slate-200 text-[10px] text-slate-600">
-                <span class="flex items-center gap-1"><span>❤️</span> 1.2w</span>
-                <span class="flex items-center gap-1"><span>⭐</span> 8,421</span>
-                <span class="flex items-center gap-1 font-bold text-blue-600"><span>💬</span> <span id="simCommentCount">482</span></span>
-                <span class="flex items-center gap-1"><span>↗️</span> 3,120</span>
-              </div>
-
-              <!-- 评论区真实盖楼展示 (促活核心！) -->
-              <div class="space-y-2.5 pt-1 border-t border-slate-100">
-                <div class="flex items-center justify-between text-[11px]">
-                  <span class="font-bold text-slate-900 flex items-center gap-1">
-                    <span>💬</span> 评论区 (<span id="simCommentsTotal">482</span>)
-                  </span>
-                  <span class="text-[9px] px-1.5 py-0.5 rounded bg-emerald-50 text-emerald-700 font-bold border border-emerald-200">
-                    距500评高热奖差18条
-                  </span>
-                </div>
-
-                <!-- 置顶作者神评 (核心！) -->
-                <div class="p-2.5 bg-rose-50/40 rounded-xl border border-rose-200 space-y-1 relative">
-                  <div class="flex items-center justify-between">
-                    <div class="flex items-center gap-1.5">
-                      <div class="w-5 h-5 rounded-full bg-rose-500 text-white flex items-center justify-center text-[8px] font-bold">
-                        硬核
-                      </div>
-                      <span class="font-bold text-[10px] text-slate-900">硬核理财笔记</span>
-                      <span class="text-[8px] px-1 py-0.2 rounded bg-rose-500 text-white font-bold">作者 · 置顶</span>
-                    </div>
-                    <span class="text-[9px] text-slate-400">1小时前</span>
-                  </div>
-                  <p id="simPinnedCommentText" class="text-[10px] text-slate-800 leading-relaxed font-medium pl-6">
-                    <!-- 动态填入置顶神评 -->
-                  </p>
-                  <div class="flex items-center justify-between text-[9px] text-slate-400 pl-6 pt-0.5">
-                    <span>回复 42 · 赞 398</span>
-                    <span class="text-rose-600 font-semibold cursor-pointer">❤️ 已赞</span>
-                  </div>
-                </div>
-
-                <!-- 仿真热评 1 (正向激发) -->
-                <div class="p-2 bg-slate-50 rounded-xl border border-slate-200 space-y-1">
-                  <div class="flex items-center justify-between">
-                    <div class="flex items-center gap-1.5">
-                      <div class="w-4 h-4 rounded-full bg-blue-500 text-white flex items-center justify-center text-[8px]">
-                        韭
-                      </div>
-                      <span class="font-semibold text-[10px] text-slate-800">理财避坑老王</span>
-                    </div>
-                    <span class="text-[8px] text-slate-400">45分钟前</span>
-                  </div>
-                  <p id="simHotComment1Text" class="text-[10px] text-slate-700 leading-relaxed pl-5">
-                    <!-- 动态填入 -->
-                  </p>
-                  <div class="flex items-center justify-between text-[8px] text-slate-400 pl-5">
-                    <span>回复 12 · 赞 89</span>
-                    <span class="text-slate-400">❤️ 赞</span>
-                  </div>
-                </div>
-
-                <!-- 仿真热评 2 (反向质疑) -->
-                <div class="p-2 bg-slate-50 rounded-xl border border-slate-200 space-y-1">
-                  <div class="flex items-center justify-between">
-                    <div class="flex items-center gap-1.5">
-                      <div class="w-4 h-4 rounded-full bg-emerald-500 text-white flex items-center justify-center text-[8px]">
-                        风
-                      </div>
-                      <span class="font-semibold text-[10px] text-slate-800">风控前车之鉴</span>
-                    </div>
-                    <span class="text-[8px] text-slate-400">30分钟前</span>
-                  </div>
-                  <p id="simHotComment2Text" class="text-[10px] text-slate-700 leading-relaxed pl-5">
-                    <!-- 动态填入 -->
-                  </p>
-                  <div class="flex items-center justify-between text-[8px] text-slate-400 pl-5">
-                    <span>回复 5 · 赞 54</span>
-                    <span class="text-slate-400">❤️ 赞</span>
-                  </div>
-                </div>
-
-              </div>
-
-            </div>
-
-            <!-- 手机底部小红书评论输入框 -->
-            <div class="p-2.5 bg-white border-t border-slate-100 flex items-center gap-2">
-              <div class="flex-1 bg-slate-100 rounded-full px-3 py-1 text-[10px] text-slate-400 flex items-center justify-between">
-                <span>说点什么... 参与争论</span>
-                <span>😊</span>
-              </div>
-              <div class="flex items-center gap-1.5 text-xs text-slate-400">
-                <span>❤️</span>
-                <span>⭐</span>
-                <span>💬</span>
-              </div>
-            </div>
-
-          </div>
-
-          <!-- 手机底部 Home Indicator -->
-          <div class="w-32 h-1 bg-slate-300 rounded-full mx-auto mt-2.5"></div>
-        </div>
-
-        <p class="text-[11px] text-slate-500 mt-3 text-center">
-          📱 小红书真机笔记与置顶评论区实时效果（左侧复制或设为置顶时实时同步）
-        </p>
-      </div>
-
+    <!-- 兼容性保留层 (零消耗，保障外部或历史 JS 函数引用安全) -->
+    <div class="hidden" aria-hidden="true" id="legacyCompatStubs">
+      <div id="panelCards"></div><div id="panelCopy"></div><div id="panelCampaign"></div>
+      <button id="tabBtnCards"></button><button id="tabBtnCopy"></button><button id="tabBtnCampaign"></button>
+      <div id="cardsToolbar"></div><button id="btnDownloadAllTop"></button>
+      <span id="simTime"></span><span id="simNoteTitle"></span><span id="simNoteExcerpt"></span>
+      <span id="simPageBadge"></span><div id="simCardMiniContainer"></div>
+      <span id="simPinnedCommentText"></span><span id="simHotComment1Text"></span><span id="simHotComment2Text"></span>
     </div>
 
   </main>
@@ -1347,18 +935,17 @@
 
     function setVisualTheme(theme) {
       visualTheme = theme;
+      _cachedCardAssets = null; // 清空图片缓存，强制使用当前最新视觉主题重新绘制
       const btnW = document.getElementById('btnThemeWhite');
       const btnR = document.getElementById('btnThemeRetro');
       if (theme === 'retro') {
-        if (btnW) btnW.className = "px-2.5 py-1 rounded-md font-bold transition text-slate-600 hover:text-slate-900";
-        if (btnR) btnR.className = "px-2.5 py-1 rounded-md font-bold transition bg-amber-100 text-amber-900 shadow-xs border border-amber-300";
-        if (cardRenderType === 'png') {
-          setCardRenderType('html');
-        }
+        if (btnW) btnW.className = "px-2.5 py-1 rounded-md font-bold transition text-slate-600 hover:text-slate-900 cursor-pointer";
+        if (btnR) btnR.className = "px-2.5 py-1 rounded-md font-bold transition bg-amber-100 text-amber-900 shadow-xs border border-amber-300 cursor-pointer";
+        cardRenderType = 'html';
         showToast('📜 已切换为【暖调复古手账风】模板！', 'success');
       } else {
-        if (btnW) btnW.className = "px-2.5 py-1 rounded-md font-bold transition bg-white text-blue-600 shadow-xs";
-        if (btnR) btnR.className = "px-2.5 py-1 rounded-md font-bold transition text-slate-600 hover:text-slate-900";
+        if (btnW) btnW.className = "px-2.5 py-1 rounded-md font-bold transition bg-white text-blue-600 shadow-xs cursor-pointer";
+        if (btnR) btnR.className = "px-2.5 py-1 rounded-md font-bold transition text-slate-600 hover:text-slate-900 cursor-pointer";
         showToast('🏢 已切换为【纯白现代杂志风】模板！', 'success');
       }
       renderCards();
@@ -1367,6 +954,7 @@
 
     function setCardRenderType(type) {
       cardRenderType = type;
+      _cachedCardAssets = null;
       const btnPng = document.getElementById('btnRenderTypePng');
       const btnHtml = document.getElementById('btnRenderTypeHtml');
       if (type === 'png') {
@@ -1415,16 +1003,17 @@
         const p = document.getElementById(`pill${i}`);
         if (p) {
           if (i === currentCardIndex) {
-            p.className = "px-2.5 py-1 rounded bg-blue-600 text-white font-bold transition";
+            p.className = "px-2.5 py-1 rounded bg-blue-600 text-white font-bold transition cursor-pointer";
           } else {
-            p.className = "px-2.5 py-1 rounded bg-slate-100 text-slate-600 hover:text-slate-900 transition";
+            p.className = "px-2.5 py-1 rounded bg-slate-100 text-slate-600 hover:text-slate-900 transition cursor-pointer";
           }
         }
       }
 
       const renderFn = visualTheme === 'retro' ? getRetroCardHTML : getWhiteCardHTML;
       const container = document.getElementById('activeCardRender');
-      if (cardRenderType === 'png' && currentTopicData.id && !currentTopicData.id.startsWith('custom_')) {
+      // 仅当选择纯白现代主题且有静态PNG时使用预渲染静态图，暖调手账始终走动态渲染
+      if (cardRenderType === 'png' && visualTheme === 'white' && currentTopicData.id && !currentTopicData.id.startsWith('custom_')) {
         container.innerHTML = `
           <div class="relative w-full h-full bg-slate-100 flex items-center justify-center overflow-hidden rounded-2xl group">
             <img src="examples/${currentTopicData.id}/page_${currentCardIndex}.png" alt="P${currentCardIndex} 预渲染大图" class="w-full h-full object-cover" onerror="this.style.display='none'; document.getElementById('pngFallbackNotice').classList.remove('hidden');" />
@@ -2576,35 +2165,18 @@
 
     function switchOutputTab(tab) {
       currentTab = tab;
-      const pCards = document.getElementById('panelCards');
-      const pCopy = document.getElementById('panelCopy');
-      const pCamp = document.getElementById('panelCampaign');
-
-      const bCards = document.getElementById('tabBtnCards');
-      const bCopy = document.getElementById('tabBtnCopy');
-      const bCamp = document.getElementById('tabBtnCampaign');
-      const cToolbar = document.getElementById('cardsToolbar');
-
-      pCards.classList.add('hidden');
-      pCopy.classList.add('hidden');
-      pCamp.classList.add('hidden');
-
-      bCards.className = "px-4 py-2 rounded-lg text-xs font-bold transition flex items-center gap-1.5 bg-white border border-slate-200 text-slate-700 hover:bg-slate-100";
-      bCopy.className = "px-4 py-2 rounded-lg text-xs font-bold transition flex items-center gap-1.5 bg-white border border-slate-200 text-slate-700 hover:bg-slate-100";
-      bCamp.className = "px-4 py-2 rounded-lg text-xs font-bold transition flex items-center gap-1.5 bg-white border border-slate-200 text-slate-700 hover:bg-slate-100";
-
       if (tab === 'cards') {
-        pCards.classList.remove('hidden');
-        bCards.className = "px-4 py-2 rounded-lg text-xs font-bold transition flex items-center gap-1.5 bg-blue-600 text-white shadow-sm";
-        cToolbar.classList.remove('hidden');
+        const el = document.getElementById('activeCardRender');
+        if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
       } else if (tab === 'copy') {
-        pCopy.classList.remove('hidden');
-        bCopy.className = "px-4 py-2 rounded-lg text-xs font-bold transition flex items-center gap-1.5 bg-blue-600 text-white shadow-sm";
-        cToolbar.classList.add('hidden');
+        const el = document.getElementById('postCopyBody');
+        if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
       } else if (tab === 'campaign') {
-        pCamp.classList.remove('hidden');
-        bCamp.className = "px-4 py-2 rounded-lg text-xs font-bold transition flex items-center gap-1.5 bg-indigo-600 text-white shadow-sm";
-        cToolbar.classList.add('hidden');
+        const details = document.getElementById('detailsCampaign');
+        if (details) {
+          details.open = true;
+          details.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
       }
     }
 
@@ -2735,8 +2307,28 @@
       }
     }
 
-    // 将指定卡片数据绘制到 1080 x 1440 Canvas (小红书标准 3:4 比例)
-    function renderCardDataToCanvas(p, pageNum, canvas) {
+    // 文本断行辅助函数 (将长文本按最大宽度拆分成多行)
+    function wrapTextToLines(ctx, text, maxWidth) {
+      if (!text) return [];
+      const chars = text.split('');
+      const lines = [];
+      let line = '';
+      for (let n = 0; n < chars.length; n++) {
+        const testLine = line + chars[n];
+        const metrics = ctx.measureText(testLine);
+        if (metrics.width > maxWidth && n > 0) {
+          lines.push(line);
+          line = chars[n];
+        } else {
+          line = testLine;
+        }
+      }
+      if (line) lines.push(line);
+      return lines;
+    }
+
+    // 绘制【纯白现代杂志风】1080 x 1440 Canvas
+    function renderWhiteCardToCanvas(p, pageNum, canvas) {
       canvas.width = 1080;
       canvas.height = 1440;
       const ctx = canvas.getContext('2d');
@@ -2918,6 +2510,305 @@
       }
     }
 
+    // 绘制【暖调复古手账风】1080 x 1440 Canvas (米白纸张/胶带/印章/荧光高亮)
+    function renderRetroCardToCanvas(p, pageNum, canvas) {
+      canvas.width = 1080;
+      canvas.height = 1440;
+      const ctx = canvas.getContext('2d');
+
+      const fontSans = '-apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif';
+
+      // 1. 底色：复古暖调桌面底色
+      ctx.fillStyle = '#f5f0eb';
+      ctx.fillRect(0, 0, 1080, 1440);
+
+      const pad = 48;
+      const cardW = 1080 - pad * 2;
+      const cardH = 1440 - pad * 2;
+      const cardX = pad;
+      const cardY = pad;
+
+      // 2. 主手账卡片底色 (米白温暖质感纸张，带复古边框)
+      drawRoundedRect(ctx, cardX, cardY, cardW, cardH, 32, '#faf8f5', '#d6d3d1', 3);
+
+      // 如果是 P2 或 P3，绘制复古记事手账横线 (Ruled memo lines)
+      if (pageNum === 2 || pageNum === 3) {
+        ctx.strokeStyle = '#ede8df';
+        ctx.lineWidth = 1.5;
+        for (let lineY = cardY + 180; lineY < cardY + cardH - 120; lineY += 46) {
+          ctx.beginPath();
+          ctx.moveTo(cardX + 36, lineY);
+          ctx.lineTo(cardX + cardW - 36, lineY);
+          ctx.stroke();
+        }
+      }
+
+      // 3. 顶部胶带效果 (Washi Tape) - 复古半透明暖黄胶带
+      const tapeW = 200, tapeH = 38;
+      const tapeX = cardX + (cardW - tapeW) / 2;
+      const tapeY = cardY - 14;
+      ctx.fillStyle = 'rgba(254, 240, 138, 0.9)';
+      ctx.fillRect(tapeX, tapeY, tapeW, tapeH);
+      ctx.strokeStyle = 'rgba(251, 191, 36, 0.6)';
+      ctx.lineWidth = 1;
+      ctx.strokeRect(tapeX, tapeY, tapeW, tapeH);
+
+      const innerX = cardX + 54;
+      const innerW = cardW - 108;
+      let curY = cardY + 64;
+
+      // 4. 顶部标题栏：印章风格标签 + 右侧分类
+      const stampText = `★ 深度争议 0${pageNum}`;
+      ctx.font = `bold 24px ${fontSans}`;
+      const stampW = ctx.measureText(stampText).width + 32;
+      drawRoundedRect(ctx, innerX, curY, stampW, 44, 10, '#fef2f2', '#b91c1c', 2);
+      ctx.fillStyle = '#b91c1c';
+      ctx.fillText(stampText, innerX + 16, curY + 30);
+
+      // 右侧分类标签 (复古质感灰色标签)
+      const tagText = `P${pageNum} · ${p.tag}`;
+      ctx.font = `bold 22px ${fontSans}`;
+      const tagW = ctx.measureText(tagText).width + 28;
+      drawRoundedRect(ctx, innerX + innerW - tagW, curY, tagW, 44, 10, '#e7e5e4', '#d6d3d1', 1.5);
+      ctx.fillStyle = '#44403c';
+      ctx.fillText(tagText, innerX + innerW - tagW + 14, curY + 30);
+
+      curY += 92;
+
+      // 5. 分页主体内容绘制
+      if (pageNum === 1) {
+        // P1 封面
+        curY += 24;
+        ctx.font = `900 58px ${fontSans}`;
+        ctx.fillStyle = '#1c1917';
+        curY = drawWrappedText(ctx, p.h1, innerX, curY, innerW, 76);
+
+        // h2 带荧光黄笔高亮效果 (Marker effect)
+        curY += 12;
+        ctx.font = `900 58px ${fontSans}`;
+        const h2Lines = wrapTextToLines(ctx, p.h2, innerW);
+        for (const line of h2Lines) {
+          const textW = ctx.measureText(line).width;
+          ctx.fillStyle = '#fef08a';
+          ctx.fillRect(innerX, curY - 50, textW + 16, 62);
+          ctx.fillStyle = '#991b1b';
+          ctx.fillText(line, innerX + 8, curY);
+          curY += 76;
+        }
+
+        curY += 24;
+        // 摘要卡片 (带琥珀色竖边与微投影卡片)
+        const sumBoxY = curY;
+        ctx.font = `30px ${fontSans}`;
+        const sumLines = wrapTextToLines(ctx, p.summary, innerW - 48);
+        const sumH = sumLines.length * 46 + 48;
+        drawRoundedRect(ctx, innerX, sumBoxY, innerW, sumH, 18, 'rgba(255, 255, 255, 0.9)', '#e7e5e4', 1.5);
+        ctx.fillStyle = '#f59e0b';
+        ctx.fillRect(innerX, sumBoxY, 8, sumH);
+        ctx.fillStyle = '#44403c';
+        let lineY = sumBoxY + 44;
+        for (const line of sumLines) {
+          ctx.fillText(line, innerX + 28, lineY);
+          lineY += 46;
+        }
+
+        // 底部正反方站队卡片
+        const btmY = cardY + cardH - 240;
+        ctx.setLineDash([8, 8]);
+        ctx.strokeStyle = '#d6d3d1';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(innerX, btmY - 24);
+        ctx.lineTo(innerX + innerW, btmY - 24);
+        ctx.stroke();
+        ctx.setLineDash([]);
+
+        // 正方
+        drawRoundedRect(ctx, innerX, btmY, innerW, 80, 16, '#fef2f2', '#fecaca', 2);
+        ctx.font = `bold 28px ${fontSans}`;
+        ctx.fillStyle = '#991b1b';
+        ctx.fillText(`🔴 正 ${p.badgeA}`, innerX + 24, btmY + 50);
+
+        // 反方
+        drawRoundedRect(ctx, innerX, btmY + 98, innerW, 80, 16, '#f0f9ff', '#bae6fd', 2);
+        ctx.fillStyle = '#075985';
+        ctx.fillText(`🔵 反 ${p.badgeB}`, innerX + 24, btmY + 98 + 50);
+
+      } else if (pageNum === 2 || pageNum === 3) {
+        // P2/P3 现实利差与数据痛点
+        curY += 16;
+        ctx.font = `900 52px ${fontSans}`;
+        ctx.fillStyle = '#1c1917';
+        curY = drawWrappedText(ctx, p.h1, innerX, curY, innerW, 70);
+
+        // h2 红色手账记号高亮
+        ctx.font = `900 52px ${fontSans}`;
+        const h2Lines = wrapTextToLines(ctx, p.h2, innerW);
+        for (const line of h2Lines) {
+          const textW = ctx.measureText(line).width;
+          ctx.fillStyle = '#fee2e2';
+          ctx.fillRect(innerX, curY - 44, textW + 12, 56);
+          ctx.fillStyle = '#991b1b';
+          ctx.fillText(line, innerX + 6, curY);
+          curY += 70;
+        }
+
+        curY += 20;
+        // 摘要
+        ctx.font = `28px ${fontSans}`;
+        const sumLines = wrapTextToLines(ctx, p.summary, innerW - 48);
+        const sumH = sumLines.length * 44 + 40;
+        drawRoundedRect(ctx, innerX, curY, innerW, sumH, 16, 'rgba(255, 255, 255, 0.92)', '#e7e5e4', 1.5);
+        ctx.fillStyle = '#44403c';
+        let lineY = curY + 40;
+        for (const line of sumLines) {
+          ctx.fillText(line, innerX + 24, lineY);
+          lineY += 44;
+        }
+        curY += sumH + 32;
+
+        // 3 组指标卡片 (手账印章风格)
+        const metrics = p.metrics || [];
+        const colW = (innerW - 32) / 3;
+        metrics.forEach((m, idx) => {
+          const mX = innerX + idx * (colW + 16);
+          drawRoundedRect(ctx, mX, curY, colW, 190, 20, '#ffffff', '#d6d3d1', 2.5);
+          ctx.font = `22px ${fontSans}`;
+          ctx.fillStyle = '#78716c';
+          ctx.textAlign = 'center';
+          ctx.fillText(m.label, mX + colW / 2, curY + 54);
+
+          ctx.font = `bold 38px ${fontSans}`;
+          ctx.fillStyle = m.color && m.color.includes('rose') ? '#dc2626' : (m.color && m.color.includes('amber') ? '#d97706' : '#2563eb');
+          ctx.fillText(m.val, mX + colW / 2, curY + 128);
+          ctx.textAlign = 'left';
+        });
+
+        const btmY = cardY + cardH - 110;
+        drawRoundedRect(ctx, innerX, btmY, innerW, 64, 16, '#fef3c7', '#fde68a', 1.5);
+        ctx.font = `bold 24px ${fontSans}`;
+        ctx.fillStyle = '#92400e';
+        ctx.fillText('📌 工业精算模型已校准 · 真实数据透视', innerX + 24, btmY + 40);
+
+      } else if (pageNum === 4 || pageNum === 5) {
+        // P4/P5 正反方代言与案例
+        const isSideA = pageNum === 4;
+        const color = isSideA ? '#1e40af' : '#b45309';
+
+        curY += 12;
+        ctx.font = `900 48px ${fontSans}`;
+        ctx.fillStyle = '#1c1917';
+        curY = drawWrappedText(ctx, `${p.h1} ${p.h2}`, innerX, curY, innerW, 66);
+
+        curY += 20;
+        ctx.font = `28px ${fontSans}`;
+        const sumLines = wrapTextToLines(ctx, p.summary, innerW - 48);
+        const sumH = sumLines.length * 42 + 36;
+        drawRoundedRect(ctx, innerX, curY, innerW, sumH, 16, 'rgba(255, 255, 255, 0.9)', '#e7e5e4', 1.5);
+        ctx.fillStyle = '#44403c';
+        let lineY = curY + 38;
+        for (const line of sumLines) {
+          ctx.fillText(line, innerX + 24, lineY);
+          lineY += 42;
+        }
+        curY += sumH + 28;
+
+        // 真实案例卡片 (回形针风格)
+        const caseH = 220;
+        drawRoundedRect(ctx, innerX, curY, innerW, caseH, 20, '#ffffff', isSideA ? '#bfdbfe' : '#fde68a', 2.5);
+        ctx.font = `bold 26px ${fontSans}`;
+        ctx.fillStyle = color;
+        ctx.fillText(`📎 ${p.caseTitle || '【真实切片】'}`, innerX + 24, curY + 48);
+        ctx.font = `24px ${fontSans}`;
+        ctx.fillStyle = '#44403c';
+        drawWrappedText(ctx, p.caseText || '', innerX + 24, curY + 92, innerW - 48, 38);
+
+        curY += caseH + 24;
+        // 金句卡片 (带左侧强调条)
+        const quoteH = 130;
+        drawRoundedRect(ctx, innerX, curY, innerW, quoteH, 16, '#fffbeb', '#fde68a', 1.5);
+        ctx.fillStyle = isSideA ? '#3b82f6' : '#f59e0b';
+        ctx.fillRect(innerX, curY, 8, quoteH);
+        ctx.font = `italic bold 25px ${fontSans}`;
+        ctx.fillStyle = '#292524';
+        drawWrappedText(ctx, p.quote || '', innerX + 28, curY + 48, innerW - 48, 38);
+
+        const btmY = cardY + cardH - 110;
+        ctx.setLineDash([6, 6]);
+        ctx.strokeStyle = '#d6d3d1';
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.moveTo(innerX, btmY - 16);
+        ctx.lineTo(innerX + innerW, btmY - 16);
+        ctx.stroke();
+        ctx.setLineDash([]);
+
+        ctx.font = `24px ${fontSans}`;
+        ctx.fillStyle = '#78716c';
+        ctx.fillText('⚖️ 深度辩论 · 双边视角平衡还原 · 权威事实验证', innerX + 16, btmY + 36);
+
+      } else if (pageNum === 6) {
+        // P6 互动投票
+        curY += 20;
+        ctx.font = `900 52px ${fontSans}`;
+        ctx.fillStyle = '#1c1917';
+        curY = drawWrappedText(ctx, p.h1, innerX, curY, innerW, 70);
+
+        curY += 8;
+        ctx.font = `900 52px ${fontSans}`;
+        const h2Lines = wrapTextToLines(ctx, p.h2, innerW);
+        for (const line of h2Lines) {
+          const textW = ctx.measureText(line).width;
+          ctx.fillStyle = '#fef08a';
+          ctx.fillRect(innerX, curY - 44, textW + 12, 56);
+          ctx.fillStyle = '#1c1917';
+          ctx.fillText(line, innerX + 6, curY);
+          curY += 70;
+        }
+
+        curY += 20;
+        ctx.font = `28px ${fontSans}`;
+        const sumLines = wrapTextToLines(ctx, p.summary, innerW - 48);
+        const sumH = sumLines.length * 44 + 36;
+        drawRoundedRect(ctx, innerX, curY, innerW, sumH, 16, 'rgba(255, 255, 255, 0.9)', '#e7e5e4', 1.5);
+        ctx.fillStyle = '#44403c';
+        let lineY = curY + 38;
+        for (const line of sumLines) {
+          ctx.fillText(line, innerX + 24, lineY);
+          lineY += 44;
+        }
+        curY += sumH + 36;
+
+        // 站队 A 卡片
+        drawRoundedRect(ctx, innerX, curY, innerW, 110, 20, '#fef2f2', '#fca5a5', 2.5);
+        ctx.font = `bold 30px ${fontSans}`;
+        ctx.fillStyle = '#991b1b';
+        drawWrappedText(ctx, p.actionA || '🔴 站队支持', innerX + 32, curY + 64, innerW - 64, 40);
+
+        curY += 136;
+        // 站队 B 卡片
+        drawRoundedRect(ctx, innerX, curY, innerW, 110, 20, '#f0f9ff', '#93c5fd', 2.5);
+        ctx.font = `bold 30px ${fontSans}`;
+        ctx.fillStyle = '#075985';
+        drawWrappedText(ctx, p.actionB || '🔵 站队反对', innerX + 32, curY + 64, innerW - 64, 40);
+
+        const btmY = cardY + cardH - 110;
+        drawRoundedRect(ctx, innerX, btmY, innerW, 68, 18, '#fef3c7', '#fde68a', 2);
+        ctx.font = `bold 26px ${fontSans}`;
+        ctx.fillStyle = '#92400e';
+        ctx.fillText('👇 在评论区留下你的真实观点与账本！', innerX + 24, btmY + 44);
+      }
+    }
+
+    // 根据当前视觉主题统一分发绘制 Canvas
+    function renderCardDataToCanvas(p, pageNum, canvas) {
+      if (visualTheme === 'retro') {
+        renderRetroCardToCanvas(p, pageNum, canvas);
+      } else {
+        renderWhiteCardToCanvas(p, pageNum, canvas);
+      }
+    }
+
     let _desktopDirHandle = null;
     let _cachedCardAssets = null;
     const TARGET_DESKTOP_PATH = '/Users/edison/Desktop/小红书图文/';
@@ -3024,7 +2915,8 @@
     }
 
     async function prepareAllCardImages() {
-      if (_cachedCardAssets && _cachedCardAssets.topicId === currentTopicData.id) {
+      const cacheKey = `${currentTopicData.id}_${visualTheme}`;
+      if (_cachedCardAssets && _cachedCardAssets.key === cacheKey) {
         return _cachedCardAssets.files;
       }
       const canvas = document.createElement('canvas');
@@ -3037,7 +2929,7 @@
         renderCardDataToCanvas(p, pageNum, canvas);
 
         const cleanTag = p.tag.replace(/[^a-zA-Z0-9\u4e00-\u9fa5]/g, '_');
-        const filename = `P${pageNum}_${cleanTag}_${currentTopicData.id}.png`;
+        const filename = `P${pageNum}_${cleanTag}_${currentTopicData.id}_${visualTheme}.png`;
         const dataUrl = canvas.toDataURL('image/png');
         const blob = await canvasToBlobPromise(canvas);
         const arrayBuf = await blob.arrayBuffer();
@@ -3054,7 +2946,7 @@
         });
       }
 
-      _cachedCardAssets = { topicId: currentTopicData.id, files };
+      _cachedCardAssets = { key: cacheKey, files };
       return files;
     }
 
@@ -3240,15 +3132,19 @@
 
       // 1. 优先调用后端直接保存服务（秒级直存，免浏览器弹窗）
       try {
+        const files = await prepareAllCardImages();
         const resp = await fetch('/api/save_to_desktop', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ topic_id: currentTopicData.id })
+          body: JSON.stringify({ 
+            topic_id: visualTheme === 'white' ? currentTopicData.id : null,
+            files: files.map(f => ({ name: f.name, data: f.dataUrl }))
+          })
         });
         if (resp.ok) {
           const res = await resp.json();
           if (res.success) {
-            setSaveStatus(`🎉 全部图片已由本地服务直接存入：${res.saved_dir || TARGET_DESKTOP_PATH}`, 'success');
+            setSaveStatus(`🎉 全部 6 张 (${visualTheme === 'retro' ? '暖调手账' : '纯白现代'}) 图片已存入：${res.saved_dir || TARGET_DESKTOP_PATH}`, 'success');
             showToast(`🎉 6 张图片已直接存入桌面【小红书图文】！`, 'success');
             if (btn) { btn.disabled = false; btn.innerHTML = oldText; }
             return;
@@ -3300,12 +3196,12 @@
       renderCardDataToCanvas(p, currentCardIndex, canvas);
 
       const cleanTag = p.tag.replace(/[^a-zA-Z0-9\u4e00-\u9fa5]/g, '_');
-      const filename = `P${currentCardIndex}_${cleanTag}_${currentTopicData.id}.png`;
+      const filename = `P${currentCardIndex}_${cleanTag}_${currentTopicData.id}_${visualTheme}.png`;
 
       canvas.toBlob((blob) => {
         if (blob) {
           downloadBlob(blob, filename);
-          showToast(`🎉 P${currentCardIndex} 高清 PNG 图片已下载！\n保存路径：${TARGET_DESKTOP_PATH}`, 'success');
+          showToast(`🎉 P${currentCardIndex} 高清 PNG (${visualTheme === 'retro' ? '暖调手账' : '纯白现代'}) 已下载！\n保存路径：${TARGET_DESKTOP_PATH}`, 'success');
         } else {
           const dataUrl = canvas.toDataURL('image/png');
           const a = document.createElement('a');
@@ -3315,9 +3211,17 @@
           document.body.appendChild(a);
           a.click();
           setTimeout(() => a.remove(), 1000);
-          showToast(`🎉 P${currentCardIndex} PNG 图片已下载！\n保存路径：${TARGET_DESKTOP_PATH}`, 'success');
+          showToast(`🎉 P${currentCardIndex} PNG (${visualTheme === 'retro' ? '暖调手账' : '纯白现代'}) 已下载！\n保存路径：${TARGET_DESKTOP_PATH}`, 'success');
         }
       }, 'image/png');
+    }
+
+    function copyTitleText() {
+      const el = document.getElementById('postCopyTitle');
+      if (!el) return;
+      navigator.clipboard.writeText(el.innerText).then(() => {
+        showToast('📋 笔记标题已复制到剪贴板！', 'success');
+      });
     }
 
     // 主下载入口：打开保存中心同时直接启动 ZIP 下载，双重响应！
