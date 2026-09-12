@@ -37,6 +37,64 @@
     .toast-anim {
       animation: slideUp 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
     }
+
+    /* 暖调微噪点纸张底纹 (工业流水线手账风) */
+    .bg-paper-warm {
+      background-color: #FAF8F5;
+      background-image: radial-gradient(#E5E0D8 0.85px, transparent 0.85px);
+      background-size: 15px 15px;
+    }
+    /* 真实横线备忘录纸 */
+    .bg-memo-ruled {
+      background-color: #FCFBF9;
+      background-image: repeating-linear-gradient(#FCFBF9, #FCFBF9 29px, #E7E3DC 30px);
+    }
+    /* 荧光记号笔划线 */
+    .marker-yellow {
+      background: linear-gradient(180deg, transparent 52%, #FDE047 52%);
+      padding: 0 4px;
+    }
+    .marker-red {
+      background: linear-gradient(180deg, transparent 58%, #FECACA 58%);
+      padding: 0 4px;
+    }
+    .marker-cyan {
+      background: linear-gradient(180deg, transparent 55%, #BAE6FD 55%);
+      padding: 0 4px;
+    }
+    /* 倾斜复古红色印章 */
+    .stamp-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: 2px solid #DC2626;
+      color: #DC2626;
+      font-weight: 900;
+      letter-spacing: 0.08em;
+      transform: rotate(-3.5deg);
+      border-radius: 6px;
+      padding: 2px 10px;
+      box-shadow: 0 1px 2px rgba(220, 38, 38, 0.15);
+    }
+    /* 和纸胶带贴角效果 */
+    .washi-tape-top {
+      position: relative;
+    }
+    .washi-tape-top::before {
+      content: "";
+      position: absolute;
+      top: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80px;
+      height: 20px;
+      background: rgba(254, 240, 138, 0.75);
+      backdrop-filter: blur(1px);
+      border-left: 3px dashed rgba(202, 138, 4, 0.5);
+      border-right: 3px dashed rgba(202, 138, 4, 0.5);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+      z-index: 10;
+    }
   </style>
 </head>
 <body class="bg-slate-50 text-slate-800 min-h-screen font-sans antialiased flex flex-col selection:bg-blue-600 selection:text-white">
@@ -60,7 +118,7 @@
 
       <!-- 右侧动作按钮 -->
       <div class="flex items-center gap-2">
-        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 text-xs font-medium hidden sm:inline-flex">
+        <span id="pipelineStatusBadge" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 text-xs font-medium hidden sm:inline-flex">
           <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
           合规自检 100分
         </span>
@@ -157,7 +215,7 @@
           <div class="flex items-center gap-2 text-xs text-slate-500">
             <span>🔥 热门金融争议题库（点击即填）：</span>
           </div>
-          <div class="flex flex-wrap gap-2 text-xs">
+          <div id="presetPillsList" class="flex flex-wrap gap-2 text-xs">
             <button onclick="applyPresetTopic(0)" class="px-3 py-1.5 rounded-lg bg-blue-50 hover:bg-blue-100 border border-blue-200 text-blue-800 font-bold transition flex items-center gap-1.5 shadow-xs">
               <span class="text-rose-500">🔥</span> 昨晚PPI突发超预期大反弹：普通人该抛售黄金还是抄底美债？
               <span class="px-1.5 py-0.2 bg-rose-100 text-rose-700 rounded text-[10px]">宏观突发 · 最新</span>
@@ -219,6 +277,15 @@
 
           <!-- 模式切换/辅助功能 -->
           <div id="cardsToolbar" class="flex flex-wrap items-center gap-2">
+            <!-- 视觉模板风格切换: 纯白现代风 / 暖调手账风 -->
+            <div class="inline-flex rounded-lg border border-slate-200 p-0.5 bg-slate-100 text-xs">
+              <button onclick="setVisualTheme('white')" id="btnThemeWhite" class="px-2.5 py-1 rounded-md font-bold transition bg-white text-blue-600 shadow-xs" title="纯白现代杂志风 · 适合中产硬核理财">
+                🏢 纯白现代
+              </button>
+              <button onclick="setVisualTheme('retro')" id="btnThemeRetro" class="px-2.5 py-1 rounded-md font-bold transition text-slate-600 hover:text-slate-900" title="暖调复古手账风 · 适合大众扎心共鸣">
+                📜 暖调手账
+              </button>
+            </div>
             <!-- 渲染模式切换: 高清PNG / 动态设计卡片 -->
             <div class="inline-flex rounded-lg border border-slate-200 p-0.5 bg-slate-100 text-xs">
               <button onclick="setCardRenderType('png')" id="btnRenderTypePng" class="px-2.5 py-1 rounded-md font-bold transition bg-white text-blue-600 shadow-xs">
@@ -1266,6 +1333,7 @@
     let currentCardIndex = 1;
     let cardViewMode = 'single';
     let cardRenderType = 'png';
+    let visualTheme = 'white'; // 'white': 纯白现代杂志风 | 'retro': 暖调复古手账风
     let currentTab = 'cards';
     let userPoints = 120;
     let hasVoted = false;
@@ -1274,7 +1342,28 @@
       renderAll();
       updateClock();
       setInterval(updateClock, 1000);
+      loadServerDecks();
     });
+
+    function setVisualTheme(theme) {
+      visualTheme = theme;
+      const btnW = document.getElementById('btnThemeWhite');
+      const btnR = document.getElementById('btnThemeRetro');
+      if (theme === 'retro') {
+        if (btnW) btnW.className = "px-2.5 py-1 rounded-md font-bold transition text-slate-600 hover:text-slate-900";
+        if (btnR) btnR.className = "px-2.5 py-1 rounded-md font-bold transition bg-amber-100 text-amber-900 shadow-xs border border-amber-300";
+        if (cardRenderType === 'png') {
+          setCardRenderType('html');
+        }
+        showToast('📜 已切换为【暖调复古手账风】模板！', 'success');
+      } else {
+        if (btnW) btnW.className = "px-2.5 py-1 rounded-md font-bold transition bg-white text-blue-600 shadow-xs";
+        if (btnR) btnR.className = "px-2.5 py-1 rounded-md font-bold transition text-slate-600 hover:text-slate-900";
+        showToast('🏢 已切换为【纯白现代杂志风】模板！', 'success');
+      }
+      renderCards();
+      renderMobileSimulator();
+    }
 
     function setCardRenderType(type) {
       cardRenderType = type;
@@ -1305,6 +1394,7 @@
       renderCommentBoosterAndTracker();
       renderMobileSimulator();
       updateBadges();
+      renderPresetPills();
     }
 
     function updateBadges() {
@@ -1332,6 +1422,7 @@
         }
       }
 
+      const renderFn = visualTheme === 'retro' ? getRetroCardHTML : getWhiteCardHTML;
       const container = document.getElementById('activeCardRender');
       if (cardRenderType === 'png' && currentTopicData.id && !currentTopicData.id.startsWith('custom_')) {
         container.innerHTML = `
@@ -1340,7 +1431,7 @@
             <div id="pngFallbackNotice" class="hidden absolute inset-0 flex flex-col items-center justify-center p-6 text-center bg-white">
               <span class="text-3xl mb-2">🎨</span>
               <p class="text-xs text-slate-600 font-bold">该页以动态 Canvas/HTML 呈现</p>
-              <div class="mt-4 w-full h-[80%]">${getWhiteCardHTML(pageData, currentCardIndex)}</div>
+              <div class="mt-4 w-full h-[80%]">${renderFn(pageData, currentCardIndex)}</div>
             </div>
             <div class="absolute top-3 left-3 bg-black/75 backdrop-blur text-white px-2.5 py-1 rounded-full text-[10px] font-mono shadow-md flex items-center gap-1.5 pointer-events-none">
               <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
@@ -1352,7 +1443,7 @@
           </div>
         `;
       } else {
-        container.innerHTML = getWhiteCardHTML(pageData, currentCardIndex);
+        container.innerHTML = renderFn(pageData, currentCardIndex);
       }
 
       const gridContainer = document.getElementById('gridCardContainer');
@@ -1367,7 +1458,7 @@
         `).join('');
       } else {
         gridContainer.innerHTML = pages.map((p, idx) => `
-          <div onclick="selectCardPage(${idx+1}); toggleCardViewMode();" class="ratio-3-4 bg-white rounded-xl p-3 border ${idx+1 === currentCardIndex ? 'border-blue-500 ring-2 ring-blue-500/20 shadow-md' : 'border-slate-200'} hover:border-slate-400 cursor-pointer transition flex flex-col justify-between overflow-hidden shadow-sm">
+          <div onclick="selectCardPage(${idx+1}); toggleCardViewMode();" class="ratio-3-4 ${visualTheme === 'retro' ? 'bg-paper-warm border-stone-300' : 'bg-white border-slate-200'} rounded-xl p-3 border ${idx+1 === currentCardIndex ? 'border-blue-500 ring-2 ring-blue-500/20 shadow-md' : ''} hover:border-slate-400 cursor-pointer transition flex flex-col justify-between overflow-hidden shadow-sm">
             <div class="flex items-center justify-between text-[9px] text-slate-500">
               <span class="font-bold text-blue-600">P${idx+1}</span>
               <span class="truncate max-w-[80px]">${p.tag}</span>
@@ -1378,6 +1469,156 @@
             <div class="text-[9px] text-slate-500 line-clamp-2">${p.summary}</div>
           </div>
         `).join('');
+      }
+    }
+
+    // 生成暖调复古手账风 3:4 卡片 HTML
+    function getRetroCardHTML(p, num) {
+      if (num === 1) {
+        return `
+          <div class="bg-paper-warm p-6 h-full flex flex-col justify-between select-none border-2 border-stone-300 rounded-2xl shadow-sm text-stone-900 relative overflow-hidden washi-tape-top">
+            <div class="flex items-center justify-between pt-1">
+              <span class="stamp-badge text-[11px]">
+                ★ 深度争议 0${num}
+              </span>
+              <span class="text-[11px] font-mono text-stone-600 font-bold bg-stone-200/80 px-2 py-0.5 rounded border border-stone-300">
+                ${p.tag}
+              </span>
+            </div>
+
+            <div class="space-y-4 my-auto py-2">
+              <div class="space-y-1">
+                <h2 class="text-2xl sm:text-3xl font-black tracking-tight text-stone-900 leading-tight">
+                  ${p.h1}
+                </h2>
+                <h2 class="text-2xl sm:text-3xl font-black tracking-tight leading-tight text-red-800">
+                  <span class="marker-yellow">${p.h2}</span>
+                </h2>
+              </div>
+              <p class="text-xs text-stone-700 leading-relaxed border-l-4 border-amber-500 pl-3 bg-white/75 p-2.5 rounded-r-xl border-y border-r border-stone-200 shadow-2xs">
+                ${p.summary}
+              </p>
+            </div>
+
+            <div class="space-y-2 pt-2 border-t-2 border-dashed border-stone-300">
+              <div class="p-2.5 rounded-lg bg-red-50/90 border border-red-200 text-red-900 text-xs font-bold flex items-center gap-2 shadow-2xs">
+                <span class="stamp-badge text-[10px] py-0 px-1 border-red-600">正</span> ${p.badgeA}
+              </div>
+              <div class="p-2.5 rounded-lg bg-sky-50/90 border border-sky-200 text-sky-900 text-xs font-bold flex items-center gap-2 shadow-2xs">
+                <span class="stamp-badge text-[10px] py-0 px-1 border-sky-700 text-sky-800">反</span> ${p.badgeB}
+              </div>
+            </div>
+          </div>
+        `;
+      } else if (num === 2 || num === 3) {
+        return `
+          <div class="bg-memo-ruled p-6 h-full flex flex-col justify-between select-none border-2 border-stone-300 rounded-2xl shadow-sm text-stone-900 relative">
+            <div class="flex items-center justify-between">
+              <span class="px-2.5 py-0.5 rounded bg-amber-100 text-amber-900 font-mono text-[11px] font-bold border border-amber-300">
+                P${num} · ${p.tag}
+              </span>
+              <span class="text-[11px] font-mono text-stone-400 font-bold tracking-widest">FINANCE NOTE</span>
+            </div>
+
+            <div class="space-y-3 my-auto">
+              <h3 class="text-xl sm:text-2xl font-black text-stone-900 leading-snug">
+                ${p.h1}<br><span class="marker-red text-red-900">${p.h2}</span>
+              </h3>
+              <p class="text-xs text-stone-700 leading-relaxed bg-white/80 p-2.5 rounded-lg border border-stone-200">
+                ${p.summary}
+              </p>
+
+              <div class="grid grid-cols-3 gap-2 pt-2">
+                ${(p.metrics || []).map(m => `
+                  <div class="p-2.5 rounded-xl bg-white/95 border-2 border-stone-300 text-center shadow-xs">
+                    <span class="text-[10px] text-stone-500 block mb-0.5 truncate font-mono">${m.label}</span>
+                    <span class="text-sm sm:text-base font-black font-mono ${m.color}">${m.val}</span>
+                  </div>
+                `).join('')}
+              </div>
+            </div>
+
+            <div class="p-2 rounded-lg bg-amber-50/80 border border-amber-200 text-[10px] text-amber-900 flex items-center justify-between font-mono">
+              <span>📌 工业精算模型已校准</span>
+              <span class="text-amber-800 font-bold">翻页查看立论 ▶</span>
+            </div>
+          </div>
+        `;
+      } else if (num === 4 || num === 5) {
+        const isSideA = num === 4;
+        const color = isSideA ? 'blue' : 'amber';
+        return `
+          <div class="bg-paper-warm p-6 h-full flex flex-col justify-between select-none border-2 border-stone-300 rounded-2xl shadow-sm text-stone-900 relative">
+            <div class="flex items-center justify-between">
+              <span class="px-2.5 py-0.5 rounded bg-${color}-100 text-${color}-900 font-mono text-[11px] font-bold border border-${color}-300">
+                P${num} · ${p.tag}
+              </span>
+              <span class="stamp-badge text-[10px] py-0 px-1.5 ${isSideA ? 'border-blue-700 text-blue-800' : 'border-amber-700 text-amber-800'}">
+                ${isSideA ? '正方代言' : '反方代言'}
+              </span>
+            </div>
+
+            <div class="space-y-3 my-auto">
+              <h3 class="text-lg sm:text-xl font-black text-stone-900 leading-snug">
+                ${p.h1}<br><span class="marker-${isSideA ? 'cyan' : 'yellow'} text-stone-900">${p.h2}</span>
+              </h3>
+              <p class="text-xs text-stone-700 leading-relaxed bg-white/75 p-2 rounded-lg border border-stone-200">
+                ${p.summary}
+              </p>
+
+              <div class="p-3 rounded-xl bg-white border-2 border-${color}-200 space-y-1 shadow-xs">
+                <span class="text-[10px] font-bold text-${color}-900 flex items-center gap-1">
+                  <span>📎</span> ${p.caseTitle}
+                </span>
+                <p class="text-[11px] text-stone-700 leading-relaxed">${p.caseText}</p>
+              </div>
+
+              <div class="p-2.5 rounded-lg bg-amber-50/60 border border-amber-200 text-[11px] text-stone-800 italic font-medium">
+                ${p.quote}
+              </div>
+            </div>
+
+            <div class="flex items-center justify-between text-[10px] text-stone-400 pt-2 border-t border-dashed border-stone-300">
+              <span>事实案例经官方质检验证</span>
+              <span class="text-stone-600 font-bold">权威深度视角</span>
+            </div>
+          </div>
+        `;
+      } else {
+        return `
+          <div class="bg-paper-warm p-6 h-full flex flex-col justify-between select-none text-center border-2 border-stone-300 rounded-2xl shadow-sm text-stone-900 relative">
+            <div class="flex items-center justify-between">
+              <span class="stamp-badge text-[11px]">
+                ★ 互动投票
+              </span>
+              <span class="text-[11px] font-mono text-stone-500 font-bold bg-stone-200/80 px-2 py-0.5 rounded border border-stone-300">
+                P6 · ${p.tag}
+              </span>
+            </div>
+
+            <div class="space-y-4 my-auto">
+              <h3 class="text-2xl sm:text-3xl font-black text-stone-900 leading-tight">
+                ${p.h1}<br><span class="marker-yellow">${p.h2}</span>
+              </h3>
+              <p class="text-xs text-stone-700 max-w-xs mx-auto leading-relaxed bg-white/70 p-2 rounded-lg border border-stone-200">
+                ${p.summary}
+              </p>
+
+              <div class="space-y-2.5 text-left pt-1">
+                <div class="p-3 rounded-xl bg-red-50/90 border-2 border-red-300 text-red-950 font-bold text-xs shadow-xs">
+                  ${p.actionA}
+                </div>
+                <div class="p-3 rounded-xl bg-sky-50/90 border-2 border-sky-300 text-sky-950 font-bold text-xs shadow-xs">
+                  ${p.actionB}
+                </div>
+              </div>
+            </div>
+
+            <div class="p-2.5 rounded-xl bg-amber-100/80 border border-amber-300 text-[11px] text-amber-950 font-bold">
+              👇 在评论区留下你的真实观点与账本！
+            </div>
+          </div>
+        `;
       }
     }
 
@@ -2041,10 +2282,85 @@
       });
     }
 
-    function generateContent() {
+    async function loadServerDecks() {
+      const badge = document.getElementById('pipelineStatusBadge');
+      try {
+        const resp = await fetch('/api/list_decks');
+        if (resp.ok) {
+          const data = await resp.json();
+          if (data.decks && data.decks.length > 0) {
+            if (badge) {
+              badge.className = "px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-300 shadow-2xs flex items-center gap-1.5";
+              badge.innerHTML = `<span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> 🟢 工业后端已连接 · ${data.decks.length} 套现成案库`;
+            }
+            // 将服务端案例合并并丰富到 PRESET_TOPICS
+            data.decks.forEach(sd => {
+              const cfg = sd.config;
+              if (cfg && cfg.topic) {
+                const existing = PRESET_TOPICS.find(t => t.id === sd.id);
+                if (!existing) {
+                  PRESET_TOPICS.push({
+                    id: sd.id,
+                    title: cfg.topic.title || sd.title,
+                    category: cfg.topic.category || sd.category,
+                    side_a: cfg.side_a,
+                    side_b: cfg.side_b,
+                    contrast: cfg.contrast,
+                    social_post: {
+                      title: cfg.topic.title || sd.title,
+                      body: sd.publish_pack || '',
+                      pinned_comment: ''
+                    },
+                    pages: cfg.pages || []
+                  });
+                } else if (sd.publish_pack && (!existing.social_post || !existing.social_post.body)) {
+                  existing.social_post = existing.social_post || {};
+                  existing.social_post.body = sd.publish_pack;
+                }
+              }
+            });
+            renderPresetPills();
+          }
+        }
+      } catch (err) {
+        console.log('Running in local standalone browser mode:', err);
+        if (badge) {
+          badge.className = "px-2.5 py-1 rounded-full text-xs font-semibold bg-slate-100 text-slate-600 border border-slate-200 shadow-2xs flex items-center gap-1.5";
+          badge.innerHTML = `<span class="w-2 h-2 rounded-full bg-blue-400"></span> ⚡ 前端即时渲染模式`;
+        }
+      }
+    }
+
+    function renderPresetPills() {
+      const container = document.getElementById('presetPillsList');
+      if (!container) return;
+      container.innerHTML = PRESET_TOPICS.map((t, idx) => {
+        const isCurrent = currentTopicData && currentTopicData.id === t.id;
+        return `
+          <button onclick="applyPresetTopic(${idx})" class="px-3 py-1.5 rounded-lg ${isCurrent ? 'bg-blue-50 border-blue-300 text-blue-800 font-bold shadow-xs' : 'bg-slate-100 hover:bg-slate-200 border-slate-200 text-slate-700 font-medium'} border transition flex items-center gap-1.5 cursor-pointer">
+            <span>${idx === 0 ? '🔥' : '📌'}</span>
+            <span class="truncate max-w-[260px] sm:max-w-none">${t.title}</span>
+            <span class="px-1.5 py-0.2 bg-blue-100 text-blue-700 rounded text-[10px] shrink-0">${t.category || '精选'}</span>
+          </button>
+        `;
+      }).join('');
+    }
+
+    async function generateContent() {
       const input = document.getElementById('titleInput').value.trim();
       if (!input) {
         showToast('⚠️ 请输入金融选题标题', 'warning');
+        return;
+      }
+
+      // 如果匹配现有预设，直接极速载入
+      const match = PRESET_TOPICS.find(t => input.includes(t.title) || t.title.includes(input));
+      if (match) {
+        currentTopicData = match;
+        currentCardIndex = 1;
+        hasVoted = false;
+        renderAll();
+        showToast(`✨ 已载入选题：《${match.title}》`, 'success');
         return;
       }
 
@@ -2053,24 +2369,61 @@
       const btnIcon = document.getElementById('genBtnIcon');
       btn.disabled = true;
       btnIcon.innerText = '⏳';
-      btnText.innerText = '正在调度专家矩阵与三大 Skill 精算中...';
+      btnText.innerText = '正在调度专家矩阵与三大 Skill 工业流水线生成中...';
 
-      setTimeout(() => {
-        let match = PRESET_TOPICS.find(t => input.includes(t.title) || t.title.includes(input));
-        if (!match) {
-          match = createCustomTopicData(input);
+      try {
+        const resp = await fetch('/api/generate_deck', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            title: input,
+            news_text: input,
+            category: '金融理财'
+          })
+        });
+        if (resp.ok) {
+          const res = await resp.json();
+          if (res.success && res.deck) {
+            const sd = res.deck;
+            const newDeck = {
+              id: sd.id,
+              title: sd.config.topic.title,
+              category: sd.config.topic.category,
+              side_a: sd.config.side_a,
+              side_b: sd.config.side_b,
+              contrast: sd.config.contrast,
+              social_post: {
+                title: sd.config.topic.title,
+                body: sd.publish_pack || '',
+                pinned_comment: ''
+              },
+              pages: sd.config.pages || []
+            };
+            PRESET_TOPICS.unshift(newDeck);
+            currentTopicData = newDeck;
+            currentCardIndex = 1;
+            hasVoted = false;
+            renderAll();
+            showToast('🎉 后端工业流水线已生成全套图文卡片与文案！', 'success');
+            return;
+          }
         }
-
-        currentTopicData = match;
-        currentCardIndex = 1;
-        hasVoted = false;
-        renderAll();
-
+      } catch (apiErr) {
+        console.warn('Backend API unavailable, using client instant generator:', apiErr);
+      } finally {
         btn.disabled = false;
         btnIcon.innerText = '⚡';
         btnText.innerText = '快速生成对应内容与图片';
-        showToast('🎉 全套 6 张 3:4 纯白卡片、文案与活动配置已快速生成！', 'success');
-      }, 600);
+      }
+
+      // 客户端降级即时生成引擎
+      const customTopic = createCustomTopicData(input);
+      PRESET_TOPICS.unshift(customTopic);
+      currentTopicData = customTopic;
+      currentCardIndex = 1;
+      hasVoted = false;
+      renderAll();
+      showToast('🎉 全套 6 张 3:4 卡片、文案与活动配置已快速生成！', 'success');
     }
 
     function createCustomTopicData(title) {
@@ -2170,8 +2523,13 @@
 
     function applyPresetTopic(index) {
       const t = PRESET_TOPICS[index];
+      if (!t) return;
       document.getElementById('titleInput').value = t.title;
-      generateContent();
+      currentTopicData = t;
+      currentCardIndex = 1;
+      hasVoted = false;
+      renderAll();
+      showToast(`✨ 已载入选题：《${t.title}》`, 'success');
     }
 
     function clearTitleInput() {
@@ -2280,26 +2638,39 @@
       });
     }
 
-    function openCardInNewTab() {
-      const p = currentTopicData.pages[currentCardIndex - 1];
-      const htmlContent = `<!DOCTYPE html>
+    function getCardStandaloneHTML(p, cardIndex) {
+      const renderFn = visualTheme === 'retro' ? getRetroCardHTML : getWhiteCardHTML;
+      const bgBody = visualTheme === 'retro' ? '#f5f0eb' : '#f8fafc';
+      return `<!DOCTYPE html>
 <html>
 <head>
   <meta charset="utf-8">
-  <title>P${currentCardIndex} - ${currentTopicData.title}</title>
+  <title>P${cardIndex} - ${currentTopicData.title}</title>
   <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"><\/script>
   <style>
-    body { margin: 0; background: #f8fafc; display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 20px; }
+    body { margin: 0; background: ${bgBody}; display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 20px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
     .card-box { width: 480px; aspect-ratio: 3 / 4; box-shadow: 0 25px 50px -12px rgba(15,23,42,0.15); border-radius: 16px; overflow: hidden; background: #ffffff; }
+    .bg-paper-warm { background-color: #FAF8F5; background-image: radial-gradient(#E5E0D8 0.85px, transparent 0.85px); background-size: 15px 15px; }
+    .bg-memo-ruled { background-color: #FCFBF9; background-image: repeating-linear-gradient(#FCFBF9, #FCFBF9 29px, #E7E3DC 30px); }
+    .marker-yellow { background: linear-gradient(180deg, transparent 52%, #FDE047 52%); padding: 0 4px; }
+    .marker-red { background: linear-gradient(180deg, transparent 58%, #FECACA 58%); padding: 0 4px; }
+    .marker-cyan { background: linear-gradient(180deg, transparent 55%, #BAE6FD 55%); padding: 0 4px; }
+    .stamp-badge { display: inline-flex; align-items: center; justify-content: center; border: 2px solid #DC2626; color: #DC2626; font-weight: 900; letter-spacing: 0.08em; transform: rotate(-3.5deg); border-radius: 6px; padding: 2px 10px; box-shadow: 0 1px 2px rgba(220, 38, 38, 0.15); }
+    .washi-tape-top { position: relative; }
+    .washi-tape-top::before { content: ""; position: absolute; top: -10px; left: 50%; transform: translateX(-50%); width: 80px; height: 20px; background: rgba(254, 240, 138, 0.75); backdrop-filter: blur(1px); border-left: 3px dashed rgba(202, 138, 4, 0.5); border-right: 3px dashed rgba(202, 138, 4, 0.5); box-shadow: 0 1px 3px rgba(0,0,0,0.08); z-index: 10; }
   </style>
 </head>
 <body>
   <div class="card-box">
-    ${getWhiteCardHTML(p, currentCardIndex)}
+    ${renderFn(p, cardIndex)}
   </div>
 </body>
 </html>`;
+    }
 
+    function openCardInNewTab() {
+      const p = currentTopicData.pages[currentCardIndex - 1];
+      const htmlContent = getCardStandaloneHTML(p, currentCardIndex);
       const blob = new Blob([htmlContent], { type: 'text/html' });
       const url = URL.createObjectURL(blob);
       window.open(url, '_blank');
@@ -2307,24 +2678,7 @@
 
     function downloadActiveCardHTML() {
       const p = currentTopicData.pages[currentCardIndex - 1];
-      const htmlContent = `<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="utf-8">
-  <title>P${currentCardIndex} - ${currentTopicData.title}</title>
-  <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"><\/script>
-  <style>
-    body { margin: 0; background: #f8fafc; display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 20px; }
-    .card-box { width: 480px; aspect-ratio: 3 / 4; box-shadow: 0 25px 50px -12px rgba(15,23,42,0.15); border-radius: 16px; overflow: hidden; background: #ffffff; }
-  </style>
-</head>
-<body>
-  <div class="card-box">
-    ${getWhiteCardHTML(p, currentCardIndex)}
-  </div>
-</body>
-</html>`;
-
+      const htmlContent = getCardStandaloneHTML(p, currentCardIndex);
       const blob = new Blob([htmlContent], { type: 'text/html' });
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
@@ -2882,9 +3236,32 @@
     async function saveAllDirectToFolder() {
       const btn = document.getElementById('btnSaveDirectFolder');
       const oldText = btn ? btn.innerHTML : '';
+      if (btn) { btn.disabled = true; btn.innerHTML = `<span>⏳</span> 正在写入桌面文件夹...`; }
 
+      // 1. 优先调用后端直接保存服务（秒级直存，免浏览器弹窗）
+      try {
+        const resp = await fetch('/api/save_to_desktop', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ topic_id: currentTopicData.id })
+        });
+        if (resp.ok) {
+          const res = await resp.json();
+          if (res.success) {
+            setSaveStatus(`🎉 全部图片已由本地服务直接存入：${res.saved_dir || TARGET_DESKTOP_PATH}`, 'success');
+            showToast(`🎉 6 张图片已直接存入桌面【小红书图文】！`, 'success');
+            if (btn) { btn.disabled = false; btn.innerHTML = oldText; }
+            return;
+          }
+        }
+      } catch (e) {
+        console.log('Backend direct save not available, trying File System Access API...', e);
+      }
+
+      // 2. 浏览器环境降级：调用原生 File System Access API
       if (!('showDirectoryPicker' in window)) {
         alert(`当前浏览器环境限制了直接文件系统访问，请使用左侧【一键打包下载 (.zip)】，解压即可存入：${TARGET_DESKTOP_PATH}`);
+        if (btn) { btn.disabled = false; btn.innerHTML = oldText; }
         return;
       }
 
